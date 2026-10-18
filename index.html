@@ -304,7 +304,7 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
     </div>
     <div class="hero-art">
       <div class="main"><img src="assets/hero.jpg" alt="Custom jackets and sweatshirts by The Customized House"></div>
-      <div class="float"><div class="ic">🎓</div><div><b>Graduation Merch '27</b><span>Batch hoodies with every name</span></div></div>
+      <div class="float"><div class="ic">🎨</div><div><b>Free mockup</b><span>See your design before you pay</span></div></div>
     </div>
   </div>
 </section>
@@ -340,7 +340,7 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
 
 <section class="section collection" id="collection">
   <div class="container">
-    <div class="section-head reveal"><span class="eyebrow">Our work</span><h2>The Collection</h2><p>Real designs we have made. Tap any design to order it as-is or make it yours.</p></div>
+    <div class="section-head reveal"><span class="eyebrow">Our work</span><h2>The Collection</h2><p>Our latest designs. Tap any design to order it as-is or make it yours.</p></div>
     <div class="filters" id="filters"></div>
     <div class="grid" id="grid"></div>
     <p class="coll-note">Have something else in mind? <a href="#order">Send us your idea</a> - we design it for free.</p>
@@ -362,9 +362,9 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
       <a class="btn btn-gold" href="https://wa.me/918431573282?text=Hi%20The%20Customized%20House%2C%20I%20want%20a%20quote%20for%20a%20bulk%20order" target="_blank" rel="noopener">Get a bulk quote</a>
     </div>
     <div class="bulk-pics reveal">
-      <img src="assets/grad-batch27-navy.jpg" alt="Batch of 27 hoodie with every name" loading="lazy">
-      <img src="assets/grad-seniors27-board.jpg" alt="Seniors Class of 27 hoodie design" loading="lazy">
-      <img src="assets/grad-batch2627-brown.jpg" alt="Batch of 2026-27 hoodie" loading="lazy">
+      <img src="assets/group.jpg" alt="Group wearing custom T-shirts" loading="lazy">
+      <img src="assets/cat-hoodie.jpg" alt="Custom hoodie" loading="lazy">
+      <img src="assets/cat-jacket.jpg" alt="Custom jacket" loading="lazy">
     </div>
   </div>
 </section>
@@ -582,14 +582,7 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
    Put the image in the assets folder, then add one line:
    {img:'assets/your-file.jpg', title:'Design name', tag:'hoodie', desc:'Short line', price:'₹899'}
    tag can be: hoodie, tshirt, oversized, sweatshirt, jacket, batch */
-const DESIGNS = [
-  {img:'assets/grad-batch27-navy.jpg', title:'Batch of 27 - Every Name', tag:'batch', desc:'The whole class inside a giant 27. Navy with cream print, class on the chest.', price:'Batch pricing'},
-  {img:'assets/grad-seniors27-board.jpg', title:'Seniors Class of 27', tag:'batch', desc:'Varsity 27 with wings, your name, lightning sleeves and chest embroidery.', price:'Batch pricing'},
-  {pos:'center 8%',img:'assets/grad-dipsites27.jpg', title:'Dipsites Class of 27', tag:'batch', desc:'Arched varsity lettering with each person\'s name between the wings.', price:'Batch pricing'},
-  {img:'assets/grad-batch2627-brown.jpg', title:'Batch of 2026-27', tag:'batch', desc:'Brown hoodie with names filling 2026-27 and your class on the front.', price:'Batch pricing'},
-  {img:'assets/grad-batch27-cobalt.jpg', title:'Batch of 27 - Cobalt', tag:'batch', desc:'The every-name design on a bold cobalt hoodie.', price:'Batch pricing'},
-  {img:'assets/grad-batch27-cream.jpg', title:'Batch of 27 - Cream', tag:'batch', desc:'Cream hoodie with a navy print - clean and classic.', price:'Batch pricing'}
-];
+const DESIGNS = [];
 const TAGS = {all:'All', batch:'Batch / Graduation', hoodie:'Hoodies', tshirt:'T-Shirts', oversized:'Oversized', sweatshirt:'Sweatshirts', jacket:'Jackets'};
 const WA = 'https://wa.me/918431573282?text=';
 function renderFilters(){
@@ -599,6 +592,7 @@ function renderFilters(){
   box.querySelectorAll('button').forEach(b=>b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderGrid(b.dataset.t)});
 }
 function renderGrid(t='all'){
+  if(!DESIGNS.length){document.getElementById('grid').innerHTML='<div style="grid-column:1/-1;text-align:center;background:#fff;border:1px dashed var(--line);border-radius:18px;padding:48px 20px"><h3 style="color:var(--navy);font-size:1.4rem;margin-bottom:8px">New collection dropping soon</h3><p style="color:var(--muted);margin-bottom:18px">Fresh designs are on the way. Want something now? Send us your idea and get a free mockup.</p><a class="btn btn-primary" href="#order">Send your idea</a></div>';return}
   document.getElementById('grid').innerHTML = DESIGNS.filter(d=>t==='all'||d.tag===t).map(d=>`
     <article class="card">
       <div class="ph"><img style="--pos:${d.pos||'center'}" src="${d.img}" alt="${d.title}" loading="lazy" onclick="openLB(this.src)"></div>
