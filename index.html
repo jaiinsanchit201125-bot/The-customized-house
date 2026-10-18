@@ -1,349 +1,129 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Customized House - Custom Hoodies, T-Shirts & Batch Merch</title>
-<meta name="description" content="Custom hoodies, T-shirts, sweatshirts and jackets made for you, your batch or your team. Free design mockup, single pieces and bulk orders. Order on WhatsApp +91 84315 73282.">
+<meta name="description" content="Custom hoodies, T-shirts, sweatshirts and jackets made for you, your batch or your team. Design it yourself with a realistic live preview, single pieces and bulk orders. Order on WhatsApp +91 84315 73282.">
 <meta property="og:title" content="The Customized House - Wear Your Story">
-<meta property="og:description" content="Custom clothing for individuals, batches, teams and brands. Free mockup before you pay.">
+<meta property="og:description" content="Custom clothing for individuals, batches, teams and brands. Design it live, see it before you pay.">
 <meta property="og:image" content="assets/hero.jpg">
+<meta name="theme-color" content="#1F2A44">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --navy:#1F2A44; --navy-2:#141c30; --gold:#C9A35A; --gold-2:#b38c45;
-  --cream:#F6F1E6; --paper:#FBF8F2; --ink:#16181d; --muted:#5d6270; --line:#e6e0d4;
-  --wa:#25D366; --text-muted:#5d6270; --radius:18px; --shadow:0 18px 40px rgba(20,28,48,.10);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'DM Sans',system-ui,sans-serif;color:var(--ink);background:#fff;line-height:1.55;-webkit-font-smoothing:antialiased}
-img{max-width:100%;display:block}
-a{color:inherit;text-decoration:none}
-.container{width:min(1200px,100% - 32px);margin-inline:auto}
-.serif{font-family:'Cormorant Garamond',serif}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 26px;border-radius:999px;font-weight:700;font-size:1rem;border:2px solid transparent;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s}
-.btn:hover{transform:translateY(-2px)}
-.btn-primary{background:var(--navy);color:#fff;box-shadow:0 10px 24px rgba(31,42,68,.25)}
-.btn-gold{background:var(--gold);color:var(--navy-2)}
-.btn-wa{background:var(--wa);color:#fff;box-shadow:0 10px 24px rgba(37,211,102,.3)}
-.btn-dark{background:var(--navy);color:#fff}
-.btn-outline{border-color:var(--navy);color:var(--navy);background:#fff}
-.btn-ghost{border-color:var(--navy);color:var(--navy);background:transparent}
-.btn-light{border-color:rgba(255,255,255,.6);color:#fff}
-.eyebrow{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-2)}
-.section{padding:96px 0}
-.section-head{text-align:center;max-width:720px;margin:0 auto 52px}
-.section-head h2{font-size:clamp(2rem,4vw,3rem);line-height:1.1;font-weight:800;letter-spacing:-.02em;margin:10px 0 14px;color:var(--navy)}
-.section-head p{color:var(--muted);font-size:1.08rem}
-
-/* top strip */
-.topbar{background:var(--navy-2);color:#e9e2d2;font-size:.85rem;text-align:center;padding:9px 16px}
-.topbar b{color:var(--gold)}
-
-/* header */
-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;justify-content:space-between;height:96px;gap:20px}
-.brand{display:flex;align-items:center;gap:14px}
-.brand img{height:74px;width:auto}
-.brand .wm{display:flex;flex-direction:column;line-height:1}
-.brand .wm b{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.65rem;letter-spacing:.08em;color:var(--navy)}
-.brand .wm span{font-size:.7rem;letter-spacing:.32em;color:var(--gold-2);margin-top:6px;font-weight:700}
-.links{display:flex;align-items:center;gap:28px;font-weight:500;font-size:.98rem}
-.links a:not(.btn):hover{color:var(--gold-2)}
-.links .btn{padding:12px 20px;font-size:.95rem}
-.menu-btn{display:none;background:none;border:0;cursor:pointer;padding:8px}
-.menu-btn span{display:block;width:26px;height:2.5px;background:var(--navy);margin:5px 0;border-radius:2px}
-
-/* hero */
-.hero{background:radial-gradient(1200px 500px at 85% -10%,rgba(201,163,90,.22),transparent 60%),var(--paper);padding:72px 0 64px;overflow:hidden}
-.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
-.hero-logo{display:flex;align-items:center;gap:18px;margin-bottom:26px}
-.hero-logo img{height:110px}
-.hero-logo div{font-family:'Cormorant Garamond',serif;font-size:2.1rem;line-height:1;letter-spacing:.06em;color:var(--navy);font-weight:600}
-.hero-logo small{display:block;font-family:'DM Sans',sans-serif;font-size:.75rem;letter-spacing:.3em;color:var(--gold-2);margin-top:8px;font-weight:700}
-.hero h1{font-size:clamp(2.6rem,6vw,4.6rem);line-height:1.02;font-weight:800;letter-spacing:-.035em;color:var(--navy)}
-.hero h1 em{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;color:var(--gold-2);letter-spacing:-.01em}
-.hero p.lead{font-size:1.18rem;color:var(--muted);margin:22px 0 32px;max-width:560px}
-.hero-ctas{display:flex;flex-wrap:wrap;gap:14px}
-.hero-pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px}
-.pill{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);padding:9px 15px;border-radius:999px;font-size:.9rem;font-weight:500}
-.pill i{font-style:normal;color:var(--gold-2)}
-.hero-art{position:relative}
-.hero-art .main{border-radius:28px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:4/5}
-.hero-art .main img{width:100%;height:100%;object-fit:cover}
-.hero-art .float{position:absolute;left:-28px;bottom:36px;background:#fff;border-radius:16px;padding:14px 18px;box-shadow:var(--shadow);display:flex;gap:12px;align-items:center;max-width:270px}
-.hero-art .float b{display:block;color:var(--navy)}
-.hero-art .float span{font-size:.85rem;color:var(--muted)}
-.hero-art .float .ic{width:44px;height:44px;border-radius:12px;background:var(--cream);display:grid;place-items:center;font-size:1.3rem}
-
-/* marquee */
-.marquee{background:var(--navy);color:var(--cream);overflow:hidden;white-space:nowrap;padding:16px 0;font-weight:700;letter-spacing:.14em;font-size:.9rem}
-.marquee .track{display:inline-block;animation:mq 28s linear infinite}
-.marquee span{margin:0 22px}.marquee span.g{color:var(--gold)}
-@keyframes mq{to{transform:translateX(-50%)}}
-
-/* steps */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.step{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:32px}
-.step .n{width:46px;height:46px;border-radius:50%;background:var(--navy);color:var(--gold);display:grid;place-items:center;font-weight:800;margin-bottom:18px}
-.step h3{font-size:1.25rem;color:var(--navy);margin-bottom:8px}
-.step p{color:var(--muted)}
-
-/* categories */
-.cats{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
-.cat{position:relative;border-radius:var(--radius);overflow:hidden;background:var(--cream);display:block}
-.cat img{aspect-ratio:4/5;width:100%;object-fit:cover;transition:transform .5s}
-.cat:hover img{transform:scale(1.05)}
-.cat .info{position:absolute;inset:auto 0 0 0;padding:18px;background:linear-gradient(transparent,rgba(16,20,32,.82));color:#fff}
-.cat .info b{display:block;font-size:1.1rem}
-.cat .info span{font-size:.9rem;color:#f0e6cf}
-
-/* collection */
-.collection{background:var(--paper)}
-.filters{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:34px}
-.filters button{border:1.5px solid var(--line);background:#fff;padding:10px 18px;border-radius:999px;font:500 .95rem 'DM Sans',sans-serif;cursor:pointer}
-.filters button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.card{background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column;transition:box-shadow .2s,transform .2s}
-.card:hover{box-shadow:var(--shadow);transform:translateY(-3px)}
-.card .ph{background:#f1ede5;aspect-ratio:4/3;overflow:hidden;cursor:zoom-in}
-.card .ph img{width:100%;height:100%;object-fit:cover;object-position:var(--pos,center)}
-.card .bd{padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
-.card .tag{font-size:.72rem;font-weight:700;letter-spacing:.14em;color:var(--gold-2);text-transform:uppercase}
-.card h3{font-size:1.15rem;color:var(--navy)}
-.card p{color:var(--muted);font-size:.95rem;flex:1}
-.card .row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
-.card .price{font-weight:800;color:var(--navy)}
-.card .row a{font-weight:700;color:#128C4A;font-size:.95rem}
-.coll-note{text-align:center;margin-top:30px;color:var(--muted)}
-.coll-note a{color:var(--navy);font-weight:700;text-decoration:underline}
-
-/* bulk */
-.bulk{background:var(--navy);color:#fff;position:relative;overflow:hidden}
-.bulk:before{content:"";position:absolute;inset:0;background:radial-gradient(800px 400px at 10% 0%,rgba(201,163,90,.25),transparent 60%)}
-.bulk .container{position:relative}
-.bulk-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
-.bulk h2{font-size:clamp(2rem,4vw,3rem);line-height:1.08;font-weight:800;letter-spacing:-.02em}
-.bulk h2 em{font-family:'Cormorant Garamond',serif;font-weight:500;color:var(--gold)}
-.bulk p.lead{color:#cfd3dd;margin:18px 0 26px;font-size:1.08rem}
-.bulk ul{list-style:none;display:grid;gap:12px;margin-bottom:30px}
-.bulk li{display:flex;gap:12px;align-items:flex-start}
-.bulk li:before{content:"✦";color:var(--gold);flex:none}
-.bulk-pics{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.bulk-pics img{border-radius:16px;width:100%;height:100%;object-fit:cover;aspect-ratio:1/1}
-.bulk-pics img:first-child{grid-column:1/3;aspect-ratio:16/10}
-
-/* features */
-.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.feat{border:1px solid var(--line);border-radius:var(--radius);padding:28px;background:#fff}
-.feat .ic{width:52px;height:52px;border-radius:14px;background:var(--cream);display:grid;place-items:center;font-size:1.5rem;margin-bottom:16px}
-.feat h3{color:var(--navy);margin-bottom:6px;font-size:1.15rem}
-.feat p{color:var(--muted);font-size:.97rem}
-
-/* mockup builder (kept, restyled) */
-.mockup{background:var(--paper)}
-.mockup-layout{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
-.mockup-controls{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:26px;display:grid;gap:20px}
-.mc-group label{display:block;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-.mc-pills{display:flex;flex-wrap:wrap;gap:8px}
-.mc-pill{border:1.5px solid var(--line);background:#fff;padding:9px 14px;border-radius:12px;font:500 .9rem 'DM Sans',sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
-.mc-pill.active{border-color:var(--navy);background:var(--navy);color:#fff}
-.mc-price{font-size:.75rem;opacity:.75}
-.mc-colors{display:flex;flex-wrap:wrap;gap:10px}
-.mc-color{width:34px;height:34px;border-radius:50%;border:2px solid #ddd;cursor:pointer}
-.mc-color.active{outline:3px solid var(--gold);outline-offset:2px}
-.mc-upload{border:2px dashed #d9d4ca;border-radius:14px;transition:border-color .2s}
-.mc-upload-inner{display:flex;align-items:center;gap:10px;padding:14px;cursor:pointer;color:var(--muted);font-size:.92rem}
-.mc-range{width:100%;accent-color:var(--navy)}
-.mc-mini-btn{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:7px 12px;cursor:pointer;font:500 .9rem 'DM Sans',sans-serif}
-.mc-select{width:100%;padding:11px 12px;border-radius:12px;border:1.5px solid var(--line);font:500 1rem 'DM Sans',sans-serif;background:#fff}
-.mc-price-box{display:flex;align-items:baseline;gap:12px;background:var(--cream);border-radius:14px;padding:14px 16px}
-.mc-price-old{display:none}
-.mc-price-now{font-size:1.6rem;font-weight:800;color:var(--navy)}
-.mc-price-note{font-size:.85rem;color:var(--muted)}
-.mockup-canvas-wrap{position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:12px}
-.mockup-canvas-wrap canvas{width:100%;height:auto;border-radius:12px;touch-action:none}
-.mockup-badge{position:absolute;top:22px;left:22px;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;letter-spacing:.1em;padding:6px 10px;border-radius:999px}
-.mockup-hint{color:var(--muted);font-size:.9rem;margin-top:12px;text-align:center}
-
-/* size chart */
-.size-wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:center}
-.size-wrap h2{font-size:clamp(1.8rem,3.4vw,2.6rem);color:var(--navy);font-weight:800;letter-spacing:-.02em;margin:8px 0 12px}
-.size-wrap p{color:var(--muted)}
-table.sz{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:16px;overflow:hidden;font-size:.98rem}
-table.sz th,table.sz td{padding:13px 10px;text-align:center;border-bottom:1px solid var(--line)}
-table.sz th{background:var(--navy);color:#fff;font-weight:700}
-table.sz td:first-child{text-align:left;font-weight:700;color:var(--navy);padding-left:16px}
-table.sz tr:last-child td{border-bottom:0}
-table.sz tr:nth-child(even) td{background:var(--paper)}
-
-/* order form */
-.order{background:linear-gradient(180deg,#fff,var(--paper))}
-.order-box{display:grid;grid-template-columns:.85fr 1.15fr;gap:40px;background:#fff;border:1px solid var(--line);border-radius:26px;padding:40px;box-shadow:var(--shadow)}
-.order-box h2{font-size:clamp(1.8rem,3.2vw,2.5rem);color:var(--navy);font-weight:800;letter-spacing:-.02em;margin:8px 0 12px}
-.order-box p{color:var(--muted)}
-.contact-list{display:grid;gap:12px;margin-top:24px}
-.contact-list a{display:flex;align-items:center;gap:12px;font-weight:600;color:var(--navy)}
-.contact-list a span{width:40px;height:40px;border-radius:12px;background:var(--cream);display:grid;place-items:center}
-form.of{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-form.of .full{grid-column:1/3}
-form.of label{font-size:.8rem;font-weight:700;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px}
-form.of input,form.of select,form.of textarea{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;font:500 1rem 'DM Sans',sans-serif;background:#fff}
-form.of input:focus,form.of select:focus,form.of textarea:focus{outline:none;border-color:var(--navy)}
-form.of textarea{min-height:96px;resize:vertical}
-form.of .btn{width:100%}
-
-/* faq */
-.faq{max-width:820px;margin:0 auto;display:grid;gap:12px}
-.faq details{border:1px solid var(--line);border-radius:16px;padding:18px 22px;background:#fff}
-.faq summary{cursor:pointer;font-weight:700;color:var(--navy);list-style:none;display:flex;justify-content:space-between;gap:16px;font-size:1.05rem}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary:after{content:"+";font-size:1.4rem;line-height:1;color:var(--gold-2)}
-.faq details[open] summary:after{content:"−"}
-.faq details p{color:var(--muted);margin-top:10px}
-
-/* cta band */
-.band{background:var(--gold);padding:64px 0}
-.band .container{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px}
-.band h2{font-size:clamp(1.8rem,3.6vw,2.8rem);font-weight:800;color:var(--navy-2);letter-spacing:-.02em;line-height:1.1}
-.band p{color:#3a3020;margin-top:6px;font-weight:500}
-
-/* footer */
-footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
-.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:36px}
-.foot .fb{display:flex;align-items:center;gap:14px;margin-bottom:14px}
-.foot .fb img{height:72px}
-.foot .fb b{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;letter-spacing:.06em;font-weight:600;line-height:1}
-.foot h4{color:#fff;margin-bottom:14px;font-size:1rem}
-.foot a{display:block;margin-bottom:9px}
-.foot a:hover{color:var(--gold)}
-.foot-bottom{border-top:1px solid rgba(255,255,255,.12);margin-top:44px;padding-top:22px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:.88rem}
-
-/* floating wa + lightbox */
-.float-wa{position:fixed;right:18px;bottom:18px;z-index:60;background:var(--wa);color:#fff;border-radius:999px;padding:13px 18px;display:flex;gap:9px;align-items:center;font-weight:700;box-shadow:0 12px 28px rgba(37,211,102,.4)}
-.lightbox{position:fixed;inset:0;background:rgba(10,12,18,.9);display:none;place-items:center;z-index:80;padding:20px;cursor:zoom-out}
-.lightbox.on{display:grid}
-.lightbox img{max-height:90vh;border-radius:14px}
-
-.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s}
-.reveal.in{opacity:1;transform:none}
-
-@media (max-width:1024px){
-  .cats{grid-template-columns:repeat(3,1fr)}
-  .grid,.feats{grid-template-columns:repeat(2,1fr)}
-  .foot{grid-template-columns:1fr 1fr}
-}
-@media (max-width:860px){
-  .nav{height:78px}
-  .brand img{height:56px}.brand .wm b{font-size:1.25rem}.brand .wm span{font-size:.6rem}
-  .menu-btn{display:block}
-  .links{position:absolute;top:78px;left:0;right:0;background:#fff;flex-direction:column;align-items:stretch;gap:0;padding:8px 16px 18px;border-bottom:1px solid var(--line);display:none}
-  .links.open{display:flex}
-  .links a{padding:13px 4px;border-bottom:1px solid var(--line)}
-  .links .btn{margin-top:12px;border-bottom:0}
-  .hero-grid,.bulk-grid,.mockup-layout,.size-wrap,.order-box{grid-template-columns:1fr}
-  .hero{padding:44px 0}
-  .hero-logo img{height:84px}.hero-logo div{font-size:1.6rem}
-  .hero-art .float{left:12px}
-  .steps{grid-template-columns:1fr}
-  .section{padding:68px 0}
-  .order-box{padding:24px}
-  form.of{grid-template-columns:1fr} form.of .full{grid-column:auto}
-}
-@media (max-width:560px){
-  .cats{grid-template-columns:repeat(2,1fr)}
-  .grid,.feats{grid-template-columns:1fr}
-  .foot{grid-template-columns:1fr}
-  .float-wa span{display:none}
-  .btn{width:100%}
-}
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="topbar">Free design mockup on every order &nbsp;·&nbsp; Single pieces & <b>bulk batch orders</b> &nbsp;·&nbsp; WhatsApp +91 84315 73282</div>
+<div class="topbar">Design it live, see it before you pay &nbsp;·&nbsp; Single pieces & <b>bulk batch orders</b> &nbsp;·&nbsp; WhatsApp +91 84315 73282</div>
 
-<header>
+<header id="hdr">
   <div class="container nav">
-    <a href="#" class="brand" aria-label="The Customized House home">
+    <a href="#top" class="brand" aria-label="The Customized House home">
       <img src="assets/logo-navy.png" alt="The Customized House logo">
       <div class="wm"><b>THE CUSTOMIZED HOUSE</b><span>WEAR YOUR STORY</span></div>
     </a>
     <nav class="links" id="links">
       <a href="#shop">Shop</a>
-      <a href="#collection">Collection</a>
+      <a href="studio.html">Design Studio</a>
       <a href="#bulk">Bulk Orders</a>
-      <a href="#mockup">Design Your Own</a>
+      <a href="#sizes">Size Guide</a>
       <a href="#faq">FAQ</a>
-      <a class="btn btn-primary" href="#order">Order Now</a>
+      <a class="btn btn-primary" href="studio.html">Start designing</a>
     </nav>
-    <button class="menu-btn" aria-label="Open menu" onclick="document.getElementById('links').classList.toggle('open')"><span></span><span></span><span></span></button>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
 </header>
 
-<section class="hero">
+<section class="hero" id="top">
   <div class="container hero-grid">
     <div>
-      <div class="hero-logo"><img src="assets/logo-navy.png" alt=""><div>THE CUSTOMIZED<br>HOUSE<small>CUSTOM CLOTHING · BENGALURU</small></div></div>
-      <h1>Clothing that tells <em>your</em> story.</h1>
-      <p class="lead">Custom hoodies, T-shirts, sweatshirts and jackets for you, your batch, your team or your brand. Send your idea, see a free mockup, then we make it.</p>
-      <div class="hero-ctas">
-        <a class="btn btn-wa" href="https://wa.me/918431573282?text=Hi%20The%20Customized%20House%2C%20I%20want%20to%20place%20an%20order" target="_blank" rel="noopener">Start your order on WhatsApp</a>
-        <a class="btn btn-ghost" href="#mockup">Design it yourself</a>
+      <div class="hero-logo reveal"><img src="assets/logo-navy.png" alt=""><div>THE CUSTOMIZED<br>HOUSE<small>CUSTOM CLOTHING · BENGALURU</small></div></div>
+      <h1 class="reveal">Clothing that tells <em>your</em> story.</h1>
+      <p class="lead reveal">Custom hoodies, T-shirts, sweatshirts and jackets for you, your batch, your team or your brand. Design it live in our studio, see exactly how it looks, then we make it.</p>
+      <div class="hero-ctas reveal">
+        <a class="btn btn-primary" href="studio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.6 7.6"/><circle cx="11" cy="11" r="2"/></svg>Design yours now</a>
+        <a class="btn btn-ghost" href="https://wa.me/918431573282?text=Hi%20The%20Customized%20House%2C%20I%20want%20to%20place%20an%20order" target="_blank" rel="noopener">Chat on WhatsApp</a>
       </div>
-      <div class="hero-pills">
-        <span class="pill"><i>✦</i>Free mockup first</span>
+      <div class="hero-pills reveal">
+        <span class="pill"><i>✦</i>Live realistic preview</span>
         <span class="pill"><i>✦</i>From 1 piece to 100+</span>
         <span class="pill"><i>✦</i>Print & embroidery</span>
-        <span class="pill"><i>✦</i>Made in India</span>
+        <span class="pill"><i>✦</i>Made in Bengaluru</span>
       </div>
     </div>
-    <div class="hero-art">
-      <div class="main"><img src="assets/hero.jpg" alt="Custom jackets and sweatshirts by The Customized House"></div>
-      <div class="float"><div class="ic">🎨</div><div><b>Free mockup</b><span>See your design before you pay</span></div></div>
+    <div class="hero-art reveal">
+      <div class="main"><img src="assets/hero.jpg" alt="Custom jackets and sweatshirts by The Customized House" fetchpriority="high"></div>
+      <div class="float f1"><div class="ic">🎨</div><div><b>See it before you pay</b><span>Live preview in 16 colours</span></div></div>
+      <div class="float f2"><div class="dots"><i style="background:#1F2A44"></i><i style="background:#B3202D"></i><i style="background:#EEE6D6"></i><i style="background:#1F4A38"></i></div><div><b>5 products</b><span>Tees to jackets</span></div></div>
     </div>
   </div>
 </section>
 
 <div class="marquee" aria-hidden="true"><div class="track">
-  <span>YOUR STYLE</span><span class="g">✦</span><span>YOUR DESIGN</span><span class="g">✦</span><span>YOUR IDENTITY</span><span class="g">✦</span><span>BATCH MERCH</span><span class="g">✦</span><span>TEAM KITS</span><span class="g">✦</span><span>FREE MOCKUP</span><span class="g">✦</span>
-  <span>YOUR STYLE</span><span class="g">✦</span><span>YOUR DESIGN</span><span class="g">✦</span><span>YOUR IDENTITY</span><span class="g">✦</span><span>BATCH MERCH</span><span class="g">✦</span><span>TEAM KITS</span><span class="g">✦</span><span>FREE MOCKUP</span><span class="g">✦</span>
+  <span>YOUR STYLE</span><span class="g">✦</span><span>YOUR DESIGN</span><span class="g">✦</span><span>YOUR IDENTITY</span><span class="g">✦</span><span>BATCH MERCH</span><span class="g">✦</span><span>TEAM KITS</span><span class="g">✦</span><span>LIVE PREVIEW</span><span class="g">✦</span>
+  <span>YOUR STYLE</span><span class="g">✦</span><span>YOUR DESIGN</span><span class="g">✦</span><span>YOUR IDENTITY</span><span class="g">✦</span><span>BATCH MERCH</span><span class="g">✦</span><span>TEAM KITS</span><span class="g">✦</span><span>LIVE PREVIEW</span><span class="g">✦</span>
 </div></div>
+
+<section class="section showcase" id="mockup">
+  <div class="container sc-grid">
+    <div class="sc-stage reveal">
+      <div class="sc-tabs" id="scTabs">
+        <button data-p="tshirt">T-Shirt</button><button data-p="oversized">Oversized</button><button data-p="hoodie" class="on">Hoodie</button><button data-p="sweatshirt">Sweatshirt</button><button data-p="jacket">Jacket</button>
+      </div>
+      <canvas id="scCanvas" width="1000" height="1240" aria-label="Live product preview"></canvas>
+      <div class="sc-view" id="scView"><button data-v="front" class="on">Front</button><button data-v="back">Back</button></div>
+    </div>
+    <div class="sc-copy reveal">
+      <span class="eyebrow" style="color:var(--gold)">TCH Design Studio</span>
+      <h2>See it <em>exactly</em> as it will look.</h2>
+      <p class="lead">Our live preview puts your design on a real garment - the print follows every fold, seam and shadow. Try a colour:</p>
+      <div class="sc-colors" id="scColors"></div>
+      <div class="sc-feats">
+        <div><i>⬆</i>Upload your art, logo or photo</div>
+        <div><i>T</i>Add names and text in 12 fonts</div>
+        <div><i>↻</i>Drag, resize and rotate freely</div>
+        <div><i>◐</i>Front and back, 16 colours</div>
+        <div><i>⬇</i>Download your mockup</div>
+        <div><i>✓</i>Order straight on WhatsApp</div>
+      </div>
+      <a class="btn btn-gold" href="studio.html">Open the Design Studio →</a>
+      <p class="sc-note">Works on your phone too. No sign-up needed.</p>
+    </div>
+  </div>
+</section>
 
 <section class="section" id="how">
   <div class="container">
-    <div class="section-head reveal"><span class="eyebrow">How it works</span><h2>Your idea to your wardrobe in 3 steps</h2><p>No design skills needed. Tell us what you want and we handle the rest.</p></div>
+    <div class="section-head reveal"><span class="eyebrow">How it works</span><h2>Your idea to your wardrobe <em>in 3 steps</em></h2><p>No design skills needed. Design it yourself or just tell us what you want.</p></div>
     <div class="steps">
-      <div class="step reveal"><div class="n">1</div><h3>Share your idea</h3><p>Pick a product and send us your design, logo, names or just a reference picture on WhatsApp.</p></div>
-      <div class="step reveal"><div class="n">2</div><h3>Approve your free mockup</h3><p>We create a preview with sizes and price. Change anything until you love it - no charge.</p></div>
-      <div class="step reveal"><div class="n">3</div><h3>We make & deliver</h3><p>Your pieces are printed or embroidered, checked and handed over or shipped to you.</p></div>
+      <div class="step reveal"><div class="n">1</div><h3>Design or share your idea</h3><p>Build it in the Design Studio, or send us your logo, names or a reference picture on WhatsApp.</p></div>
+      <div class="step reveal"><div class="n">2</div><h3>Approve your mockup</h3><p>See the realistic preview with sizes and price. We check every design before printing - changes are free.</p></div>
+      <div class="step reveal"><div class="n">3</div><h3>We make & deliver</h3><p>Your pieces are printed or embroidered, quality checked and handed over or shipped to you.</p></div>
     </div>
   </div>
 </section>
 
 <section class="section" id="shop" style="padding-top:0">
   <div class="container">
-    <div class="section-head reveal"><span class="eyebrow">Shop by product</span><h2>Pick your base</h2><p>Every product can carry your print, embroidery, names or logo.</p></div>
+    <div class="section-head reveal"><span class="eyebrow">Shop by product</span><h2>Pick your <em>base</em></h2><p>Every product takes your print, embroidery, names or logo - tap one to start designing.</p></div>
     <div class="cats">
-      <a class="cat reveal" href="#order" data-prod="T-Shirt"><img src="assets/cat-tshirt.jpg" alt="Custom T-shirts" loading="lazy"><div class="info"><b>T-Shirts</b><span>From ₹699</span></div></a>
-      <a class="cat reveal" href="#order" data-prod="Oversized T-Shirt"><img src="assets/cat-oversized.jpg" alt="Custom oversized T-shirts" loading="lazy"><div class="info"><b>Oversized Tees</b><span>From ₹759</span></div></a>
-      <a class="cat reveal" href="#order" data-prod="Hoodie"><img src="assets/cat-hoodie.jpg" alt="Custom hoodies" loading="lazy"><div class="info"><b>Hoodies</b><span>From ₹899</span></div></a>
-      <a class="cat reveal" href="#order" data-prod="Sweatshirt"><img src="assets/cat-sweatshirt.jpg" alt="Custom sweatshirts" loading="lazy"><div class="info"><b>Sweatshirts</b><span>From ₹899</span></div></a>
-      <a class="cat reveal" href="#order" data-prod="Jacket"><img src="assets/cat-jacket.jpg" alt="Custom jackets" loading="lazy"><div class="info"><b>Jackets</b><span>From ₹999</span></div></a>
+      <a class="cat reveal" href="studio.html?p=tshirt"><img src="assets/cat-tshirt.jpg" alt="Custom T-shirts" loading="lazy"><span class="go">Customise →</span><div class="info"><b>T-Shirts</b><span>From ₹699</span></div></a>
+      <a class="cat reveal" href="studio.html?p=oversized"><img src="assets/cat-oversized.jpg" alt="Custom oversized T-shirts" loading="lazy"><span class="go">Customise →</span><div class="info"><b>Oversized Tees</b><span>From ₹759</span></div></a>
+      <a class="cat reveal" href="studio.html?p=hoodie"><img src="assets/cat-hoodie.jpg" alt="Custom hoodies" loading="lazy"><span class="go">Customise →</span><div class="info"><b>Hoodies</b><span>From ₹899</span></div></a>
+      <a class="cat reveal" href="studio.html?p=sweatshirt"><img src="assets/cat-sweatshirt.jpg" alt="Custom sweatshirts" loading="lazy"><span class="go">Customise →</span><div class="info"><b>Sweatshirts</b><span>From ₹899</span></div></a>
+      <a class="cat reveal" href="studio.html?p=jacket"><img src="assets/cat-jacket.jpg" alt="Custom jackets" loading="lazy"><span class="go">Customise →</span><div class="info"><b>Jackets</b><span>From ₹999</span></div></a>
     </div>
   </div>
 </section>
 
 <section class="section collection" id="collection">
   <div class="container">
-    <div class="section-head reveal"><span class="eyebrow">Our work</span><h2>The Collection</h2><p>Our latest designs. Tap any design to order it as-is or make it yours.</p></div>
+    <div class="section-head reveal"><span class="eyebrow">The Collection</span><h2>Ready-made <em>designs</em></h2><p>Our own designs, ready to order or make yours.</p></div>
     <div class="filters" id="filters"></div>
     <div class="grid" id="grid"></div>
-    <p class="coll-note">Have something else in mind? <a href="#order">Send us your idea</a> - we design it for free.</p>
   </div>
 </section>
 
@@ -371,7 +151,7 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
 
 <section class="section" id="why">
   <div class="container">
-    <div class="section-head reveal"><span class="eyebrow">Why The Customized House</span><h2>Made properly. Made personal.</h2></div>
+    <div class="section-head reveal"><span class="eyebrow">Why The Customized House</span><h2>Made properly. <em>Made personal.</em></h2></div>
     <div class="feats">
       <div class="feat reveal"><div class="ic">🎨</div><h3>Free design help</h3><p>Send a rough idea - we turn it into a print-ready design and mockup before you pay.</p></div>
       <div class="feat reveal"><div class="ic">🧵</div><h3>Print + embroidery</h3><p>DTF prints for bold, detailed artwork and embroidery for a premium chest logo.</p></div>
@@ -383,118 +163,7 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
   </div>
 </section>
 
-<section class="section mockup" id="mockup">
-  <div class="container">
-    <div class="section-head reveal"><span class="eyebrow">Live preview</span><h2>Design your own - see it instantly</h2><p>Upload your design, choose the product and colour, and preview the front and back. Then send it to us on WhatsApp.</p></div>
-    <div class="mockup-layout reveal">
-    <!-- Controls -->
-    <div class="mockup-controls">
-      <div class="mc-group">
-        <label>Product</label>
-        <div class="mc-pills" id="productPills">
-          <button class="mc-pill" data-val="tshirt" onclick="setProduct('tshirt',this)">T-Shirt<span class="mc-price">₹699</span></button>
-          <button class="mc-pill" data-val="oversized" onclick="setProduct('oversized',this)">Oversized<span class="mc-price">₹759</span></button>
-          <button class="mc-pill active" data-val="hoodie" onclick="setProduct('hoodie',this)">Hoodie<span class="mc-price">₹899</span></button>
-          <button class="mc-pill" data-val="sweatshirt" onclick="setProduct('sweatshirt',this)">Sweatshirt<span class="mc-price">₹899</span></button>
-          <button class="mc-pill" data-val="jacket" onclick="setProduct('jacket',this)">Jacket<span class="mc-price">₹999</span></button>
-        </div>
-      </div>
-
-      <div class="mc-group">
-        <label>Color</label>
-        <div class="mc-colors" id="colorPills">
-          <button class="mc-color" style="background:#f5f0e8" data-color="#f5f0e8" onclick="setColor('#f5f0e8',this)" title="Off-White"></button>
-          <button class="mc-color" style="background:#1a1a1a" data-color="#1a1a1a" onclick="setColor('#1a1a1a',this)" title="Black"></button>
-          <button class="mc-color" style="background:#d4cfc7" data-color="#d4cfc7" onclick="setColor('#d4cfc7',this)" title="Grey"></button>
-          <button class="mc-color" style="background:#3d3d3d" data-color="#3d3d3d" onclick="setColor('#3d3d3d',this)" title="Charcoal"></button>
-          <button class="mc-color active" style="background:#2b3a4e" data-color="#2b3a4e" onclick="setColor('#2b3a4e',this)" title="Navy"></button>
-          <button class="mc-color" style="background:#5c6148" data-color="#5c6148" onclick="setColor('#5c6148',this)" title="Olive"></button>
-          <button class="mc-color" style="background:#e8d5c0" data-color="#e8d5c0" onclick="setColor('#e8d5c0',this)" title="Beige"></button>
-          <button class="mc-color" style="background:#8b2d2d" data-color="#8b2d2d" onclick="setColor('#8b2d2d',this)" title="Maroon"></button>
-          <button class="mc-color" style="background:#1f4fbf" data-color="#1f4fbf" onclick="setColor('#1f4fbf',this)" title="Cobalt"></button>
-          <button class="mc-color" style="background:#f2f2f0" data-color="#f2f2f0" onclick="setColor('#f2f2f0',this)" title="White"></button>
-        </div>
-      </div>
-
-      <div class="mc-group">
-        <label>View</label>
-        <div class="mc-pills">
-          <button class="mc-pill mc-view active" onclick="setView('front',this)">Front</button>
-          <button class="mc-pill mc-view" onclick="setView('back',this)">Back</button>
-        </div>
-      </div>
-
-      <div class="mc-group">
-        <label>Front Design</label>
-        <div class="mc-upload" id="mcUploadFront">
-          <input type="file" id="mockupFileFront" accept="image/*" style="display:none">
-          <div class="mc-upload-inner" onclick="document.getElementById('mockupFileFront').click()">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-            <span id="uploadLabelFront">Upload front design</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="mc-group">
-        <label>Back Design</label>
-        <div class="mc-upload" id="mcUploadBack">
-          <input type="file" id="mockupFileBack" accept="image/*" style="display:none">
-          <div class="mc-upload-inner" onclick="document.getElementById('mockupFileBack').click()">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-            <span id="uploadLabelBack">Upload back design</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="mc-group" id="designControls" style="display:none">
-        <label id="sizeLabel">Front Design Size</label>
-        <input type="range" id="designSize" min="40" max="280" value="140" class="mc-range" oninput="updateMockup()">
-        <div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--text-muted);margin-top:2px"><span>Small</span><span>Large</span></div>
-      </div>
-
-      <div class="mc-group" id="posControls" style="display:none">
-        <label id="posLabel">Position - drag on mockup or use buttons</label>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button class="mc-mini-btn" onclick="moveDesign(0,-8)">↑</button>
-          <button class="mc-mini-btn" onclick="moveDesign(0,8)">↓</button>
-          <button class="mc-mini-btn" onclick="moveDesign(-8,0)">←</button>
-          <button class="mc-mini-btn" onclick="moveDesign(8,0)">→</button>
-          <button class="mc-mini-btn" onclick="centerDesign()">Center</button>
-        </div>
-      </div>
-
-      <div class="mc-group">
-        <label>Size</label>
-        <select class="mc-select" id="sizeSelect">
-          <option>S</option><option selected>M</option><option>L</option><option>XL</option><option>XXL</option>
-        </select>
-      </div>
-
-      <div class="mc-price-box">
-        <div class="mc-price-old" id="mcOldPrice"></div>
-        <div class="mc-price-now" id="mcNowPrice">₹899</div>
-        <div class="mc-price-note">Your design, same price</div>
-      </div>
-
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a id="waOrderBtn" href="#" target="_blank" class="btn btn-dark" style="flex:1;justify-content:center;min-width:160px">Order on WhatsApp</a>
-        <button class="btn btn-outline" style="flex:1;min-width:140px" onclick="downloadMockup()">Download Mockup</button>
-      </div>
-    </div>
-
-    <!-- Canvas Preview -->
-    <div class="mockup-preview">
-      <div class="mockup-canvas-wrap">
-        <canvas id="mockupCanvas" width="1000" height="1240"></canvas>
-        <div class="mockup-badge">Live Preview</div>
-      </div>
-      <p class="mockup-hint">Tip: use a PNG with a transparent background for the most realistic print. Drag the design to move it.</p>
-    </div>
-  </div>
-  </div>
-</section>
-
-<section class="section" id="sizes">
+<section class="section sizes-sec" id="sizes">
   <div class="container size-wrap">
     <div class="reveal"><span class="eyebrow">Size guide</span><h2>Find your fit</h2><p>Hoodie measurements in inches (±1 inch). Want it oversized? Go one size up. Not sure? Send us your chest and length and we will suggest the size.</p></div>
     <div class="reveal" style="overflow-x:auto">
@@ -515,14 +184,14 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
       <div>
         <span class="eyebrow">Place an order</span>
         <h2>Tell us what you want</h2>
-        <p>Fill this in and tap the button - it opens WhatsApp with your details ready to send. Attach your design or reference picture in the chat.</p>
+        <p>Fill this in and tap the button - it opens WhatsApp with your details ready to send. Attach your design or reference picture in the chat. Prefer to design it yourself? <a href="studio.html" style="color:var(--navy);font-weight:700;text-decoration:underline">Open the Design Studio</a>.</p>
         <div class="contact-list">
           <a href="https://wa.me/918431573282" target="_blank" rel="noopener"><span>💬</span>WhatsApp +91 84315 73282</a>
           <a href="tel:+918431573282"><span>📞</span>Call +91 84315 73282</a>
           <a href="https://www.instagram.com/_the_customized_house" target="_blank" rel="noopener"><span>📸</span>@_the_customized_house</a>
         </div>
       </div>
-      <form class="of" id="orderForm" onsubmit="return sendOrder(event)">
+      <form class="of" id="orderForm">
         <div><label for="fName">Your name</label><input id="fName" required placeholder="Full name"></div>
         <div><label for="fPhone">WhatsApp number</label><input id="fPhone" type="tel" placeholder="10-digit number"></div>
         <div><label for="fProd">Product</label><select id="fProd"><option>Hoodie</option><option>T-Shirt</option><option>Oversized T-Shirt</option><option>Sweatshirt</option><option>Jacket</option><option>Jersey</option><option>Other</option></select></div>
@@ -538,10 +207,11 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
 
 <section class="section" id="faq" style="padding-top:0">
   <div class="container">
-    <div class="section-head reveal"><span class="eyebrow">FAQ</span><h2>Questions, answered</h2></div>
+    <div class="section-head reveal"><span class="eyebrow">FAQ</span><h2>Questions, <em>answered</em></h2></div>
     <div class="faq">
       <details class="reveal"><summary>Can I order just one piece?</summary><p>Yes. We make single custom pieces as well as bulk orders for batches, teams and companies.</p></details>
-      <details class="reveal"><summary>Do I need my own design?</summary><p>No. Send us your idea, names or a reference picture and we create the design and a free mockup for you.</p></details>
+      <details class="reveal"><summary>Do I need my own design?</summary><p>No. Design it in our studio with text and fonts, or send us your idea, names or a reference picture and we create the design for you.</p></details>
+      <details class="reveal"><summary>How accurate is the live preview?</summary><p>Very close. The preview uses real garment photos, so you see the colour, folds and print placement. We still check every design before printing and send you a final mockup to approve.</p></details>
       <details class="reveal"><summary>How do I pay?</summary><p>After you approve the mockup we confirm the final price on WhatsApp. For bulk orders we take an advance to start and the balance on delivery.</p></details>
       <details class="reveal"><summary>How long does an order take?</summary><p>It depends on the product and quantity. We confirm the delivery date with you before we start, so you know exactly when to expect it.</p></details>
       <details class="reveal"><summary>Can every person in a group get their own name?</summary><p>Yes. Send us the list of names and sizes and we prepare a separate print file for each person.</p></details>
@@ -552,8 +222,11 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
 
 <section class="band">
   <div class="container">
-    <div><h2>Ready to wear your story?</h2><p>Message us now - your free mockup is one chat away.</p></div>
-    <a class="btn btn-primary" href="https://wa.me/918431573282?text=Hi%20The%20Customized%20House%2C%20I%20want%20to%20place%20an%20order" target="_blank" rel="noopener">Chat on WhatsApp</a>
+    <div><h2>Ready to wear your story?</h2><p>Design it now, or message us - we reply fast.</p></div>
+    <div class="acts">
+      <a class="btn btn-primary" href="studio.html">Start designing</a>
+      <a class="btn btn-wa" href="https://wa.me/918431573282?text=Hi%20The%20Customized%20House%2C%20I%20want%20to%20place%20an%20order" target="_blank" rel="noopener">Chat on WhatsApp</a>
+    </div>
   </div>
 </section>
 
@@ -562,10 +235,10 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
     <div class="foot">
       <div>
         <div class="fb"><img src="assets/logo-gold.png" alt="The Customized House"><b>THE CUSTOMIZED<br>HOUSE</b></div>
-        <p>Custom clothing for individuals, batches, teams and brands. Designed with you, made with care.</p>
+        <p>Custom clothing for individuals, batches, teams and brands. Designed with you, made with care in Bengaluru.</p>
       </div>
-      <div><h4>Shop</h4><a href="#shop">T-Shirts</a><a href="#shop">Oversized Tees</a><a href="#shop">Hoodies</a><a href="#shop">Sweatshirts</a><a href="#shop">Jackets</a></div>
-      <div><h4>Explore</h4><a href="#collection">Collection</a><a href="#bulk">Bulk Orders</a><a href="#mockup">Design Your Own</a><a href="#sizes">Size Guide</a><a href="#faq">FAQ</a></div>
+      <div><h4>Shop</h4><a href="studio.html?p=tshirt">T-Shirts</a><a href="studio.html?p=oversized">Oversized Tees</a><a href="studio.html?p=hoodie">Hoodies</a><a href="studio.html?p=sweatshirt">Sweatshirts</a><a href="studio.html?p=jacket">Jackets</a></div>
+      <div><h4>Explore</h4><a href="studio.html">Design Studio</a><a href="#bulk">Bulk Orders</a><a href="#sizes">Size Guide</a><a href="#order">Place an order</a><a href="#faq">FAQ</a></div>
       <div><h4>Contact</h4><a href="https://wa.me/918431573282" target="_blank" rel="noopener">WhatsApp +91 84315 73282</a><a href="tel:+918431573282">Call us</a><a href="https://www.instagram.com/_the_customized_house" target="_blank" rel="noopener">Instagram</a><a>Bengaluru, India</a></div>
     </div>
     <div class="foot-bottom"><span>© <span id="yr">2026</span> The Customized House. All rights reserved.</span><span>Wear your story.</span></div>
@@ -577,256 +250,9 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
   <span>Order Now</span>
 </a>
 
-<div class="lightbox" id="lightbox" onclick="this.classList.remove('on')"><img id="lightboxImg" src="" alt=""></div>
+<div class="lightbox" id="lightbox"><img id="lightboxImg" src="" alt=""></div>
 
-<script>
-/* ===== COLLECTION - add new designs here =====
-   Put the image in the assets folder, then add one line:
-   {img:'assets/your-file.jpg', title:'Design name', tag:'hoodie', desc:'Short line', price:'₹899'}
-   tag can be: hoodie, tshirt, oversized, sweatshirt, jacket, batch */
-const DESIGNS = [];
-const TAGS = {all:'All', batch:'Batch / Graduation', hoodie:'Hoodies', tshirt:'T-Shirts', oversized:'Oversized', sweatshirt:'Sweatshirts', jacket:'Jackets'};
-const WA = 'https://wa.me/918431573282?text=';
-function renderFilters(){
-  const used = ['all', ...new Set(DESIGNS.map(d=>d.tag))];
-  const box = document.getElementById('filters');
-  box.innerHTML = used.length>2 ? used.map((t,i)=>`<button class="${i?'':'on'}" data-t="${t}">${TAGS[t]||t}</button>`).join('') : '';
-  box.querySelectorAll('button').forEach(b=>b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderGrid(b.dataset.t)});
-}
-function renderGrid(t='all'){
-  if(!DESIGNS.length){document.getElementById('grid').innerHTML='<div style="grid-column:1/-1;text-align:center;background:#fff;border:1px dashed var(--line);border-radius:18px;padding:48px 20px"><h3 style="color:var(--navy);font-size:1.4rem;margin-bottom:8px">New collection dropping soon</h3><p style="color:var(--muted);margin-bottom:18px">Fresh designs are on the way. Want something now? Send us your idea and get a free mockup.</p><a class="btn btn-primary" href="#order">Send your idea</a></div>';return}
-  document.getElementById('grid').innerHTML = DESIGNS.filter(d=>t==='all'||d.tag===t).map(d=>`
-    <article class="card">
-      <div class="ph"><img style="--pos:${d.pos||'center'}" src="${d.img}" alt="${d.title}" loading="lazy" onclick="openLB(this.src)"></div>
-      <div class="bd"><span class="tag">${TAGS[d.tag]||d.tag}</span><h3>${d.title}</h3><p>${d.desc}</p>
-      <div class="row"><span class="price">${d.price}</span><a href="${WA+encodeURIComponent('Hi The Customized House, I want to order the design: '+d.title)}" target="_blank" rel="noopener">Order →</a></div></div>
-    </article>`).join('');
-}
-function openLB(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('on')}
-renderFilters(); renderGrid();
-
-/* product cards pre-fill the order form */
-document.querySelectorAll('.cat').forEach(c=>c.addEventListener('click',()=>{const p=c.dataset.prod;const s=document.getElementById('fProd');[...s.options].forEach(o=>{if(o.text===p)s.value=o.text})}));
-
-/* order form -> WhatsApp */
-function sendOrder(e){
-  e.preventDefault();
-  const v=id=>document.getElementById(id).value.trim();
-  const msg=['Hi The Customized House, I want to place an order.','Name: '+v('fName'),'Phone: '+(v('fPhone')||'-'),'Product: '+v('fProd'),'Quantity: '+v('fQty'),'Colour: '+(v('fColour')||'-'),'Size(s): '+(v('fSize')||'-'),'Idea: '+(v('fIdea')||'-')].join('\n');
-  window.open(WA+encodeURIComponent(msg),'_blank');
-  return false;
-}
-
-/* close mobile menu after tapping a link */
-document.querySelectorAll('#links a').forEach(a=>a.addEventListener('click',()=>document.getElementById('links').classList.remove('open')));
-document.getElementById('yr').textContent=new Date().getFullYear();
-
-/* reveal on scroll */
-const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.08});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
-// ═══ MOCKUP BUILDER ENGINE (photo-realistic) ═══
-const CVS = document.getElementById('mockupCanvas');
-const CTX = CVS.getContext('2d');
-const RES = 2; // internal resolution multiplier (canvas is 1000x1240, logic is 500x620)
-let mockState = {
-  product: 'hoodie',
-  color: '#2b3a4e',
-  view: 'front',
-  front: { img: null, x: 190, y: 175, w: 120 },
-  back:  { img: null, x: 150, y: 150, w: 200 },
-  dragging: false, dragOffX: 0, dragOffY: 0, hideGuide: false
-};
-const PRICES = {tshirt:{now:'₹699'},oversized:{now:'₹759'},hoodie:{now:'₹899'},sweatshirt:{now:'₹899'},jacket:{now:'₹999'}};
-
-// Print areas (logical 500x620 coordinates) - design is clipped to these
-const AREAS = {
-  hoodie:{front:[150,140,200,190], back:[130,120,240,330]},
-  other:{front:[130,90,240,380], back:[130,90,240,380]}
-};
-
-// Photo-based garments: greyscale shading (128 = flat) + alpha mask, recoloured on the fly
-const PHOTO = {hoodie:{front:'assets/mock-hoodie-front.png', back:'assets/mock-hoodie-back.png'}};
-const SHADE = {};
-function loadShade(prod, view){
-  return new Promise(res=>{
-    const key=prod+'-'+view; if(SHADE[key]) return res(SHADE[key]);
-    const im=new Image(); im.onload=()=>{
-      const c=document.createElement('canvas'); c.width=im.width; c.height=im.height;
-      const x=c.getContext('2d'); x.drawImage(im,0,0);
-      const d=x.getImageData(0,0,c.width,c.height).data;
-      const n=c.width*c.height, S=new Float32Array(n), A=new Uint8ClampedArray(n);
-      for(let i=0;i<n;i++){S[i]=d[i*4]/128; A[i]=d[i*4+3];}
-      SHADE[key]={S,A,w:c.width,h:c.height}; res(SHADE[key]);
-    }; im.src=PHOTO[prod][view];
-  });
-}
-const FLAT=document.createElement('canvas'); FLAT.width=1000; FLAT.height=1240;
-const FCTX=FLAT.getContext('2d');
-
-function hexRgb(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]}
-function drawBackdrop(){
-  const g=CTX.createLinearGradient(0,0,0,1240); g.addColorStop(0,'#f6f3ee'); g.addColorStop(1,'#e8e3da');
-  CTX.fillStyle=g; CTX.fillRect(0,0,1000,1240);
-  const sh=CTX.createRadialGradient(500,1170,20,500,1170,380);
-  sh.addColorStop(0,'rgba(40,32,20,.22)'); sh.addColorStop(1,'rgba(40,32,20,0)');
-  CTX.fillStyle=sh; CTX.beginPath(); CTX.ellipse(500,1170,380,46,0,0,Math.PI*2); CTX.fill();
-}
-function drawDesignOn(ctx, area){
-  const cur=getCurDesign(); if(!cur.img) return;
-  const sz=parseInt(document.getElementById('designSize').value); cur.w=sz;
-  const dh=sz*(cur.img.height/cur.img.width);
-  ctx.save(); ctx.beginPath(); ctx.rect(area[0],area[1],area[2],area[3]); ctx.clip();
-  ctx.drawImage(cur.img,cur.x,cur.y,sz,dh); ctx.restore();
-}
-function drawGuides(area){
-  if(mockState.hideGuide) return;
-  const cur=getCurDesign();
-  CTX.save(); CTX.scale(RES,RES);
-  CTX.strokeStyle='rgba(201,163,90,.9)'; CTX.lineWidth=1; CTX.setLineDash([5,4]);
-  if(cur.img){const dh=cur.w*(cur.img.height/cur.img.width); CTX.strokeRect(cur.x,cur.y,cur.w,dh);}
-  else{CTX.strokeStyle='rgba(255,255,255,.55)'; CTX.strokeRect(area[0],area[1],area[2],area[3]);
-    CTX.setLineDash([]); CTX.fillStyle='rgba(255,255,255,.85)'; CTX.font='500 11px "DM Sans",sans-serif'; CTX.textAlign='center';
-    CTX.fillText('Print area - upload a '+mockState.view+' design',area[0]+area[2]/2,area[1]+area[3]/2);}
-  CTX.restore();
-}
-
-let rafPending=false;
-function updateMockup(){ if(rafPending) return; rafPending=true; requestAnimationFrame(()=>{rafPending=false; renderMockup();}); }
-
-async function renderMockup(){
-  const s=mockState;
-  CTX.setTransform(1,0,0,1,0,0); CTX.clearRect(0,0,1000,1240); drawBackdrop();
-  if(PHOTO[s.product]){
-    const area=AREAS.hoodie[s.view];
-    const sh=await loadShade(s.product,s.view);
-    // flat colour + design
-    FCTX.setTransform(1,0,0,1,0,0); FCTX.fillStyle=s.color; FCTX.fillRect(0,0,1000,1240);
-    FCTX.save(); FCTX.scale(RES,RES); drawDesignOn(FCTX,area); FCTX.restore();
-    const img=FCTX.getImageData(0,0,1000,1240), d=img.data, S=sh.S, A=sh.A;
-    for(let i=0,j=0;i<S.length;i++,j+=4){
-      const k=S[i]*0.95, hl=S[i]>1?(S[i]-1)*70:0;
-      d[j]=Math.min(255,d[j]*k+hl); d[j+1]=Math.min(255,d[j+1]*k+hl); d[j+2]=Math.min(255,d[j+2]*k+hl); d[j+3]=A[i];
-    }
-    FCTX.putImageData(img,0,0);
-    CTX.drawImage(FLAT,0,0);
-    drawGuides(area);
-  } else {
-    const area=AREAS.other[s.view];
-    CTX.save(); CTX.scale(RES,RES);
-    const prod=PRODUCTS[s.product]; if(prod)(s.view==='front'?prod.front:prod.back)(CTX,s.color);
-    // soft fabric light/shadow
-    const g=CTX.createLinearGradient(60,0,440,0); g.addColorStop(0,'rgba(0,0,0,.10)'); g.addColorStop(.35,'rgba(255,255,255,.06)'); g.addColorStop(.7,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,.12)');
-    CTX.globalCompositeOperation='source-atop'; CTX.fillStyle=g; CTX.fillRect(0,0,500,620); CTX.globalCompositeOperation='source-over';
-    drawDesignOn(CTX,area);
-    CTX.restore();
-    drawGuides(area);
-  }
-  // labels
-  CTX.save(); CTX.scale(RES,RES);
-  CTX.fillStyle='rgba(31,42,68,.45)'; CTX.font='600 11px "DM Sans",sans-serif'; CTX.textAlign='center';
-  CTX.fillText((s.view==='front'?'FRONT':'BACK')+' VIEW', 250, 604);
-  CTX.restore();
-
-  document.getElementById('sizeLabel').textContent=(s.view==='front'?'Front':'Back')+' Design Size';
-  document.getElementById('posLabel').textContent=(s.view==='front'?'Front':'Back')+' Position - drag on the mockup or use the buttons';
-  document.getElementById('mcUploadFront').style.borderColor=s.view==='front'?'#1F2A44':'#d9d4ca';
-  document.getElementById('mcUploadBack').style.borderColor=s.view==='back'?'#1F2A44':'#d9d4ca';
-  const p=PRICES[s.product], size=document.getElementById('sizeSelect').value;
-  const waText=encodeURIComponent('Hi The Customized House, I want a custom '+s.product+' ('+size+', '+getColorName(s.color)+'). Front design: '+(s.front.img?'Yes':'No')+'. Back design: '+(s.back.img?'Yes':'No')+'. Price: '+p.now+'. I will share my design(s) here.');
-  document.getElementById('waOrderBtn').href='https://wa.me/918431573282?text='+waText;
-}
-
-const PRODUCTS = {
-  tshirt: {
-    front: (c,clr)=>{c.fillStyle=clr;c.beginPath();c.moveTo(155,80);c.lineTo(110,95);c.lineTo(70,150);c.lineTo(105,165);c.lineTo(130,115);c.lineTo(130,460);c.lineTo(370,460);c.lineTo(370,115);c.lineTo(395,165);c.lineTo(430,150);c.lineTo(390,95);c.lineTo(345,80);c.quadraticCurveTo(310,55,250,55);c.quadraticCurveTo(190,55,155,80);c.closePath();c.fill();c.strokeStyle=adjustColor(clr,-.12);c.lineWidth=1.5;c.stroke();c.beginPath();c.ellipse(250,72,48,16,0,0,Math.PI);c.strokeStyle=adjustColor(clr,-.15);c.lineWidth=1.5;c.stroke()},
-    back: (c,clr)=>{c.fillStyle=clr;c.beginPath();c.moveTo(155,80);c.lineTo(110,95);c.lineTo(70,150);c.lineTo(105,165);c.lineTo(130,115);c.lineTo(130,460);c.lineTo(370,460);c.lineTo(370,115);c.lineTo(395,165);c.lineTo(430,150);c.lineTo(390,95);c.lineTo(345,80);c.quadraticCurveTo(310,60,250,60);c.quadraticCurveTo(190,60,155,80);c.closePath();c.fill();c.strokeStyle=adjustColor(clr,-.12);c.lineWidth=1.5;c.stroke();c.beginPath();c.moveTo(250,75);c.lineTo(250,100);c.strokeStyle=adjustColor(clr,-.1);c.lineWidth=1;c.stroke()}
-  },
-  oversized: {
-    front: (c,clr)=>{c.fillStyle=clr;c.beginPath();c.moveTo(148,82);c.lineTo(90,100);c.lineTo(45,168);c.lineTo(88,185);c.lineTo(118,120);c.lineTo(118,475);c.lineTo(382,475);c.lineTo(382,120);c.lineTo(412,185);c.lineTo(455,168);c.lineTo(410,100);c.lineTo(352,82);c.quadraticCurveTo(312,54,250,54);c.quadraticCurveTo(188,54,148,82);c.closePath();c.fill();c.strokeStyle=adjustColor(clr,-.12);c.lineWidth=1.5;c.stroke();c.beginPath();c.ellipse(250,72,50,17,0,0,Math.PI);c.strokeStyle=adjustColor(clr,-.15);c.lineWidth=1.5;c.stroke()},
-    back: (c,clr)=>{c.fillStyle=clr;c.beginPath();c.moveTo(148,82);c.lineTo(90,100);c.lineTo(45,168);c.lineTo(88,185);c.lineTo(118,120);c.lineTo(118,475);c.lineTo(382,475);c.lineTo(382,120);c.lineTo(412,185);c.lineTo(455,168);c.lineTo(410,100);c.lineTo(352,82);c.quadraticCurveTo(312,58,250,58);c.quadraticCurveTo(188,58,148,82);c.closePath();c.fill();c.strokeStyle=adjustColor(clr,-.12);c.lineWidth=1.5;c.stroke();c.beginPath();c.moveTo(250,72);c.lineTo(250,100);c.strokeStyle=adjustColor(clr,-.1);c.lineWidth=1;c.stroke()}
-  },
-  hoodie: {
-    front: (c,clr)=>{c.fillStyle=clr;c.beginPath();c.moveTo(150,95);c.lineTo(95,110);c.lineTo(55,180);c.lineTo(95,195);c.lineTo(125,130);c.lineTo(125,470);c.lineTo(375,470);c.lineTo(375,130);c.lineTo(405,195);c.lineTo(445,180);c.lineTo(405,110);c.lineTo(350,95);c.quadraticCurveTo(330,35,250,30);c.quadraticCurveTo(170,35,150,95);c.closePath();c.fill();c.strokeStyle=adjustColor(clr,-.12);c.lineWidth=1.5;c.stroke();c.beginPath();c.moveTo(185,95);c.quadraticCurveTo(190,42,250,35);c.quadraticCurveTo(310,42,315,95);c.strokeStyle=adjustColor(clr,-.1);c.lineWidth=1.5;c.stroke();c.beginPath();c.moveTo(185,350);c.lineTo(315,350);c.lineTo(315,410);c.lineTo(185,410);c.closePath();c.strokeStyle=adjustColor(clr,-.08);c.lineWidth=1;c.stroke();c.strokeStyle=adjustColor(clr,-.15);c.lineWidth=1;c.beginPath();c.moveTo(235,95);c.lineTo(230,140);c.stroke();c.beginPath();c.moveTo(265,95);c.lineTo(270,140);c.stroke()},
-    back: (c,clr)=>{c.fillStyle=clr;c.beginPath();c.moveTo(150,95);c.lineTo(95,110);c.lineTo(55,180);c.lineTo(95,195);c.lineTo(125,130);c.lineTo(125,470);c.lineTo(375,470);c.lineTo(375,130);c.lineTo(405,195);c.lineTo(445,180);c.lineTo(405,110);c.lineTo(350,95);c.quadraticCurveTo(330,35,250,30);c.quadraticCurveTo(170,35,150,95);c.closePath();c.fill();c.strokeStyle=adjustColor(clr,-.12);c.lineWidth=1.5;c.stroke();c.beginPath();c.moveTo(185,95);c.quadraticCurveTo(190,42,250,35);c.quadraticCurveTo(310,42,315,95);c.strokeStyle=adjustColor(clr,-.1);c.lineWidth=1.5;c.stroke()}
-  },
-  sweatshirt: {
-    front: (c,clr)=>{c.fillStyle=clr;c.beginPath();c.moveTo(150,85);c.lineTo(95,100);c.lineTo(55,172);c.lineTo(95,188);c.lineTo(125,122);c.lineTo(125,465);c.lineTo(375,465);c.lineTo(375,122);c.lineTo(405,188);c.lineTo(445,172);c.lineTo(405,100);c.lineTo(350,85);c.quadraticCurveTo(310,58,250,58);c.quadraticCurveTo(190,58,150,85);c.closePath();c.fill();c.strokeStyle=adjustColor(clr,-.12);c.lineWidth=1.5;c.stroke();c.beginPath();c.ellipse(250,74,42,14,0,0,Math.PI);c.fillStyle=adjustColor(clr,-.06);c.fill();c.strokeStyle=adjustColor(clr,-.15);c.lineWidth=1.5;c.stroke();c.fillStyle=adjustColor(clr,-.04);c.fillRect(125,448,250,17)},
-    back: (c,clr)=>{c.fillStyle=clr;c.beginPath();c.moveTo(150,85);c.lineTo(95,100);c.lineTo(55,172);c.lineTo(95,188);c.lineTo(125,122);c.lineTo(125,465);c.lineTo(375,465);c.lineTo(375,122);c.lineTo(405,188);c.lineTo(445,172);c.lineTo(405,100);c.lineTo(350,85);c.quadraticCurveTo(310,62,250,62);c.quadraticCurveTo(190,62,150,85);c.closePath();c.fill();c.strokeStyle=adjustColor(clr,-.12);c.lineWidth=1.5;c.stroke();c.fillStyle=adjustColor(clr,-.04);c.fillRect(125,448,250,17)}
-  },
-  jacket: {
-    front: (c,clr)=>{c.fillStyle=clr;c.beginPath();c.moveTo(155,82);c.lineTo(98,98);c.lineTo(55,172);c.lineTo(98,188);c.lineTo(128,118);c.lineTo(128,465);c.lineTo(372,465);c.lineTo(372,118);c.lineTo(402,188);c.lineTo(445,172);c.lineTo(402,98);c.lineTo(345,82);c.lineTo(330,55);c.lineTo(250,50);c.lineTo(170,55);c.closePath();c.fill();c.strokeStyle=adjustColor(clr,-.12);c.lineWidth=1.5;c.stroke();c.beginPath();c.moveTo(195,82);c.lineTo(215,55);c.lineTo(250,50);c.lineTo(285,55);c.lineTo(305,82);c.strokeStyle=adjustColor(clr,-.15);c.lineWidth=1.5;c.stroke();c.beginPath();c.moveTo(250,82);c.lineTo(250,465);c.strokeStyle=adjustColor(clr,-.2);c.lineWidth=2;c.stroke();c.fillStyle=adjustColor(clr,-.04);c.fillRect(128,448,244,17)},
-    back: (c,clr)=>{c.fillStyle=clr;c.beginPath();c.moveTo(155,82);c.lineTo(98,98);c.lineTo(55,172);c.lineTo(98,188);c.lineTo(128,118);c.lineTo(128,465);c.lineTo(372,465);c.lineTo(372,118);c.lineTo(402,188);c.lineTo(445,172);c.lineTo(402,98);c.lineTo(345,82);c.lineTo(330,55);c.lineTo(250,50);c.lineTo(170,55);c.closePath();c.fill();c.strokeStyle=adjustColor(clr,-.12);c.lineWidth=1.5;c.stroke();c.fillStyle=adjustColor(clr,-.04);c.fillRect(128,448,244,17)}
-  }
-};
-
-
-
-function adjustColor(hex, amount){
-  let [r,g,b]=hexRgb(hex);
-  r=Math.max(0,Math.min(255,Math.round(r*(1+amount))));g=Math.max(0,Math.min(255,Math.round(g*(1+amount))));b=Math.max(0,Math.min(255,Math.round(b*(1+amount))));
-  return `rgb(${r},${g},${b})`;
-}
-function getCurDesign(){ return mockState[mockState.view]; }
-function getColorName(hex){const m={'#f5f0e8':'Off-White','#1a1a1a':'Black','#d4cfc7':'Grey','#3d3d3d':'Charcoal','#2b3a4e':'Navy','#5c6148':'Olive','#e8d5c0':'Beige','#8b2d2d':'Maroon','#1f4fbf':'Cobalt','#f2f2f0':'White'};return m[hex]||hex}
-function curArea(){return (PHOTO[mockState.product]?AREAS.hoodie:AREAS.other)[mockState.view]}
-function setProduct(p,btn){mockState.product=p;document.querySelectorAll('#productPills .mc-pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('mcNowPrice').textContent=PRICES[p].now;['front','back'].forEach(v=>{if(mockState[v].img)fitDesign(v)});updateMockup()}
-function setColor(clr,btn){mockState.color=clr;document.querySelectorAll('.mc-color').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateMockup()}
-function setView(v,btn){
-  getCurDesign().w=parseInt(document.getElementById('designSize').value);
-  mockState.view=v; document.querySelectorAll('.mc-view').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
-  const c=getCurDesign(); document.getElementById('designSize').value=c.w||140;
-  document.getElementById('designControls').style.display=c.img?'':'none';
-  document.getElementById('posControls').style.display=c.img?'':'none';
-  updateMockup();
-}
-function moveDesign(dx,dy){const c=getCurDesign();c.x+=dx;c.y+=dy;updateMockup()}
-function fitDesign(view){
-  const c=mockState[view]; if(!c.img) return;
-  const a=(PHOTO[mockState.product]?AREAS.hoodie:AREAS.other)[view];
-  const ar=c.img.height/c.img.width;
-  let w=view==='front'?Math.min(a[2]*0.55,(a[3]*0.6)/ar):Math.min(a[2]*0.9,(a[3]*0.9)/ar); c.w=Math.round(w);
-  c.x=a[0]+(a[2]-w)/2; c.y=a[1]+(view==='front'?a[3]*0.12:a[3]*0.04);
-  if(view===mockState.view) document.getElementById('designSize').value=c.w;
-}
-function centerDesign(){
-  const c=getCurDesign(); const a=curArea();
-  const sz=parseInt(document.getElementById('designSize').value);
-  c.x=a[0]+a[2]/2-sz/2; c.y=c.img? a[1]+a[3]/2-(sz*(c.img.height/c.img.width))/2 : a[1];
-  updateMockup();
-}
-function loadDesign(view,file){
-  const img=new Image();
-  img.onload=function(){
-    mockState[view].img=img;
-    const lab=document.getElementById(view==='front'?'uploadLabelFront':'uploadLabelBack'); lab.textContent='✓ '+file.name; lab.style.color='#2e7d32';
-    fitDesign(view);
-    if(mockState.view===view){document.getElementById('designControls').style.display='';document.getElementById('posControls').style.display='';}
-    else { const btn=[...document.querySelectorAll('.mc-view')].find(b=>b.textContent.toLowerCase()===view); if(btn) setView(view,btn); }
-    updateMockup();
-  };
-  img.src=URL.createObjectURL(file);
-}
-document.getElementById('mockupFileFront').addEventListener('change',e=>{const f=e.target.files[0]; if(f) loadDesign('front',f)});
-document.getElementById('mockupFileBack').addEventListener('change',e=>{const f=e.target.files[0]; if(f) loadDesign('back',f)});
-
-// Drag (mouse + touch), in logical coordinates
-function evtPos(cx,cy){const r=CVS.getBoundingClientRect();return [(cx-r.left)*(500/r.width),(cy-r.top)*(620/r.height)]}
-function hit(mx,my){const c=getCurDesign(); if(!c.img) return false; const dh=c.w*(c.img.height/c.img.width); return mx>=c.x&&mx<=c.x+c.w&&my>=c.y&&my<=c.y+dh}
-CVS.addEventListener('mousedown',e=>{const [mx,my]=evtPos(e.clientX,e.clientY); if(hit(mx,my)){const c=getCurDesign();mockState.dragging=true;mockState.dragOffX=mx-c.x;mockState.dragOffY=my-c.y}});
-CVS.addEventListener('mousemove',e=>{if(!mockState.dragging)return;const [mx,my]=evtPos(e.clientX,e.clientY);const c=getCurDesign();c.x=mx-mockState.dragOffX;c.y=my-mockState.dragOffY;updateMockup()});
-['mouseup','mouseleave'].forEach(ev=>CVS.addEventListener(ev,()=>{mockState.dragging=false}));
-CVS.addEventListener('touchstart',e=>{const t=e.touches[0];const [mx,my]=evtPos(t.clientX,t.clientY); if(hit(mx,my)){const c=getCurDesign();mockState.dragging=true;mockState.dragOffX=mx-c.x;mockState.dragOffY=my-c.y;e.preventDefault()}},{passive:false});
-CVS.addEventListener('touchmove',e=>{if(!mockState.dragging)return;const t=e.touches[0];const [mx,my]=evtPos(t.clientX,t.clientY);const c=getCurDesign();c.x=mx-mockState.dragOffX;c.y=my-mockState.dragOffY;updateMockup();e.preventDefault()},{passive:false});
-CVS.addEventListener('touchend',()=>{mockState.dragging=false});
-
-async function downloadMockup(){
-  mockState.hideGuide=true; await renderMockup();
-  const a=document.createElement('a'); a.download='TCH-'+mockState.product+'-'+mockState.view+'.png'; a.href=CVS.toDataURL('image/png'); a.click();
-  mockState.hideGuide=false; updateMockup();
-}
-updateMockup();
-
-</script>
+<script src="js/mockup.js"></script>
+<script src="js/site.js"></script>
 </body>
 </html>
