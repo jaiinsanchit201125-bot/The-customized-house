@@ -5,11 +5,11 @@
 window.TCH_CATEGORIES = {
   tshirt:     {name:'T-Shirts',          blurb:'Soft 180 GSM cotton tees with bold prints. Pick a design, choose your size and order on WhatsApp.', studio:'tshirt'},
   oversized:  {name:'Oversized T-Shirts',blurb:'Heavy drop-shoulder tees with a relaxed fit.', studio:'oversized'},
-  hoodie:     {name:'Hoodies',           blurb:'320 GSM brushed fleece hoodies.', studio:'hoodie'},
+  hoodie:     {name:'Hoodies',           blurb:'Heavy 320 GSM brushed fleece hoodies with bold prints. Pick a design, choose your size and order on WhatsApp.', studio:'hoodie'},
   sweatshirt: {name:'Sweatshirts',       blurb:'Crewneck fleece sweatshirts.', studio:'sweatshirt'},
   jacket:     {name:'Jackets',           blurb:'Zip jackets and hoodies.', studio:'jacket'}
 };
-const T = 'assets/shop/tshirt/';
+const T = 'assets/shop/tshirt/', H = 'assets/shop/hoodie/';
 window.TCH_CATALOG = {
   tshirt: [
     {id:'all-we-need-is-money', name:'All We Need Is Money', img:T+'all-we-need-is-money.jpg', colour:'Black', print:'Back print', mrp:899, price:699, tags:['black','streetwear'],
@@ -37,5 +37,25 @@ window.TCH_CATALOG = {
     {id:'acid-wash-tee', name:'Acid Wash Tee', img:T+'acid-wash-tee.jpg', colour:'Charcoal acid wash', print:'Plain', mrp:899, price:699, tags:['plain','black'],
      desc:'Vintage acid-wash finish with a boxy fit. Wear it plain or add your own print.'}
   ],
-  oversized: [], hoodie: [], sweatshirt: [], jacket: []
+  hoodie: [
+    {id:'moon-thief', name:'Moon Thief', img:H+'moon-thief.jpg', colour:'Black', print:'Back print', mrp:1299, price:999, tags:['black','graphic'],
+     desc:'Bubbly "MOON THIEF" lettering in a circle with stars and moon phases - big back print.'},
+    {id:'error-404', name:'Error 404', img:H+'error-404.jpg', colour:'Black', print:'Back print', mrp:1299, price:999, tags:['black','minimal'],
+     desc:'"ERROR 404 - HUMAN NOT FOUND". Clean, funny and loved by every coder.'},
+    {id:'tokyo-underground', name:'Tokyo Underground', img:H+'tokyo-underground.jpg', colour:'White', print:'Back print', mrp:1299, price:999, tags:['white','streetwear'],
+     desc:'JDM street-car graphic with Tokyo coordinates and Japanese text.'},
+    {id:'dream', name:'Dream', img:H+'dream.jpg', colour:'Black', print:'Back print', mrp:1299, price:999, tags:['black','graphic'],
+     desc:'"Man struggles upwards" - sliced classical statue art with DREAM type.'},
+    {id:'chase-gains', name:'Chase Gains', img:H+'chase-gains.jpg', art:H+'chase-gains-art.png', colour:'Black', print:'Back print', mrp:1299, price:999, tags:['black','streetwear'],
+     desc:'Gym-ready statue graphic with pink graffiti "Chase gains, never stop".'},
+    {id:'street-racing', name:'Street Racing', img:H+'street-racing.jpg', art:H+'street-racing-art.png', colour:'Black', print:'Back print', mrp:1299, price:999, tags:['black','retro'],
+     desc:'Gold line-art muscle car - "Fast lane fever, no rules, just racing".'},
+    {id:'compass', name:'Compass', img:H+'compass.jpg', colour:'White', print:'Back print', mrp:1299, price:999, tags:['white','minimal'],
+     desc:'Fine-line compass with mountains, sun and moon down the spine.'},
+    {id:'explore-universe', name:'Explore Universe', img:H+'explore-universe.jpg', colour:'Black', print:'Front print', mrp:1299, price:999, tags:['black','graphic'],
+     desc:'Three-panel astronaut comic strip across the chest.'},
+    {id:'idk-idc', name:'IDK. IDC. IDGAF.', img:H+'idk-idc.jpg', colour:'Black', print:'Back + sleeve print', mrp:1299, price:999, tags:['black','minimal'],
+     desc:'Bold stacked statement on the back with a matching sleeve print.'}
+  ],
+  oversized: [], sweatshirt: [], jacket: []
 };

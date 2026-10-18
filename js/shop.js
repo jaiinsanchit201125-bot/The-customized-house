@@ -4,6 +4,7 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const CATS=window.TCH_CATEGORIES, CAT=window.TCH_CATALOG;
 const WA='https://wa.me/918431573282?text=';
 const SIZES=['S','M','L','XL','XXL'];
+const FABRIC={tshirt:'180 GSM cotton',oversized:'240 GSM cotton',hoodie:'320 GSM fleece',sweatshirt:'320 GSM fleece',jacket:'320 GSM fleece'};
 const money=n=>'₹'+n.toLocaleString('en-IN');
 const off=p=>Math.round((1-p.price/p.mrp)*100);
 const qs=new URLSearchParams(location.search);
@@ -48,7 +49,7 @@ function renderGrid(){
     return;
   }
   $('#pgrid').innerHTML=list.map(p=>`<button class="pc" data-id="${p.id}">
-    <div class="ph"><img src="${p.img}" alt="${p.name} T-shirt" loading="lazy"><span class="badge">${off(p)}% OFF</span><span class="quick">Quick view</span></div>
+    <div class="ph"><img src="${p.img}" alt="${p.name}" loading="lazy"><span class="badge">${off(p)}% OFF</span><span class="quick">Quick view</span></div>
     <span class="nm">${p.name}</span><span class="sub">${p.colour} · ${p.print}</span>
     <span class="pr"><b>${money(p.price)}</b><s>${money(p.mrp)}</s><em>Save ${money(p.mrp-p.price)}</em></span></button>`).join('');
 }
@@ -64,7 +65,7 @@ function openProduct(id){
   $('#pmImg').src=p.img; $('#pmImg').alt=p.name; $('#pmBadge').textContent=off(p)+'% OFF';
   $('#pmCat').textContent=CATS[p.cat].name.replace(/s$/,''); $('#pmName').textContent=p.name;
   $('#pmPrice').textContent=money(p.price); $('#pmMrp').textContent=money(p.mrp); $('#pmSave').textContent=`${off(p)}% off · Save ${money(p.mrp-p.price)}`;
-  $('#pmDesc').textContent=p.desc; $('#pmColour').textContent=p.colour; $('#pmPrint').textContent=p.print;
+  $('#pmDesc').textContent=p.desc; $('.pm-meta span:last-child').textContent=FABRIC[p.cat]||''; $('#pmColour').textContent=p.colour; $('#pmPrint').textContent=p.print;
   $('#pmSizes').innerHTML=SIZES.map(s=>`<button data-s="${s}">${s}</button>`).join(''); $('#pmSizes').classList.remove('err');
   $('#qVal').textContent=qty;
   const colourName=(p.colour.split(/[ /]/)[0]||'');
@@ -84,7 +85,7 @@ $('#qPlus').addEventListener('click',()=>{qty=Math.min(99,qty+1); $('#qVal').tex
 function needSize(){ if(size) return false; const z=$('#pmSizes'); z.classList.remove('err'); void z.offsetWidth; z.classList.add('err'); toast('Please select a size'); return true; }
 $('#addBag').addEventListener('click',()=>{ if(needSize()) return; addToBag(cur,size,qty); closeProduct(); toast(`Added to bag - ${cur.name} (${size})`); });
 $('#buyNow').addEventListener('click',()=>{ if(needSize()) return;
-  const msg=['Hi The Customized House, I want to order:',`${cur.name} T-shirt`,`Colour: ${cur.colour}`,`Size: ${size}`,`Quantity: ${qty}`,`Price: ${money(cur.price)} each (MRP ${money(cur.mrp)})`,`Total: ${money(cur.price*qty)}`].join('\n');
+  const msg=['Hi The Customized House, I want to order:',`${cur.name} ${CATS[cur.cat].name.replace(/s$/,'')}`,`Colour: ${cur.colour}`,`Size: ${size}`,`Quantity: ${qty}`,`Price: ${money(cur.price)} each (MRP ${money(cur.mrp)})`,`Total: ${money(cur.price*qty)}`].join('\n');
   window.open(WA+encodeURIComponent(msg),'_blank'); });
 
 /* bag (saved on this device) */

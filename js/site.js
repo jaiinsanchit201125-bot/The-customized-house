@@ -5,12 +5,12 @@ const WA = 'https://wa.me/918431573282?text=';
 
 /* ===== trending T-shirts (from js/catalog.js) ===== */
 (function(){
-  const list=((window.TCH_CATALOG||{}).tshirt||[]).slice(0,8), box=$('#trend'); if(!box) return;
   const money=n=>'₹'+n.toLocaleString('en-IN');
-  box.innerHTML=list.map(p=>`<a class="pc reveal" href="shop.html?c=tshirt#${p.id}">
-    <div class="ph"><img src="${p.img}" alt="${p.name} T-shirt" loading="lazy"><span class="badge">${Math.round((1-p.price/p.mrp)*100)}% OFF</span><span class="quick">Choose size</span></div>
+  $$('.trend-grid').forEach(box=>{ const cat=box.dataset.cat, list=((window.TCH_CATALOG||{})[cat]||[]).slice(0,4);
+  box.innerHTML=list.map(p=>`<a class="pc reveal" href="shop.html?c=${cat}#${p.id}">
+    <div class="ph"><img src="${p.img}" alt="${p.name}" loading="lazy"><span class="badge">${Math.round((1-p.price/p.mrp)*100)}% OFF</span><span class="quick">Choose size</span></div>
     <span class="nm">${p.name}</span><span class="sub">${p.colour} · ${p.print}</span>
-    <span class="pr"><b>${money(p.price)}</b><s>${money(p.mrp)}</s><em>Save ${money(p.mrp-p.price)}</em></span></a>`).join('');
+    <span class="pr"><b>${money(p.price)}</b><s>${money(p.mrp)}</s><em>Save ${money(p.mrp-p.price)}</em></span></a>`).join(''); });
 })();
 document.addEventListener('click',e=>{ const im=e.target.closest('[data-lb]'); if(im){ $('#lightboxImg').src=im.src; $('#lightbox').classList.add('on'); } });
 $('#lightbox').addEventListener('click',()=>$('#lightbox').classList.remove('on'));

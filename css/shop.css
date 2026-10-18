@@ -118,6 +118,12 @@
 .toast.on{opacity:1;transform:translateX(-50%)}
 
 /* homepage trending strip */
+.strip-head{display:flex;justify-content:space-between;align-items:baseline;margin:10px 0 18px;gap:12px}
+.strip-head+.trend-grid{margin-bottom:46px}
+.strip-head h3{font-size:1.5rem;color:var(--navy);letter-spacing:-.02em}
+.strip-head h3 span{font-size:1rem;color:#1a8a4a;margin-left:8px;font-weight:800}
+.strip-head h3 s{color:#8b909c;font-weight:500;margin-left:4px}
+.strip-head a{font-weight:700;color:var(--navy);text-decoration:underline;white-space:nowrap}
 .trend-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px 20px}
 .see-all{text-align:center;margin-top:40px}
 
