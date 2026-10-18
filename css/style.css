@@ -236,6 +236,9 @@ footer{background:var(--navy-2);color:#c3c8d3;padding:70px 0 28px}
 /* floating wa + lightbox */
 .float-wa{position:fixed;right:18px;bottom:18px;z-index:60;background:var(--wa);color:#fff;border-radius:999px;padding:13px 18px;display:flex;gap:9px;align-items:center;font-weight:700;box-shadow:0 14px 30px -8px rgba(37,211,102,.6);transition:transform .2s}
 .float-wa:hover{transform:translateY(-3px)}
+.float-ig{position:fixed;right:18px;bottom:84px;z-index:60;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%);box-shadow:0 14px 30px -8px rgba(214,36,159,.55);transition:transform .2s}
+.float-ig:hover{transform:translateY(-3px)}
+.float-ig svg{width:27px;height:27px}
 .lightbox{position:fixed;inset:0;background:rgba(10,12,18,.9);display:none;place-items:center;z-index:80;padding:20px;cursor:zoom-out}
 .lightbox.on{display:grid}
 .lightbox img{max-height:90vh;border-radius:14px}

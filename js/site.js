@@ -3,14 +3,22 @@
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const WA = 'https://wa.me/918431573282?text=';
 
-/* ===== trending T-shirts (from js/catalog.js) ===== */
+/* ===== trending (from js/catalog.js) ===== */
 (function(){
+  const CAT=window.TCH_CATALOG||{}, CATS=window.TCH_CATEGORIES||{}, box=$('#trend'), tabs=$('#trendTabs'); if(!box) return;
   const money=n=>'₹'+n.toLocaleString('en-IN');
-  $$('.trend-grid').forEach(box=>{ const cat=box.dataset.cat, list=((window.TCH_CATALOG||{})[cat]||[]).slice(0,4);
-  box.innerHTML=list.map(p=>`<a class="pc reveal" href="shop.html?c=${cat}#${p.id}">
+  const keys=Object.keys(CATS).filter(k=>(CAT[k]||[]).length);
+  tabs.innerHTML=keys.map((k,i)=>`<button data-c="${k}" class="${i?'':'on'}">${CATS[k].name.replace(' T-Shirts','')}<span>${money(CAT[k][0].price)}</span></button>`).join('');
+  function show(cat){
+    $$('#trendTabs button').forEach(b=>b.classList.toggle('on',b.dataset.c===cat));
+    $('#trendAll').href='shop.html?c='+cat; $('#trendAll').textContent='View all '+CATS[cat].name;
+    box.innerHTML=(CAT[cat]||[]).slice(0,4).map(p=>`<a class="pc" href="shop.html?c=${cat}#${p.id}">
     <div class="ph"><img src="${p.img}" alt="${p.name}" loading="lazy"><span class="badge">${Math.round((1-p.price/p.mrp)*100)}% OFF</span><span class="quick">Choose size</span></div>
     <span class="nm">${p.name}</span><span class="sub">${p.colour} · ${p.print}</span>
-    <span class="pr"><b>${money(p.price)}</b><s>${money(p.mrp)}</s><em>Save ${money(p.mrp-p.price)}</em></span></a>`).join(''); });
+    <span class="pr"><b>${money(p.price)}</b><s>${money(p.mrp)}</s><em>Save ${money(p.mrp-p.price)}</em></span></a>`).join('');
+  }
+  tabs.addEventListener('click',e=>{const b=e.target.closest('button'); if(b) show(b.dataset.c);});
+  if(keys.length) show(keys[0]);
 })();
 document.addEventListener('click',e=>{ const im=e.target.closest('[data-lb]'); if(im){ $('#lightboxImg').src=im.src; $('#lightbox').classList.add('on'); } });
 $('#lightbox').addEventListener('click',()=>$('#lightbox').classList.remove('on'));

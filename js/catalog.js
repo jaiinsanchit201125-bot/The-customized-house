@@ -4,10 +4,10 @@
    art = optional transparent PNG of just the design (lets customers open it in the Design Studio). */
 window.TCH_CATEGORIES = {
   tshirt:     {name:'T-Shirts',          blurb:'Soft 180 GSM cotton tees with bold prints. Pick a design, choose your size and order on WhatsApp.', studio:'tshirt'},
-  oversized:  {name:'Oversized T-Shirts',blurb:'Heavy drop-shoulder tees with a relaxed fit.', studio:'oversized'},
+  oversized:  {name:'Oversized T-Shirts',blurb:'Heavy 240 GSM drop-shoulder tees with a relaxed, boxy fit and big back prints.', studio:'oversized'},
   hoodie:     {name:'Hoodies',           blurb:'Heavy 320 GSM brushed fleece hoodies with bold prints. Pick a design, choose your size and order on WhatsApp.', studio:'hoodie'},
-  sweatshirt: {name:'Sweatshirts',       blurb:'Crewneck fleece sweatshirts.', studio:'sweatshirt'},
-  jacket:     {name:'Jackets',           blurb:'Zip jackets and hoodies.', studio:'jacket'}
+  sweatshirt: {name:'Sweatshirts',       blurb:'Cosy 320 GSM crewneck fleece sweatshirts with bold prints.', studio:'sweatshirt'},
+  jacket:     {name:'Jackets',           blurb:'320 GSM fleece zip hoodie jackets with a metal zip and back prints.', studio:'jacket'}
 };
 const T = 'assets/shop/tshirt/', H = 'assets/shop/hoodie/';
 window.TCH_CATALOG = {
@@ -57,5 +57,64 @@ window.TCH_CATALOG = {
     {id:'idk-idc', name:'IDK. IDC. IDGAF.', img:H+'idk-idc.jpg', colour:'Black', print:'Back + sleeve print', mrp:1299, price:999, tags:['black','minimal'],
      desc:'Bold stacked statement on the back with a matching sleeve print.'}
   ],
-  oversized: [], sweatshirt: [], jacket: []
+  oversized: [
+    {id:'oversized-seek', name:'Seek', img:'assets/shop/oversized/seek.jpg', art:'assets/shop/art/seek.png', colour:'Beige', print:'Back print', mrp:999, price:799, tags:['beige','retro'],
+     desc:'Retro red "SEEK" type with an eye illustration, printed big on the back.'},
+    {id:'oversized-peace-enjoy-the-wind', name:'Peace - Enjoy The Wind', img:'assets/shop/oversized/peace-enjoy-the-wind.jpg', art:'assets/shop/art/peace-enjoy-the-wind.png', colour:'Beige', print:'Back print', mrp:999, price:799, tags:['beige','graphic'],
+     desc:'A white dove with red roses and bold PEACE lettering on the back.'},
+    {id:'oversized-all-we-need-is-money', name:'All We Need Is Money', img:'assets/shop/oversized/all-we-need-is-money.jpg', art:'assets/shop/art/all-we-need-is-money.png', colour:'Black', print:'Back print', mrp:999, price:799, tags:['black','streetwear'],
+     desc:'Gothic lettering with a torn-paper money print across the back. A loud streetwear statement.'},
+    {id:'oversized-moon-thief', name:'Moon Thief', img:'assets/shop/oversized/moon-thief.jpg', art:'assets/shop/art/moon-thief.png', colour:'Black', print:'Back print', mrp:999, price:799, tags:['black','graphic'],
+     desc:'Bubbly "MOON THIEF" lettering in a circle with stars and moon phases - big back print.'},
+    {id:'oversized-error-404', name:'Error 404', img:'assets/shop/oversized/error-404.jpg', art:'assets/shop/art/error-404.png', colour:'Black', print:'Back print', mrp:999, price:799, tags:['black','minimal'],
+     desc:'"ERROR 404 - HUMAN NOT FOUND". Clean, funny and loved by every coder.'},
+    {id:'oversized-faith-over-fear', name:'Faith Over Fear', img:'assets/shop/oversized/faith-over-fear.jpg', art:'assets/shop/tshirt/faith-over-fear-art.png', colour:'Black', print:'Back print', mrp:999, price:799, tags:['black','graphic'],
+     desc:'A vintage-style angel graphic with "Trust the unseen" - distressed print on a black tee.'},
+    {id:'oversized-tokyo-underground', name:'Tokyo Underground', img:'assets/shop/oversized/tokyo-underground.jpg', art:'assets/shop/art/tokyo-underground.png', colour:'White', print:'Back print', mrp:999, price:799, tags:['white','streetwear'],
+     desc:'JDM street-car graphic with Tokyo coordinates and Japanese text.'},
+    {id:'oversized-street-racing', name:'Street Racing', img:'assets/shop/oversized/street-racing.jpg', art:'assets/shop/hoodie/street-racing-art.png', colour:'Black', print:'Back print', mrp:999, price:799, tags:['black','retro'],
+     desc:'Gold line-art muscle car - "Fast lane fever, no rules, just racing".'},
+    {id:'oversized-chase-gains', name:'Chase Gains', img:'assets/shop/oversized/chase-gains.jpg', art:'assets/shop/hoodie/chase-gains-art.png', colour:'Black', print:'Back print', mrp:999, price:799, tags:['black','streetwear'],
+     desc:'Gym-ready statue graphic with pink graffiti "Chase gains, never stop".'},
+    {id:'oversized-homies', name:'Sidestreet Homies', img:'assets/shop/oversized/homies.jpg', art:'assets/shop/tshirt/homies-art.png', colour:'White', print:'Back print', mrp:999, price:799, tags:['white','graphic'],
+     desc:'Street-style dog graphic with neon star eyes and drip details.'}
+  ],
+  sweatshirt: [
+    {id:'sweatshirt-dream', name:'Dream', img:'assets/shop/sweatshirt/dream.jpg', art:'assets/shop/art/dream.png', colour:'Black', print:'Back print', mrp:1199, price:899, tags:['black','graphic'],
+     desc:'"Man struggles upwards" - sliced classical statue art with DREAM type.'},
+    {id:'sweatshirt-built-different', name:'Built Different', img:'assets/shop/sweatshirt/built-different.jpg', art:'assets/shop/art/built-different.png', colour:'Black', print:'Front print', mrp:1199, price:899, tags:['black','minimal'],
+     desc:'Clean, bold "BUILT DIFFERENT" chest print. Simple and strong.'},
+    {id:'sweatshirt-im-peace', name:"I'm Peace", img:'assets/shop/sweatshirt/im-peace.jpg', art:'assets/shop/tshirt/im-peace-art.png', colour:'White', print:'Front print', mrp:1199, price:899, tags:['white','retro'],
+     desc:'A detailed retro hippie illustration with groovy "I\'M PEACE" type.'},
+    {id:'sweatshirt-think-outside-the-box', name:'Think Outside The Box', img:'assets/shop/sweatshirt/think-outside-the-box.jpg', art:'assets/shop/tshirt/think-outside-the-box-art.png', colour:'White', print:'Front print', mrp:1199, price:899, tags:['white','minimal'],
+     desc:'Hand-drawn tic-tac-toe with a twist. Fun, clever and easy to wear.'},
+    {id:'sweatshirt-peace-hand', name:'Peace Sign', img:'assets/shop/sweatshirt/peace-hand.jpg', art:'assets/shop/tshirt/peace-hand-art.png', colour:'Black', print:'Front print', mrp:1199, price:899, tags:['black','minimal'],
+     desc:'Hand-painted orange peace sign that pops on black.'},
+    {id:'sweatshirt-life-is-an-adventure', name:'Life Is An Adventure', img:'assets/shop/sweatshirt/life-is-an-adventure.jpg', art:'assets/shop/tshirt/life-is-an-adventure-art.png', colour:'Black', print:'Front print', mrp:1199, price:899, tags:['black','retro'],
+     desc:'A vintage van and palm trees on a three-colour retro panel.'},
+    {id:'sweatshirt-seek', name:'Seek', img:'assets/shop/sweatshirt/seek.jpg', art:'assets/shop/art/seek.png', colour:'Beige', print:'Back print', mrp:1199, price:899, tags:['beige','retro'],
+     desc:'Retro red "SEEK" type with an eye illustration, printed big on the back.'},
+    {id:'sweatshirt-idk-idc', name:'IDK. IDC. IDGAF.', img:'assets/shop/sweatshirt/idk-idc.jpg', art:'assets/shop/art/idk-idc.png', colour:'Black', print:'Back print', mrp:1199, price:899, tags:['black','minimal'],
+     desc:'Bold stacked statement on the back with a matching sleeve print.'},
+    {id:'sweatshirt-moon-thief', name:'Moon Thief', img:'assets/shop/sweatshirt/moon-thief.jpg', art:'assets/shop/art/moon-thief.png', colour:'Black', print:'Back print', mrp:1199, price:899, tags:['black','graphic'],
+     desc:'Bubbly "MOON THIEF" lettering in a circle with stars and moon phases - big back print.'}
+  ],
+  jacket: [
+    {id:'jacket-moon-thief', name:'Moon Thief', img:'assets/shop/jacket/moon-thief.jpg', art:'assets/shop/art/moon-thief.png', colour:'Black', print:'Back print', mrp:1399, price:1099, tags:['black','graphic'],
+     desc:'Bubbly "MOON THIEF" lettering in a circle with stars and moon phases - big back print.'},
+    {id:'jacket-error-404', name:'Error 404', img:'assets/shop/jacket/error-404.jpg', art:'assets/shop/art/error-404.png', colour:'Black', print:'Back print', mrp:1399, price:1099, tags:['black','minimal'],
+     desc:'"ERROR 404 - HUMAN NOT FOUND". Clean, funny and loved by every coder.'},
+    {id:'jacket-idk-idc', name:'IDK. IDC. IDGAF.', img:'assets/shop/jacket/idk-idc.jpg', art:'assets/shop/art/idk-idc.png', colour:'Black', print:'Back print', mrp:1399, price:1099, tags:['black','minimal'],
+     desc:'Bold stacked statement on the back with a matching sleeve print.'},
+    {id:'jacket-street-racing', name:'Street Racing', img:'assets/shop/jacket/street-racing.jpg', art:'assets/shop/hoodie/street-racing-art.png', colour:'Black', print:'Back print', mrp:1399, price:1099, tags:['black','retro'],
+     desc:'Gold line-art muscle car - "Fast lane fever, no rules, just racing".'},
+    {id:'jacket-chase-gains', name:'Chase Gains', img:'assets/shop/jacket/chase-gains.jpg', art:'assets/shop/hoodie/chase-gains-art.png', colour:'Black', print:'Back print', mrp:1399, price:1099, tags:['black','streetwear'],
+     desc:'Gym-ready statue graphic with pink graffiti "Chase gains, never stop".'},
+    {id:'jacket-tokyo-underground', name:'Tokyo Underground', img:'assets/shop/jacket/tokyo-underground.jpg', art:'assets/shop/art/tokyo-underground.png', colour:'White', print:'Back print', mrp:1399, price:1099, tags:['white','streetwear'],
+     desc:'JDM street-car graphic with Tokyo coordinates and Japanese text.'},
+    {id:'jacket-faith-over-fear', name:'Faith Over Fear', img:'assets/shop/jacket/faith-over-fear.jpg', art:'assets/shop/tshirt/faith-over-fear-art.png', colour:'Black', print:'Back print', mrp:1399, price:1099, tags:['black','graphic'],
+     desc:'A vintage-style angel graphic with "Trust the unseen" - distressed print on a black tee.'},
+    {id:'jacket-dream', name:'Dream', img:'assets/shop/jacket/dream.jpg', art:'assets/shop/art/dream.png', colour:'Black', print:'Back print', mrp:1399, price:1099, tags:['black','graphic'],
+     desc:'"Man struggles upwards" - sliced classical statue art with DREAM type.'}
+  ]
 };

@@ -146,3 +146,11 @@
   .tb-right{justify-content:space-between}
   .offer{width:100%}
 }
+
+.trend-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:-20px 0 30px}
+.trend-tabs button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;font-weight:700;font-size:.92rem;color:#30364a;display:flex;gap:8px;align-items:center}
+.trend-tabs button span{font-size:.78rem;color:#1a8a4a}
+.trend-tabs button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.trend-tabs button.on span{color:var(--gold)}
+@media (max-width:760px){.trend-tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;margin:-10px -16px 22px;padding:0 16px}.trend-tabs button{flex:none}}
+.bag-btn{bottom:150px}

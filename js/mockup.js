@@ -8,13 +8,13 @@ const W = 1000, H = 1240, RES = 2;           // canvas pixels; logical space is 
 const PRODUCTS = {
   tshirt:     {name:'Classic T-Shirt',  short:'T-Shirt',    price:699, fabric:'180 GSM 100% cotton, regular fit',
                areas:{front:[155,176,189,300], back:[155,162,189,320]}, inches:{front:12, back:12}},
-  oversized:  {name:'Oversized T-Shirt', short:'Oversized', price:759, fabric:'240 GSM cotton, drop shoulder',
+  oversized:  {name:'Oversized T-Shirt', short:'Oversized', price:799, fabric:'240 GSM cotton, drop shoulder',
                areas:{front:[139,178,214,310], back:[139,166,214,322]}, inches:{front:13, back:14}},
-  hoodie:     {name:'Premium Hoodie',   short:'Hoodie',     price:899, fabric:'320 GSM brushed fleece',
+  hoodie:     {name:'Premium Hoodie',   short:'Hoodie',     price:1099, fabric:'320 GSM brushed fleece',
                areas:{front:[172,180,156,162], back:[146,190,208,296]}, inches:{front:10, back:12}},
   sweatshirt: {name:'Crewneck Sweatshirt', short:'Sweatshirt', price:899, fabric:'320 GSM brushed fleece',
                areas:{front:[149,176,202,296], back:[146,168,208,312]}, inches:{front:12, back:12}},
-  jacket:     {name:'Zip Hoodie Jacket', short:'Zip Jacket', price:999, fabric:'320 GSM fleece, metal zip',
+  jacket:     {name:'Zip Hoodie Jacket', short:'Zip Jacket', price:1199, fabric:'320 GSM fleece, metal zip',
                areas:{front:[172,190,150,150], back:[146,190,208,296]}, inches:{front:9, back:12}, trim:{front:true}}
 };
 

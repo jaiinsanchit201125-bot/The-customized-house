@@ -15,7 +15,7 @@ function toast(t){const e=$('#toast'); e.textContent=t; e.classList.add('on'); c
 const hdr=$('#hdr'); const onScroll=()=>hdr&&hdr.classList.toggle('scrolled',scrollY>20); addEventListener('scroll',onScroll,{passive:true}); onScroll();
 $('#menuBtn')&&$('#menuBtn').addEventListener('click',()=>$('#links').classList.toggle('open'));
 $('#yr')&&($('#yr').textContent=new Date().getFullYear());
-const fw=$('.float-wa'); if(fw) fw.style.display='none';
+
 
 /* category tabs */
 $('#catTabs').innerHTML=Object.entries(CATS).map(([k,c])=>`<a href="?c=${k}" data-c="${k}">${c.name}${CAT[k].length?`<span>${CAT[k].length}</span>`:''}</a>`).join('');
