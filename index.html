@@ -392,9 +392,9 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
       <div class="mc-group">
         <label>Product</label>
         <div class="mc-pills" id="productPills">
-          <button class="mc-pill active" data-val="tshirt" onclick="setProduct('tshirt',this)">T-Shirt<span class="mc-price">₹699</span></button>
+          <button class="mc-pill" data-val="tshirt" onclick="setProduct('tshirt',this)">T-Shirt<span class="mc-price">₹699</span></button>
           <button class="mc-pill" data-val="oversized" onclick="setProduct('oversized',this)">Oversized<span class="mc-price">₹759</span></button>
-          <button class="mc-pill" data-val="hoodie" onclick="setProduct('hoodie',this)">Hoodie<span class="mc-price">₹899</span></button>
+          <button class="mc-pill active" data-val="hoodie" onclick="setProduct('hoodie',this)">Hoodie<span class="mc-price">₹899</span></button>
           <button class="mc-pill" data-val="sweatshirt" onclick="setProduct('sweatshirt',this)">Sweatshirt<span class="mc-price">₹899</span></button>
           <button class="mc-pill" data-val="jacket" onclick="setProduct('jacket',this)">Jacket<span class="mc-price">₹999</span></button>
         </div>
@@ -403,14 +403,16 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
       <div class="mc-group">
         <label>Color</label>
         <div class="mc-colors" id="colorPills">
-          <button class="mc-color active" style="background:#f5f0e8" data-color="#f5f0e8" onclick="setColor('#f5f0e8',this)" title="Off-White"></button>
+          <button class="mc-color" style="background:#f5f0e8" data-color="#f5f0e8" onclick="setColor('#f5f0e8',this)" title="Off-White"></button>
           <button class="mc-color" style="background:#1a1a1a" data-color="#1a1a1a" onclick="setColor('#1a1a1a',this)" title="Black"></button>
           <button class="mc-color" style="background:#d4cfc7" data-color="#d4cfc7" onclick="setColor('#d4cfc7',this)" title="Grey"></button>
           <button class="mc-color" style="background:#3d3d3d" data-color="#3d3d3d" onclick="setColor('#3d3d3d',this)" title="Charcoal"></button>
-          <button class="mc-color" style="background:#2b3a4e" data-color="#2b3a4e" onclick="setColor('#2b3a4e',this)" title="Navy"></button>
+          <button class="mc-color active" style="background:#2b3a4e" data-color="#2b3a4e" onclick="setColor('#2b3a4e',this)" title="Navy"></button>
           <button class="mc-color" style="background:#5c6148" data-color="#5c6148" onclick="setColor('#5c6148',this)" title="Olive"></button>
           <button class="mc-color" style="background:#e8d5c0" data-color="#e8d5c0" onclick="setColor('#e8d5c0',this)" title="Beige"></button>
           <button class="mc-color" style="background:#8b2d2d" data-color="#8b2d2d" onclick="setColor('#8b2d2d',this)" title="Maroon"></button>
+          <button class="mc-color" style="background:#1f4fbf" data-color="#1f4fbf" onclick="setColor('#1f4fbf',this)" title="Cobalt"></button>
+          <button class="mc-color" style="background:#f2f2f0" data-color="#f2f2f0" onclick="setColor('#f2f2f0',this)" title="White"></button>
         </div>
       </div>
 
@@ -470,7 +472,7 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
 
       <div class="mc-price-box">
         <div class="mc-price-old" id="mcOldPrice"></div>
-        <div class="mc-price-now" id="mcNowPrice">₹699</div>
+        <div class="mc-price-now" id="mcNowPrice">₹899</div>
         <div class="mc-price-note">Your design, same price</div>
       </div>
 
@@ -483,10 +485,10 @@ footer{background:var(--navy-2);color:#c8ccd6;padding:64px 0 28px}
     <!-- Canvas Preview -->
     <div class="mockup-preview">
       <div class="mockup-canvas-wrap">
-        <canvas id="mockupCanvas" width="500" height="620"></canvas>
+        <canvas id="mockupCanvas" width="1000" height="1240"></canvas>
         <div class="mockup-badge">Live Preview</div>
       </div>
-      <p class="mockup-hint">Upload separate designs for front & back - drag to reposition, switch views to preview each side</p>
+      <p class="mockup-hint">Tip: use a PNG with a transparent background for the most realistic print. Drag the design to move it.</p>
     </div>
   </div>
   </div>
@@ -623,21 +625,117 @@ document.getElementById('yr').textContent=new Date().getFullYear();
 const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.08});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-// ═══ MOCKUP BUILDER ENGINE ═══
+// ═══ MOCKUP BUILDER ENGINE (photo-realistic) ═══
 const CVS = document.getElementById('mockupCanvas');
 const CTX = CVS.getContext('2d');
+const RES = 2; // internal resolution multiplier (canvas is 1000x1240, logic is 500x620)
 let mockState = {
-  product: 'tshirt',
-  color: '#f5f0e8',
+  product: 'hoodie',
+  color: '#2b3a4e',
   view: 'front',
-  front: { img: null, x: 170, y: 180, w: 140 },
-  back:  { img: null, x: 170, y: 160, w: 160 },
-  dragging: false,
-  dragOffX: 0,
-  dragOffY: 0
+  front: { img: null, x: 190, y: 175, w: 120 },
+  back:  { img: null, x: 150, y: 150, w: 200 },
+  dragging: false, dragOffX: 0, dragOffY: 0, hideGuide: false
+};
+const PRICES = {tshirt:{now:'₹699'},oversized:{now:'₹759'},hoodie:{now:'₹899'},sweatshirt:{now:'₹899'},jacket:{now:'₹999'}};
+
+// Print areas (logical 500x620 coordinates) - design is clipped to these
+const AREAS = {
+  hoodie:{front:[150,140,200,190], back:[130,120,240,330]},
+  other:{front:[130,90,240,380], back:[130,90,240,380]}
 };
 
-const PRICES = {tshirt:{now:'\u20b9699'},oversized:{now:'\u20b9759'},hoodie:{now:'\u20b9899'},sweatshirt:{now:'\u20b9899'},jacket:{now:'\u20b9999'}};
+// Photo-based garments: greyscale shading (128 = flat) + alpha mask, recoloured on the fly
+const PHOTO = {hoodie:{front:'assets/mock-hoodie-front.png', back:'assets/mock-hoodie-back.png'}};
+const SHADE = {};
+function loadShade(prod, view){
+  return new Promise(res=>{
+    const key=prod+'-'+view; if(SHADE[key]) return res(SHADE[key]);
+    const im=new Image(); im.onload=()=>{
+      const c=document.createElement('canvas'); c.width=im.width; c.height=im.height;
+      const x=c.getContext('2d'); x.drawImage(im,0,0);
+      const d=x.getImageData(0,0,c.width,c.height).data;
+      const n=c.width*c.height, S=new Float32Array(n), A=new Uint8ClampedArray(n);
+      for(let i=0;i<n;i++){S[i]=d[i*4]/128; A[i]=d[i*4+3];}
+      SHADE[key]={S,A,w:c.width,h:c.height}; res(SHADE[key]);
+    }; im.src=PHOTO[prod][view];
+  });
+}
+const FLAT=document.createElement('canvas'); FLAT.width=1000; FLAT.height=1240;
+const FCTX=FLAT.getContext('2d');
+
+function hexRgb(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]}
+function drawBackdrop(){
+  const g=CTX.createLinearGradient(0,0,0,1240); g.addColorStop(0,'#f6f3ee'); g.addColorStop(1,'#e8e3da');
+  CTX.fillStyle=g; CTX.fillRect(0,0,1000,1240);
+  const sh=CTX.createRadialGradient(500,1170,20,500,1170,380);
+  sh.addColorStop(0,'rgba(40,32,20,.22)'); sh.addColorStop(1,'rgba(40,32,20,0)');
+  CTX.fillStyle=sh; CTX.beginPath(); CTX.ellipse(500,1170,380,46,0,0,Math.PI*2); CTX.fill();
+}
+function drawDesignOn(ctx, area){
+  const cur=getCurDesign(); if(!cur.img) return;
+  const sz=parseInt(document.getElementById('designSize').value); cur.w=sz;
+  const dh=sz*(cur.img.height/cur.img.width);
+  ctx.save(); ctx.beginPath(); ctx.rect(area[0],area[1],area[2],area[3]); ctx.clip();
+  ctx.drawImage(cur.img,cur.x,cur.y,sz,dh); ctx.restore();
+}
+function drawGuides(area){
+  if(mockState.hideGuide) return;
+  const cur=getCurDesign();
+  CTX.save(); CTX.scale(RES,RES);
+  CTX.strokeStyle='rgba(201,163,90,.9)'; CTX.lineWidth=1; CTX.setLineDash([5,4]);
+  if(cur.img){const dh=cur.w*(cur.img.height/cur.img.width); CTX.strokeRect(cur.x,cur.y,cur.w,dh);}
+  else{CTX.strokeStyle='rgba(255,255,255,.55)'; CTX.strokeRect(area[0],area[1],area[2],area[3]);
+    CTX.setLineDash([]); CTX.fillStyle='rgba(255,255,255,.85)'; CTX.font='500 11px "DM Sans",sans-serif'; CTX.textAlign='center';
+    CTX.fillText('Print area - upload a '+mockState.view+' design',area[0]+area[2]/2,area[1]+area[3]/2);}
+  CTX.restore();
+}
+
+let rafPending=false;
+function updateMockup(){ if(rafPending) return; rafPending=true; requestAnimationFrame(()=>{rafPending=false; renderMockup();}); }
+
+async function renderMockup(){
+  const s=mockState;
+  CTX.setTransform(1,0,0,1,0,0); CTX.clearRect(0,0,1000,1240); drawBackdrop();
+  if(PHOTO[s.product]){
+    const area=AREAS.hoodie[s.view];
+    const sh=await loadShade(s.product,s.view);
+    // flat colour + design
+    FCTX.setTransform(1,0,0,1,0,0); FCTX.fillStyle=s.color; FCTX.fillRect(0,0,1000,1240);
+    FCTX.save(); FCTX.scale(RES,RES); drawDesignOn(FCTX,area); FCTX.restore();
+    const img=FCTX.getImageData(0,0,1000,1240), d=img.data, S=sh.S, A=sh.A;
+    for(let i=0,j=0;i<S.length;i++,j+=4){
+      const k=S[i]*0.95, hl=S[i]>1?(S[i]-1)*70:0;
+      d[j]=Math.min(255,d[j]*k+hl); d[j+1]=Math.min(255,d[j+1]*k+hl); d[j+2]=Math.min(255,d[j+2]*k+hl); d[j+3]=A[i];
+    }
+    FCTX.putImageData(img,0,0);
+    CTX.drawImage(FLAT,0,0);
+    drawGuides(area);
+  } else {
+    const area=AREAS.other[s.view];
+    CTX.save(); CTX.scale(RES,RES);
+    const prod=PRODUCTS[s.product]; if(prod)(s.view==='front'?prod.front:prod.back)(CTX,s.color);
+    // soft fabric light/shadow
+    const g=CTX.createLinearGradient(60,0,440,0); g.addColorStop(0,'rgba(0,0,0,.10)'); g.addColorStop(.35,'rgba(255,255,255,.06)'); g.addColorStop(.7,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,.12)');
+    CTX.globalCompositeOperation='source-atop'; CTX.fillStyle=g; CTX.fillRect(0,0,500,620); CTX.globalCompositeOperation='source-over';
+    drawDesignOn(CTX,area);
+    CTX.restore();
+    drawGuides(area);
+  }
+  // labels
+  CTX.save(); CTX.scale(RES,RES);
+  CTX.fillStyle='rgba(31,42,68,.45)'; CTX.font='600 11px "DM Sans",sans-serif'; CTX.textAlign='center';
+  CTX.fillText((s.view==='front'?'FRONT':'BACK')+' VIEW', 250, 604);
+  CTX.restore();
+
+  document.getElementById('sizeLabel').textContent=(s.view==='front'?'Front':'Back')+' Design Size';
+  document.getElementById('posLabel').textContent=(s.view==='front'?'Front':'Back')+' Position - drag on the mockup or use the buttons';
+  document.getElementById('mcUploadFront').style.borderColor=s.view==='front'?'#1F2A44':'#d9d4ca';
+  document.getElementById('mcUploadBack').style.borderColor=s.view==='back'?'#1F2A44':'#d9d4ca';
+  const p=PRICES[s.product], size=document.getElementById('sizeSelect').value;
+  const waText=encodeURIComponent('Hi The Customized House, I want a custom '+s.product+' ('+size+', '+getColorName(s.color)+'). Front design: '+(s.front.img?'Yes':'No')+'. Back design: '+(s.back.img?'Yes':'No')+'. Price: '+p.now+'. I will share my design(s) here.');
+  document.getElementById('waOrderBtn').href='https://wa.me/918431573282?text='+waText;
+}
 
 const PRODUCTS = {
   tshirt: {
@@ -662,201 +760,71 @@ const PRODUCTS = {
   }
 };
 
-function adjustColor(hex, amount) {
-  let r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+
+
+function adjustColor(hex, amount){
+  let [r,g,b]=hexRgb(hex);
   r=Math.max(0,Math.min(255,Math.round(r*(1+amount))));g=Math.max(0,Math.min(255,Math.round(g*(1+amount))));b=Math.max(0,Math.min(255,Math.round(b*(1+amount))));
   return `rgb(${r},${g},${b})`;
 }
-
-function getCurDesign() { return mockState[mockState.view]; }
-
-function updateMockup() {
-  const s = mockState;
-  const cur = getCurDesign();
-  CTX.clearRect(0,0,500,620);
-  CTX.fillStyle = '#f2f0ec';
-  CTX.fillRect(0,0,500,620);
-
-  const prod = PRODUCTS[s.product];
-  if (prod) (s.view === 'front' ? prod.front : prod.back)(CTX, s.color);
-
-  if (cur.img) {
-    const sz = parseInt(document.getElementById('designSize').value);
-    cur.w = sz;
-    const aspect = cur.img.height / cur.img.width;
-    const dh = sz * aspect;
-    CTX.save();
-    CTX.beginPath();CTX.rect(130,90,240,380);CTX.clip();
-    CTX.drawImage(cur.img, cur.x, cur.y, sz, dh);
-    CTX.restore();
-    CTX.strokeStyle = 'rgba(0,0,0,0.15)';CTX.lineWidth=1;CTX.setLineDash([4,4]);
-    CTX.strokeRect(cur.x, cur.y, sz, dh);CTX.setLineDash([]);
-  }
-
-  // "no design" placeholder text when no image on this side
-  if (!cur.img) {
-    CTX.fillStyle = adjustColor(s.color, s.color === '#1a1a1a' ? .3 : -.15);
-    CTX.font = '300 13px "DM Sans", sans-serif';
-    CTX.textAlign = 'center';
-    CTX.fillText('Upload a ' + s.view + ' design above', 250, 280);
-    CTX.fillText('to see your mockup here', 250, 300);
-  }
-
-  // View label
-  CTX.fillStyle = 'rgba(0,0,0,0.3)';
-  CTX.font = '500 11px "DM Sans", sans-serif';
-  CTX.textAlign = 'center';
-  CTX.fillText((s.view === 'front' ? 'FRONT' : 'BACK') + ' VIEW', 250, 555);
-
-  // Front/back indicator dots
-  CTX.fillStyle = s.view === 'front' ? 'rgba(0,0,0,.4)' : 'rgba(0,0,0,.12)';
-  CTX.beginPath();CTX.arc(240, 575, 4, 0, Math.PI*2);CTX.fill();
-  CTX.fillStyle = s.view === 'back' ? 'rgba(0,0,0,.4)' : 'rgba(0,0,0,.12)';
-  CTX.beginPath();CTX.arc(260, 575, 4, 0, Math.PI*2);CTX.fill();
-
-  // Update labels
-  document.getElementById('sizeLabel').textContent = (s.view === 'front' ? 'Front' : 'Back') + ' Design Size';
-  document.getElementById('posLabel').textContent = (s.view === 'front' ? 'Front' : 'Back') + ' Position - drag on mockup or use buttons';
-
-  // Highlight active upload
-  document.getElementById('mcUploadFront').style.borderColor = s.view === 'front' ? '#1F2A44' : '#d9d4ca';
-  document.getElementById('mcUploadBack').style.borderColor = s.view === 'back' ? '#1F2A44' : '#d9d4ca';
-
-  // Update WhatsApp link
-  const p = PRICES[s.product];
-  const size = document.getElementById('sizeSelect').value;
-  const hasFront = s.front.img ? 'Yes' : 'No';
-  const hasBack = s.back.img ? 'Yes' : 'No';
-  const waText = encodeURIComponent('Hi The Customized House, I want a custom ' + s.product + ' (' + size + ', ' + getColorName(s.color) + '). Front design: ' + hasFront + '. Back design: ' + hasBack + '. Price: ' + p.now + '. I have design(s) to share.');
-  document.getElementById('waOrderBtn').href = 'https://wa.me/918431573282?text=' + waText;
-}
-
-function getColorName(hex){const m={'#f5f0e8':'Off-White','#1a1a1a':'Black','#d4cfc7':'Grey','#3d3d3d':'Charcoal','#2b3a4e':'Navy','#5c6148':'Olive','#e8d5c0':'Beige','#8b2d2d':'Maroon'};return m[hex]||hex}
-
-function setProduct(p,btn){mockState.product=p;document.querySelectorAll('#productPills .mc-pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const pr=PRICES[p];document.getElementById('mcNowPrice').textContent=pr.now;updateMockup()}
-
+function getCurDesign(){ return mockState[mockState.view]; }
+function getColorName(hex){const m={'#f5f0e8':'Off-White','#1a1a1a':'Black','#d4cfc7':'Grey','#3d3d3d':'Charcoal','#2b3a4e':'Navy','#5c6148':'Olive','#e8d5c0':'Beige','#8b2d2d':'Maroon','#1f4fbf':'Cobalt','#f2f2f0':'White'};return m[hex]||hex}
+function curArea(){return (PHOTO[mockState.product]?AREAS.hoodie:AREAS.other)[mockState.view]}
+function setProduct(p,btn){mockState.product=p;document.querySelectorAll('#productPills .mc-pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('mcNowPrice').textContent=PRICES[p].now;['front','back'].forEach(v=>{if(mockState[v].img)fitDesign(v)});updateMockup()}
 function setColor(clr,btn){mockState.color=clr;document.querySelectorAll('.mc-color').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateMockup()}
-
 function setView(v,btn){
-  // Save current slider value to current side
-  const cur = getCurDesign();
-  cur.w = parseInt(document.getElementById('designSize').value);
-  // Switch view
-  mockState.view = v;
-  document.querySelectorAll('.mc-view').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  // Load new side's slider value
-  const newCur = getCurDesign();
-  document.getElementById('designSize').value = newCur.w || 140;
-  // Show/hide controls based on whether this side has a design
-  document.getElementById('designControls').style.display = newCur.img ? '' : 'none';
-  document.getElementById('posControls').style.display = newCur.img ? '' : 'none';
+  getCurDesign().w=parseInt(document.getElementById('designSize').value);
+  mockState.view=v; document.querySelectorAll('.mc-view').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  const c=getCurDesign(); document.getElementById('designSize').value=c.w||140;
+  document.getElementById('designControls').style.display=c.img?'':'none';
+  document.getElementById('posControls').style.display=c.img?'':'none';
   updateMockup();
 }
-
 function moveDesign(dx,dy){const c=getCurDesign();c.x+=dx;c.y+=dy;updateMockup()}
-
+function fitDesign(view){
+  const c=mockState[view]; if(!c.img) return;
+  const a=(PHOTO[mockState.product]?AREAS.hoodie:AREAS.other)[view];
+  const ar=c.img.height/c.img.width;
+  let w=view==='front'?Math.min(a[2]*0.55,(a[3]*0.6)/ar):Math.min(a[2]*0.9,(a[3]*0.9)/ar); c.w=Math.round(w);
+  c.x=a[0]+(a[2]-w)/2; c.y=a[1]+(view==='front'?a[3]*0.12:a[3]*0.04);
+  if(view===mockState.view) document.getElementById('designSize').value=c.w;
+}
 function centerDesign(){
-  const c=getCurDesign();
+  const c=getCurDesign(); const a=curArea();
   const sz=parseInt(document.getElementById('designSize').value);
-  c.x=250-sz/2;
-  c.y= c.img ? 240-(sz*(c.img.height/c.img.width))/2 : 220-sz/2;
+  c.x=a[0]+a[2]/2-sz/2; c.y=c.img? a[1]+a[3]/2-(sz*(c.img.height/c.img.width))/2 : a[1];
   updateMockup();
 }
-
-// Front upload
-document.getElementById('mockupFileFront').addEventListener('change', function(e){
-  const file=e.target.files[0]; if(!file) return;
+function loadDesign(view,file){
   const img=new Image();
   img.onload=function(){
-    mockState.front.img=img;
-    document.getElementById('uploadLabelFront').textContent='\u2713 '+file.name;
-    document.getElementById('uploadLabelFront').style.color='#2e7d32';
-    if(mockState.view==='front'){
-      document.getElementById('designControls').style.display='';
-      document.getElementById('posControls').style.display='';
-      centerDesign();
-    } else { // auto-center front design
-      const sz=140; mockState.front.w=sz;
-      mockState.front.x=250-sz/2;
-      mockState.front.y=240-(sz*(img.height/img.width))/2;
-    }
+    mockState[view].img=img;
+    const lab=document.getElementById(view==='front'?'uploadLabelFront':'uploadLabelBack'); lab.textContent='✓ '+file.name; lab.style.color='#2e7d32';
+    fitDesign(view);
+    if(mockState.view===view){document.getElementById('designControls').style.display='';document.getElementById('posControls').style.display='';}
+    else { const btn=[...document.querySelectorAll('.mc-view')].find(b=>b.textContent.toLowerCase()===view); if(btn) setView(view,btn); }
     updateMockup();
   };
   img.src=URL.createObjectURL(file);
-});
+}
+document.getElementById('mockupFileFront').addEventListener('change',e=>{const f=e.target.files[0]; if(f) loadDesign('front',f)});
+document.getElementById('mockupFileBack').addEventListener('change',e=>{const f=e.target.files[0]; if(f) loadDesign('back',f)});
 
-// Back upload
-document.getElementById('mockupFileBack').addEventListener('change', function(e){
-  const file=e.target.files[0]; if(!file) return;
-  const img=new Image();
-  img.onload=function(){
-    mockState.back.img=img;
-    document.getElementById('uploadLabelBack').textContent='\u2713 '+file.name;
-    document.getElementById('uploadLabelBack').style.color='#2e7d32';
-    if(mockState.view==='back'){
-      document.getElementById('designControls').style.display='';
-      document.getElementById('posControls').style.display='';
-      centerDesign();
-    } else { // auto-center back design
-      const sz=160; mockState.back.w=sz;
-      mockState.back.x=250-sz/2;
-      mockState.back.y=220-(sz*(img.height/img.width))/2;
-    }
-    updateMockup();
-  };
-  img.src=URL.createObjectURL(file);
-});
-
-// Drag on canvas
-CVS.addEventListener('mousedown', function(e){
-  const c=getCurDesign(); if(!c.img) return;
-  const rect=CVS.getBoundingClientRect();
-  const sx=500/rect.width, sy=620/rect.height;
-  const mx=(e.clientX-rect.left)*sx, my=(e.clientY-rect.top)*sy;
-  const dh=c.w*(c.img.height/c.img.width);
-  if(mx>=c.x&&mx<=c.x+c.w&&my>=c.y&&my<=c.y+dh){
-    mockState.dragging=true;mockState.dragOffX=mx-c.x;mockState.dragOffY=my-c.y;
-  }
-});
-CVS.addEventListener('mousemove', function(e){
-  if(!mockState.dragging) return;
-  const c=getCurDesign();const rect=CVS.getBoundingClientRect();
-  c.x=(e.clientX-rect.left)*(500/rect.width)-mockState.dragOffX;
-  c.y=(e.clientY-rect.top)*(620/rect.height)-mockState.dragOffY;
-  updateMockup();
-});
-CVS.addEventListener('mouseup',()=>{mockState.dragging=false});
-CVS.addEventListener('mouseleave',()=>{mockState.dragging=false});
-
-CVS.addEventListener('touchstart', function(e){
-  const c=getCurDesign(); if(!c.img) return;
-  const t=e.touches[0];const rect=CVS.getBoundingClientRect();
-  const mx=(t.clientX-rect.left)*(500/rect.width);
-  const my=(t.clientY-rect.top)*(620/rect.height);
-  const dh=c.w*(c.img.height/c.img.width);
-  if(mx>=c.x&&mx<=c.x+c.w&&my>=c.y&&my<=c.y+dh){
-    mockState.dragging=true;mockState.dragOffX=mx-c.x;mockState.dragOffY=my-c.y;e.preventDefault();
-  }
-},{passive:false});
-CVS.addEventListener('touchmove', function(e){
-  if(!mockState.dragging) return;
-  const c=getCurDesign();const t=e.touches[0];const rect=CVS.getBoundingClientRect();
-  c.x=(t.clientX-rect.left)*(500/rect.width)-mockState.dragOffX;
-  c.y=(t.clientY-rect.top)*(620/rect.height)-mockState.dragOffY;
-  updateMockup();e.preventDefault();
-},{passive:false});
+// Drag (mouse + touch), in logical coordinates
+function evtPos(cx,cy){const r=CVS.getBoundingClientRect();return [(cx-r.left)*(500/r.width),(cy-r.top)*(620/r.height)]}
+function hit(mx,my){const c=getCurDesign(); if(!c.img) return false; const dh=c.w*(c.img.height/c.img.width); return mx>=c.x&&mx<=c.x+c.w&&my>=c.y&&my<=c.y+dh}
+CVS.addEventListener('mousedown',e=>{const [mx,my]=evtPos(e.clientX,e.clientY); if(hit(mx,my)){const c=getCurDesign();mockState.dragging=true;mockState.dragOffX=mx-c.x;mockState.dragOffY=my-c.y}});
+CVS.addEventListener('mousemove',e=>{if(!mockState.dragging)return;const [mx,my]=evtPos(e.clientX,e.clientY);const c=getCurDesign();c.x=mx-mockState.dragOffX;c.y=my-mockState.dragOffY;updateMockup()});
+['mouseup','mouseleave'].forEach(ev=>CVS.addEventListener(ev,()=>{mockState.dragging=false}));
+CVS.addEventListener('touchstart',e=>{const t=e.touches[0];const [mx,my]=evtPos(t.clientX,t.clientY); if(hit(mx,my)){const c=getCurDesign();mockState.dragging=true;mockState.dragOffX=mx-c.x;mockState.dragOffY=my-c.y;e.preventDefault()}},{passive:false});
+CVS.addEventListener('touchmove',e=>{if(!mockState.dragging)return;const t=e.touches[0];const [mx,my]=evtPos(t.clientX,t.clientY);const c=getCurDesign();c.x=mx-mockState.dragOffX;c.y=my-mockState.dragOffY;updateMockup();e.preventDefault()},{passive:false});
 CVS.addEventListener('touchend',()=>{mockState.dragging=false});
 
-function downloadMockup(){
-  // Download current view
-  const a=document.createElement('a');
-  a.download='TCH-'+mockState.product+'-'+mockState.view+'.png';
-  a.href=CVS.toDataURL('image/png');a.click();
+async function downloadMockup(){
+  mockState.hideGuide=true; await renderMockup();
+  const a=document.createElement('a'); a.download='TCH-'+mockState.product+'-'+mockState.view+'.png'; a.href=CVS.toDataURL('image/png'); a.click();
+  mockState.hideGuide=false; updateMockup();
 }
-
-
-
 updateMockup();
 
 </script>
