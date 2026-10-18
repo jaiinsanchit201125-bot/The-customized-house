@@ -410,5 +410,10 @@ mq.addEventListener('change',placeSide); placeSide();
 /* ---------- start ---------- */
 setProduct(st.product); markColor(); refreshLayerList(); updateSummary();
 if(qs.get('pane')) showPane(qs.get('pane'));
+const art=qs.get('art');
+if(art && /^assets\/[\w\/.-]+\.(png|webp|jpg)$/.test(art)){
+  const im=new Image(); im.onload=()=>{ const src=normalise(im), thumb=thumbOf(src); st.uploads.unshift({src,thumb,natW:im.naturalWidth}); renderUploads();
+    addLayer({type:'image',src,thumb,natW:im.naturalWidth},.85); toast('Design loaded - make it yours'); }; im.src=art;
+}
 window.addEventListener('resize',drawUI);
 })();

@@ -3,35 +3,15 @@
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const WA = 'https://wa.me/918431573282?text=';
 
-/* ===== COLLECTION - add new designs here =====
-   Put the image in the assets folder, then add one line:
-   {img:'assets/your-file.jpg', title:'Design name', tag:'hoodie', desc:'Short line', price:'₹899'}
-   tag can be: hoodie, tshirt, oversized, sweatshirt, jacket, batch */
-const DESIGNS = [];
-const TAGS = {all:'All', batch:'Batch / Graduation', hoodie:'Hoodies', tshirt:'T-Shirts', oversized:'Oversized', sweatshirt:'Sweatshirts', jacket:'Jackets'};
-
-function renderFilters(){
-  const used=['all',...new Set(DESIGNS.map(d=>d.tag))], box=$('#filters');
-  box.innerHTML = used.length>2 ? used.map((t,i)=>`<button class="${i?'':'on'}" data-t="${t}">${TAGS[t]||t}</button>`).join('') : '';
-  box.querySelectorAll('button').forEach(b=>b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderGrid(b.dataset.t);});
-}
-function renderGrid(t='all'){
-  const g=$('#grid');
-  if(!DESIGNS.length){
-    g.style.display='block';
-    g.innerHTML=`<div class="soon"><div><span class="eyebrow">New drop</span><h3 style="margin-top:10px">Our first collection is dropping soon.</h3>
-      <p>Fresh TCH designs are on the way. Until then, design your own in the studio or send us your idea - we turn it into a print-ready design for free.</p></div>
-      <div class="acts"><a class="btn btn-primary" href="studio.html">Design your own</a><a class="btn btn-ghost" href="#order">Send your idea</a></div></div>`;
-    return;
-  }
-  g.innerHTML = DESIGNS.filter(d=>t==='all'||d.tag===t).map(d=>`
-    <article class="card">
-      <div class="ph"><img style="--pos:${d.pos||'center'}" src="${d.img}" alt="${d.title}" loading="lazy" data-lb></div>
-      <div class="bd"><span class="tag">${TAGS[d.tag]||d.tag}</span><h3>${d.title}</h3><p>${d.desc}</p>
-      <div class="row"><span class="price">${d.price}</span><a href="${WA+encodeURIComponent('Hi The Customized House, I want to order the design: '+d.title)}" target="_blank" rel="noopener">Order →</a></div></div>
-    </article>`).join('');
-}
-renderFilters(); renderGrid();
+/* ===== trending T-shirts (from js/catalog.js) ===== */
+(function(){
+  const list=((window.TCH_CATALOG||{}).tshirt||[]).slice(0,8), box=$('#trend'); if(!box) return;
+  const money=n=>'₹'+n.toLocaleString('en-IN');
+  box.innerHTML=list.map(p=>`<a class="pc reveal" href="shop.html?c=tshirt#${p.id}">
+    <div class="ph"><img src="${p.img}" alt="${p.name} T-shirt" loading="lazy"><span class="badge">${Math.round((1-p.price/p.mrp)*100)}% OFF</span><span class="quick">Choose size</span></div>
+    <span class="nm">${p.name}</span><span class="sub">${p.colour} · ${p.print}</span>
+    <span class="pr"><b>${money(p.price)}</b><s>${money(p.mrp)}</s><em>Save ${money(p.mrp-p.price)}</em></span></a>`).join('');
+})();
 document.addEventListener('click',e=>{ const im=e.target.closest('[data-lb]'); if(im){ $('#lightboxImg').src=im.src; $('#lightbox').classList.add('on'); } });
 $('#lightbox').addEventListener('click',()=>$('#lightbox').classList.remove('on'));
 

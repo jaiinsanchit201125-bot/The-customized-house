@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" class="js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop T-Shirts, Hoodies & More - The Customized House</title>
+<meta name="description" content="Custom hoodies, T-shirts, sweatshirts and jackets made for you, your batch or your team. Design it yourself with a realistic live preview, single pieces and bulk orders. Order on WhatsApp +91 84315 73282.">
+<meta property="og:title" content="The Customized House - Wear Your Story">
+<meta property="og:description" content="Custom clothing for individuals, batches, teams and brands. Design it live, see it before you pay.">
+<meta property="og:image" content="assets/hero.jpg">
+<meta name="theme-color" content="#1F2A44">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/shop.css">
+</head>
+<body>
+<div class="topbar">Design it live, see it before you pay &nbsp;·&nbsp; Single pieces & <b>bulk batch orders</b> &nbsp;·&nbsp; WhatsApp +91 84315 73282</div>
+
+<header id="hdr">
+  <div class="container nav">
+    <a href="index.html" class="brand" aria-label="The Customized House home">
+      <img src="assets/logo-navy.png" alt="The Customized House logo">
+      <div class="wm"><b>THE CUSTOMIZED HOUSE</b><span>WEAR YOUR STORY</span></div>
+    </a>
+    <nav class="links" id="links">
+      <a href="shop.html">Shop</a>
+      <a href="studio.html">Design Studio</a>
+      <a href="index.html#bulk">Bulk Orders</a>
+      <a href="index.html#sizes">Size Guide</a>
+      <a href="index.html#faq">FAQ</a>
+      <a class="btn btn-primary" href="studio.html">Start designing</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+
+<section class="shop-hero">
+  <div class="container">
+    <nav class="crumbs"><a href="index.html">Home</a><span>/</span><a href="shop.html">Shop</a><span>/</span><b id="crumb">T-Shirts</b></nav>
+    <div class="shop-head">
+      <div><h1 id="catTitle">T-Shirts</h1><p id="catBlurb"></p></div>
+      <div class="offer"><b>Launch offer</b><span>Every T-shirt ₹699 <s>₹899</s></span></div>
+    </div>
+    <div class="cat-tabs" id="catTabs"></div>
+  </div>
+</section>
+
+<section class="shop-body">
+  <div class="container">
+    <div class="toolbar">
+      <div class="chips" id="chips"></div>
+      <div class="tb-right"><span id="count"></span>
+        <select id="sort" aria-label="Sort"><option value="feat">Featured</option><option value="az">Name A-Z</option><option value="za">Name Z-A</option></select></div>
+    </div>
+    <div class="pgrid" id="pgrid"></div>
+    <div class="own">
+      <div><b>Want your own design instead?</b><span>Upload your art or add text in the Design Studio and see it live.</span></div>
+      <a class="btn btn-primary" id="ownBtn" href="studio.html?p=tshirt">Design your own</a>
+    </div>
+    <div class="perks">
+      <div><i>✦</i><b>Free size help</b><span>Not sure? Send your chest size on WhatsApp</span></div>
+      <div><i>✦</i><b>Pay after confirmation</b><span>We confirm details before printing</span></div>
+      <div><i>✦</i><b>Made in Bengaluru</b><span>Printed and checked by us</span></div>
+      <div><i>✦</i><b>Bulk pricing</b><span>Special rates for 20+ pieces</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- product modal -->
+<div class="pm" id="pm" aria-hidden="true">
+  <div class="pm-card" role="dialog" aria-modal="true" aria-labelledby="pmName">
+    <button class="pm-x" id="pmClose" aria-label="Close">×</button>
+    <div class="pm-img"><img id="pmImg" alt=""><span class="badge" id="pmBadge"></span></div>
+    <div class="pm-info">
+      <span class="eyebrow" id="pmCat">T-Shirt</span>
+      <h2 id="pmName"></h2>
+      <div class="pm-price"><b id="pmPrice"></b><s id="pmMrp"></s><em id="pmSave"></em></div>
+      <p class="tax">Inclusive of all taxes</p>
+      <p id="pmDesc"></p>
+      <div class="pm-meta"><span id="pmColour"></span><span id="pmPrint"></span><span>180 GSM cotton</span></div>
+      <div class="lbl-row"><span class="lbl">Select size</span><a href="index.html#sizes" class="link">Size guide</a></div>
+      <div class="szs" id="pmSizes"></div>
+      <span class="lbl">Quantity</span>
+      <div class="qty"><button id="qMinus" aria-label="Less">−</button><span id="qVal">1</span><button id="qPlus" aria-label="More">+</button></div>
+      <div class="pm-acts">
+        <button class="btn btn-primary" id="addBag">Add to bag</button>
+        <button class="btn btn-wa" id="buyNow">Buy now on WhatsApp</button>
+      </div>
+      <a class="pm-custom" id="pmStudio" href="#">Customise this design in the Design Studio →</a>
+      <ul class="pm-notes"><li>Free design check before printing</li><li>Delivery date confirmed on WhatsApp</li><li>Wash inside out in cold water</li></ul>
+    </div>
+  </div>
+</div>
+
+<!-- bag -->
+<button class="bag-btn" id="bagBtn" aria-label="Open bag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 7h12l1 14H5L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span id="bagCount">0</span></button>
+<div class="drawer" id="drawer" aria-hidden="true">
+  <div class="dr-card">
+    <div class="dr-head"><b>Your bag</b><button id="drClose" aria-label="Close">×</button></div>
+    <div class="dr-items" id="drItems"></div>
+    <div class="dr-foot">
+      <div class="ln"><span>MRP</span><s id="drMrp"></s></div>
+      <div class="ln save"><span>Discount</span><span id="drSave"></span></div>
+      <div class="ln tot"><span>Total</span><b id="drTot"></b></div>
+      <button class="btn btn-wa" id="checkout">Order on WhatsApp</button>
+      <small>You will confirm sizes, address and payment on WhatsApp.</small>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<footer>
+  <div class="container">
+    <div class="foot">
+      <div>
+        <div class="fb"><img src="assets/logo-gold.png" alt="The Customized House"><b>THE CUSTOMIZED<br>HOUSE</b></div>
+        <p>Custom clothing for individuals, batches, teams and brands. Designed with you, made with care in Bengaluru.</p>
+      </div>
+      <div><h4>Shop</h4><a href="shop.html?c=tshirt">T-Shirts</a><a href="shop.html?c=oversized">Oversized Tees</a><a href="shop.html?c=hoodie">Hoodies</a><a href="shop.html?c=sweatshirt">Sweatshirts</a><a href="shop.html?c=jacket">Jackets</a></div>
+      <div><h4>Explore</h4><a href="studio.html">Design Studio</a><a href="index.html#bulk">Bulk Orders</a><a href="index.html#sizes">Size Guide</a><a href="index.html#order">Place an order</a><a href="index.html#faq">FAQ</a></div>
+      <div><h4>Contact</h4><a href="https://wa.me/918431573282" target="_blank" rel="noopener">WhatsApp +91 84315 73282</a><a href="tel:+918431573282">Call us</a><a href="https://www.instagram.com/_the_customized_house" target="_blank" rel="noopener">Instagram</a><a>Bengaluru, India</a></div>
+    </div>
+    <div class="foot-bottom"><span>© <span id="yr">2026</span> The Customized House. All rights reserved.</span><span>Wear your story.</span></div>
+  </div>
+</footer>
+
+<a class="float-wa" href="https://wa.me/918431573282?text=Hi%20The%20Customized%20House%2C%20I%20want%20to%20place%20an%20order" target="_blank" rel="noopener" aria-label="Order on WhatsApp">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.08-.13-.28-.2-.57-.35M12.05 21.8a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88a9.87 9.87 0 0 1 9.88 9.89c0 5.45-4.44 9.88-9.89 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.14 1.59 5.94L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.9 0-3.18-1.24-6.17-3.48-8.41"/></svg>
+  <span>Order Now</span>
+</a>
+
+<script src="js/catalog.js"></script>
+<script src="js/shop.js"></script>
+</body>
+</html>
