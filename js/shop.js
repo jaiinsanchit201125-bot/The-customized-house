@@ -94,6 +94,7 @@ let cur=null, size=null, qty=1;
 function find(id){ for(const [k,l] of Object.entries(CAT)){ const p=l.find(x=>x.id===id); if(p) return {...p,cat:k}; } return null; }
 function openProduct(id){
   const p=find(id); if(!p) return; cur=p; size=null; qty=1;
+  window.tchTrack&&tchTrack('ViewContent',{content_ids:[p.id],content_name:p.name,content_type:'product',value:p.price,currency:'INR'});
   $('#pmImg').src=p.img; $('#pmImg').alt=p.name; $('#pmBadge').textContent=off(p)+'% OFF';
   $('#pmCat').textContent=CATS[p.cat].name.replace(/s$/,''); $('#pmName').textContent=p.name;
   { const lv=$('#pmLive'); lv.hidden=!p.art; if(p.art) lv.href='live-try.html?id='+encodeURIComponent(p.id); }

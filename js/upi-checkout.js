@@ -74,6 +74,7 @@ window.TCHUpi = (function(){
   function open(lines, done){
     order = { lines, total: lines.reduce((a,l)=>a+l.price*l.qty,0), ref: ref() };
     onDone = done;
+    window.tchTrack&&tchTrack('InitiateCheckout',{value:order.total,currency:'INR',num_items:lines.reduce((a,l)=>a+l.qty,0)});
     $('#upiSum1').innerHTML = summary();
     const f = $('#upiForm'), s = saved();
     Object.keys(s).forEach(k => { if(f.elements[k]) f.elements[k].value = s[k]; });
@@ -125,6 +126,7 @@ window.TCHUpi = (function(){
     const utr = $('#upiUtr').value.trim();
     if(utr && !/^\d{12}$/.test(utr)){ $('#upiErr2').textContent = 'The UPI transaction ID is usually 12 digits. Check it, or leave it empty and send a screenshot on WhatsApp.'; return; }
     $('#upiErr2').textContent = '';
+    window.tchTrack&&tchTrack('Purchase',{value:order.total,currency:'INR',content_ids:order.lines.map(l=>l.id||l.name),content_type:'product'});
     sendWa(); step(3); if(onDone) onDone(order);
   });
   $('#upiWaAgain').addEventListener('click', e => { e.preventDefault(); sendWa(); });
