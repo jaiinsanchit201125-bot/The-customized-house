@@ -8,7 +8,13 @@ const FABRIC={tshirt:'180 GSM cotton',oversized:'240 GSM cotton',hoodie:'320 GSM
 const money=n=>'₹'+n.toLocaleString('en-IN');
 const off=p=>Math.round((1-p.price/p.mrp)*100);
 const qs=new URLSearchParams(location.search);
-let cat=CATS[qs.get('c')]?qs.get('c'):'tshirt', chip='all', sort='feat';
+let cat=(CATS[qs.get('c')]||qs.get('c')==='fav')?qs.get('c'):'tshirt', chip='all', sort='feat';
+/* favourites (saved on this device) */
+let favs=new Set(); try{ favs=new Set(JSON.parse(localStorage.getItem('tch_favs')||'[]')); }catch(e){}
+const saveFavs=()=>{ try{ localStorage.setItem('tch_favs',JSON.stringify([...favs])); }catch(e){} const c=document.querySelector('#favCount'); if(c) c.textContent=favs.size; };
+const ALL=Object.entries(CAT).flatMap(([k,l])=>l.map(p=>({...p,cat:k})));
+const HEART='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2 0 3.4 1.1 5 3 1.6-1.9 3-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2Z"/></svg>';
+const FAVCAT={name:'Saved designs',blurb:'Your favourite designs, saved on this device. Add them to your bag whenever you are ready.',studio:'tshirt'};
 function toast(t){const e=$('#toast'); e.textContent=t; e.classList.add('on'); clearTimeout(e._t); e._t=setTimeout(()=>e.classList.remove('on'),2200);}
 
 /* header bits shared with the homepage */
@@ -18,7 +24,8 @@ $('#yr')&&($('#yr').textContent=new Date().getFullYear());
 
 
 /* category tabs */
-$('#catTabs').innerHTML=Object.entries(CATS).map(([k,c])=>`<a href="?c=${k}" data-c="${k}">${c.name}${CAT[k].length?`<span>${CAT[k].length}</span>`:''}</a>`).join('');
+$('#catTabs').innerHTML=Object.entries(CATS).map(([k,c])=>`<a href="?c=${k}" data-c="${k}">${c.name}${CAT[k].length?`<span>${CAT[k].length}</span>`:''}</a>`).join('')
+  +`<a href="?c=fav" data-c="fav" class="fav-tab"><i>${HEART}</i>Saved<span id="favCount">${favs.size}</span></a>`;
 $('#catTabs').addEventListener('click',e=>{const a=e.target.closest('a'); if(!a) return; e.preventDefault(); cat=a.dataset.c; chip='all'; history.replaceState(null,'','?c='+cat); renderAll(); scrollTo({top:0,behavior:'smooth'});});
 
 function chipsFor(list){
@@ -27,35 +34,60 @@ function chipsFor(list){
   return used.map(t=>`<button data-t="${t}" class="${t===chip?'on':''}">${names[t]}</button>`).join('');
 }
 function renderAll(){
-  const c=CATS[cat], list=CAT[cat]||[];
+  const c=cat==='fav'?FAVCAT:CATS[cat], list=cat==='fav'?ALL.filter(p=>favs.has(p.id)):(CAT[cat]||[]);
   document.title=c.name+' - The Customized House';
   $('#crumb').textContent=c.name; $('#catTitle').textContent=c.name; $('#catBlurb').textContent=c.blurb;
   $$('#catTabs a').forEach(a=>a.classList.toggle('on',a.dataset.c===cat));
-  $('.offer').style.display=list.length?'':'none';
+  $('.offer').style.display=(list.length&&cat!=='fav')?'':'none';
   if(list.length){ const p=list[0]; $('.offer span').innerHTML=`Every design ${money(p.price)} <s>${money(p.mrp)}</s>`; }
   $('#ownBtn').href='studio.html?p='+c.studio;
   $('#chips').innerHTML=list.length?chipsFor(list):'';
   renderGrid();
 }
 function renderGrid(){
-  let list=(CAT[cat]||[]).filter(p=>chip==='all'||(p.tags||[]).includes(chip));
+  const base=cat==='fav'?ALL.filter(p=>favs.has(p.id)):(CAT[cat]||[]);
+  let list=base.filter(p=>chip==='all'||(p.tags||[]).includes(chip));
   if(sort==='az') list=[...list].sort((a,b)=>a.name.localeCompare(b.name));
   if(sort==='za') list=[...list].sort((a,b)=>b.name.localeCompare(a.name));
   $('#count').textContent=list.length?list.length+' design'+(list.length>1?'s':''):'';
-  if(!(CAT[cat]||[]).length){
+  if(cat==='fav'&&!base.length){
+    $('#pgrid').innerHTML=`<div class="pempty"><h3>No saved designs yet</h3><p>Tap the heart on any design to save it here for later.</p>
+      <div class="acts"><a class="btn btn-primary" href="?c=hoodie" data-go="hoodie">Browse hoodies</a><a class="btn btn-ghost" href="?c=tshirt" data-go="tshirt">Browse T-Shirts</a></div></div>`;
+    $$('[data-go]').forEach(g=>g.addEventListener('click',e=>{e.preventDefault(); cat=g.dataset.go; history.replaceState(null,'','?c='+cat); renderAll();}));
+    return;
+  }
+  if(!base.length){
     $('#pgrid').innerHTML=`<div class="pempty"><h3>${CATS[cat].name} designs are coming soon</h3><p>Our designs for this range are on the way. You can still design your own right now.</p>
       <div class="acts"><a class="btn btn-primary" href="studio.html?p=${CATS[cat].studio}">Design your own</a><a class="btn btn-ghost" href="?c=tshirt" data-go="tshirt">Shop T-Shirts</a></div></div>`;
     const g=$('[data-go]'); g&&g.addEventListener('click',e=>{e.preventDefault(); cat='tshirt'; history.replaceState(null,'','?c=tshirt'); renderAll();});
     return;
   }
-  $('#pgrid').innerHTML=list.map(p=>`<button class="pc" data-id="${p.id}">
-    <div class="ph"><img src="${p.img}" alt="${p.name}" loading="lazy"><span class="badge">${off(p)}% OFF</span><span class="quick">Quick view</span></div>
-    <span class="nm">${p.name}</span><span class="sub">${p.colour} · ${p.print}</span>
-    <span class="pr"><b>${money(p.price)}</b><s>${money(p.mrp)}</s><em>Save ${money(p.mrp-p.price)}</em></span></button>`).join('');
+  $('#pgrid').innerHTML=list.map(p=>{ const kind=CATS[p.cat||cat].name.replace(/s$/,'');
+    return `<div class="pc" data-id="${p.id}" role="button" tabindex="0" aria-label="${p.name} ${kind}">
+    <div class="ph"><img src="${p.img}" alt="${p.name}" loading="lazy"><span class="badge">${off(p)}% OFF</span><span class="quick">Quick view</span>
+      <button class="fav${favs.has(p.id)?' on':''}" data-fav="${p.id}" aria-pressed="${favs.has(p.id)}" aria-label="Save ${p.name} to favourites">${HEART}</button></div>
+    <span class="nm">${p.name}</span><span class="sub">${cat==='fav'?kind+' · ':''}${p.colour} · ${p.print}</span>
+    <span class="pr"><b>${money(p.price)}</b><s>${money(p.mrp)}</s><em>Save ${money(p.mrp-p.price)}</em></span>
+    <div class="qa"><button class="qa-btn" data-qa="${p.id}">Add to bag</button>
+      <div class="qa-sizes" hidden><span>Pick a size</span><div>${SIZES.map(s=>`<button data-qs="${s}" data-id="${p.id}">${s}</button>`).join('')}</div></div></div></div>`; }).join('');
 }
 $('#chips').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; chip=b.dataset.t; $$('#chips button').forEach(x=>x.classList.toggle('on',x===b)); renderGrid();});
 $('#sort').addEventListener('change',e=>{sort=e.target.value; renderGrid();});
-$('#pgrid').addEventListener('click',e=>{const b=e.target.closest('.pc'); if(b) openProduct(b.dataset.id);});
+$('#pgrid').addEventListener('click',e=>{
+  const f=e.target.closest('[data-fav]');
+  if(f){ e.stopPropagation(); const id=f.dataset.fav, on=!favs.has(id); on?favs.add(id):favs.delete(id); saveFavs();
+    f.classList.toggle('on',on); f.setAttribute('aria-pressed',on); f.classList.remove('pulse'); void f.offsetWidth; f.classList.add('pulse');
+    toast(on?'Saved to favourites':'Removed from favourites'); if(cat==='fav'&&!on) renderGrid(); return; }
+  const q=e.target.closest('[data-qa]');
+  if(q){ e.stopPropagation(); $$('.qa').forEach(x=>{ if(x!==q.parentElement){ x.querySelector('.qa-btn').hidden=false; x.querySelector('.qa-sizes').hidden=true; } });
+    q.hidden=true; q.parentElement.querySelector('.qa-sizes').hidden=false; return; }
+  const s=e.target.closest('[data-qs]');
+  if(s){ e.stopPropagation(); const p=find(s.dataset.id); addToBag(p,s.dataset.qs,1); toast(`Added to bag - ${p.name} (${s.dataset.qs})`);
+    const qa=s.closest('.qa'); qa.querySelector('.qa-sizes').hidden=true; const btn=qa.querySelector('.qa-btn'); btn.hidden=false; btn.textContent='Added ✓'; btn.classList.add('done');
+    setTimeout(()=>{ btn.textContent='Add to bag'; btn.classList.remove('done'); },1600); return; }
+  if(e.target.closest('.qa')) return;
+  const b=e.target.closest('.pc'); if(b) openProduct(b.dataset.id);});
+$('#pgrid').addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target.classList.contains('pc')) openProduct(e.target.dataset.id); });
 
 /* product modal */
 let cur=null, size=null, qty=1;
@@ -63,7 +95,7 @@ function find(id){ for(const [k,l] of Object.entries(CAT)){ const p=l.find(x=>x.
 function openProduct(id){
   const p=find(id); if(!p) return; cur=p; size=null; qty=1;
   $('#pmImg').src=p.img; $('#pmImg').alt=p.name; $('#pmBadge').textContent=off(p)+'% OFF';
-  $('#pmCat').textContent=CATS[p.cat].name.replace(/s$/,''); $('#pmName').textContent=p.name;
+  $('#pmCat').textContent=CATS[p.cat].name.replace(/s$/,''); $('#pmName').textContent=p.name; $('#pmFav').classList.toggle('on',favs.has(p.id)); $('#pmFav').setAttribute('aria-pressed',favs.has(p.id));
   $('#pmPrice').textContent=money(p.price); $('#pmMrp').textContent=money(p.mrp); $('#pmSave').textContent=`${off(p)}% off · Save ${money(p.mrp-p.price)}`;
   $('#pmDesc').textContent=p.desc; $('.pm-meta span:last-child').textContent=FABRIC[p.cat]||''; $('#pmColour').textContent=p.colour; $('#pmPrint').textContent=p.print;
   $('#pmSizes').innerHTML=SIZES.map(s=>`<button data-s="${s}">${s}</button>`).join(''); $('#pmSizes').classList.remove('err');
@@ -77,6 +109,9 @@ function openProduct(id){
 }
 function closeProduct(){ $('#pm').classList.remove('on'); $('#pm').setAttribute('aria-hidden','true'); document.body.style.overflow=''; history.replaceState(null,'','?c='+cat); }
 $('#pmClose').addEventListener('click',closeProduct);
+$('#pmFav').addEventListener('click',()=>{ const id=cur.id, on=!favs.has(id); on?favs.add(id):favs.delete(id); saveFavs();
+  $('#pmFav').classList.toggle('on',on); $('#pmFav').setAttribute('aria-pressed',on); toast(on?'Saved to favourites':'Removed from favourites');
+  const cf=document.querySelector(`[data-fav="${id}"]`); if(cf){ cf.classList.toggle('on',on); } if(cat==='fav') renderGrid(); });
 $('#pm').addEventListener('click',e=>{ if(e.target.id==='pm') closeProduct(); });
 addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeProduct(); closeBag(); } });
 $('#pmSizes').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; size=b.dataset.s; $$('#pmSizes button').forEach(x=>x.classList.toggle('on',x===b)); $('#pmSizes').classList.remove('err');});

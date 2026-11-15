@@ -197,3 +197,24 @@
 @media (max-width:560px){.upi{padding:0;align-items:flex-end}.upi-card{width:100%;border-radius:24px 24px 0 0;max-height:94vh;padding:24px 18px 20px}.upi .f3{grid-template-columns:1fr 1fr}.upi .f3 label:last-child{grid-column:1/-1}.upi .f2{grid-template-columns:1fr}.upi-qr img{width:120px;height:120px}}
 .chips{min-width:0;max-width:100%}.toolbar{min-width:0;max-width:100%}
 .upi-x,.upi-back,.upi-id button{border:0}.upi-back{background:none}
+
+/* favourites + quick add */
+.pc .ph .fav{position:absolute;right:12px;top:12px;z-index:2;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.94);display:grid;place-items:center;box-shadow:0 6px 16px -6px rgba(0,0,0,.35);cursor:pointer;transition:transform .15s}
+.pc .ph .fav:hover{transform:scale(1.08)}
+.fav svg{width:21px;height:21px;fill:none;stroke:var(--navy);stroke-width:2;stroke-linejoin:round}
+.fav.on svg{fill:#d6263b;stroke:#d6263b}
+.fav.pulse{animation:pop .35s}
+.qa{margin-top:12px}
+.qa-btn{width:100%;border:1.5px solid var(--navy);color:var(--navy);background:#fff;border-radius:999px;padding:10px 12px;font-weight:700;font-size:.88rem;cursor:pointer;transition:.15s}
+.qa-btn:hover{background:var(--navy);color:#fff}
+.qa-btn.done{background:#1a8a4a;border-color:#1a8a4a;color:#fff}
+.qa-sizes span{display:block;font-size:.76rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.qa-sizes div{display:flex;gap:6px}
+.qa-sizes button{flex:1;min-width:0;padding:9px 0;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--navy);font-weight:700;font-size:.85rem;cursor:pointer}
+.qa-sizes button:hover{border-color:var(--gold);background:var(--gold-soft)}
+.cat-tabs .fav-tab{display:inline-flex;align-items:center;gap:6px}
+.cat-tabs .fav-tab i{display:grid}.cat-tabs .fav-tab svg{width:16px;height:16px;fill:#d6263b;stroke:#d6263b;stroke-width:2}
+@media (hover:none){.pc .quick{display:none}}
+.pm-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+#pmFav{flex:none;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;margin-top:4px}
+#pmFav:hover{border-color:#d6263b}
