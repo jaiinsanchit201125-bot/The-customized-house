@@ -397,7 +397,8 @@ function loop() {
     if (t !== lastT) {
       lastT = t; let hit = null;
       const r = landmarker.detectForVideo(video, t); hit = pick(r);
-      const ok = render(video, video.videoWidth, video.videoHeight, hit, true);
+      const k = Math.min(1, 1280 / Math.max(video.videoWidth, video.videoHeight));   // cap work size for smooth frame rate
+      const ok = render(video, Math.round(video.videoWidth * k), Math.round(video.videoHeight * k), hit, true);
       if (r.close) r.close();
       if (ok) { lastSeen = t; hint(tooClose ? 'Step back so your waist is in view, or use the 5s timer' : ''); }
       else { if (t - lastSeen > 1500) lockX = null; if (t - lastSeen > 900) hint(view === 'back' ? 'Turn around so your back faces the camera' : 'Step back until your shoulders and waist are in view'); }
