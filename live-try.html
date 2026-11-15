@@ -76,8 +76,8 @@
   </div>
 </div>
 
-<script src="js/catalog.js?v=20261115d"></script>
-<script src="js/mockup.js?v=20261115d"></script>
+<script src="js/catalog.js?v=20261115e"></script>
+<script src="js/mockup.js?v=20261115e"></script>
 <script type="module">
 const $ = s => document.querySelector(s);
 const CATS = window.TCH_CATEGORIES, CAT = window.TCH_CATALOG, M = window.TCHMock;
@@ -153,12 +153,12 @@ function drawFrame(src, lm, mirror) {
   const dx = sR.x - sL.x, dy = sR.y - sL.y, sw = Math.hypot(dx, dy);
   const u = { x: dx / sw, y: dy / sw }, n = { x: -u.y, y: u.x };
   const jm = { x: (sL.x + sR.x) / 2, y: (sL.y + sR.y) / 2 };
-  const lift = sw * 0.12;                                  // shoulder seam sits above the shoulder joints
+  const lift = sw * 0.05;                                  // shoulder seam sits above the shoulder joints
   const mid = { x: jm.x - n.x * lift, y: jm.y - n.y * lift };
-  let torso;
+  let torso; tooClose = false;
   if (h1.v > 0.4 && h2.v > 0.4) { const hm = smooth('hm', { x: (h1.x + h2.x) / 2, y: (h1.y + h2.y) / 2 }); torso = Math.hypot(hm.x - jm.x, hm.y - jm.y) + lift; }
-  else torso = sw * 1.45;                                 // hips out of frame: typical body proportion
-  const sx = (sw * 1.2) / (fit.R[0] - fit.L[0]);
+  else { torso = sw * 1.45; tooClose = true; }                                 // hips out of frame: typical body proportion
+  const sx = (sw * 1.1) / (fit.R[0] - fit.L[0]);
   const sy = (torso * (1 + fit.below)) / (fit.hem - fit.L[1]);
   const gcx = (fit.L[0] + fit.R[0]) / 2, gsy = (fit.L[1] + fit.R[1]) / 2;
   const A = u.x * sx, B = u.y * sx, C = n.x * sy, D = n.y * sy;
@@ -172,6 +172,7 @@ window.__tchReady = Promise.all([garment('front'), garment('back')]);
 
 /* camera + pose tracking (MediaPipe, runs fully in the browser) */
 const hint = t => { $('#hint').textContent = t; };
+let tooClose = false;
 let landmarker = null, video = $('#cam'), lastT = -1, lastSeen = 0;
 async function start() {
   const btn = $('#start'), err = $('#gerr'); err.hidden = true;
@@ -201,7 +202,7 @@ function loop() {
     const t = performance.now(); let lm = null;
     if (t !== lastT) { lastT = t; const r = landmarker.detectForVideo(video, t); lm = r.landmarks && r.landmarks[0]; }
     const ok = drawFrame(video, lm, true);
-    if (ok) { lastSeen = t; hint(''); }
+    if (ok) { lastSeen = t; hint(tooClose ? 'Step back a little so your waist is in view for the best fit' : ''); }
     else if (t - lastSeen > 900) hint(view === 'back' ? 'Turn around so your back faces the camera' : 'Step back until your shoulders and waist are in view');
   }
   requestAnimationFrame(loop);
