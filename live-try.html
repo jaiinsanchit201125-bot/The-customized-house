@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Live Try-On - The Customized House</title>
+<meta name="description" content="Try The Customized House designs on yourself live with your camera.">
+<meta name="theme-color" content="#121a2c">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:#0d111b;color:#fff;font-family:'DM Sans',Arial,sans-serif;overflow:hidden}
+  button{font:inherit;cursor:pointer;border:0}
+  .top{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;gap:12px;padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;background:linear-gradient(#0d111bcc,#0d111b00)}
+  .top a{color:#fff;text-decoration:none;font-weight:700;font-size:.95rem;background:#ffffff1f;border-radius:999px;padding:8px 14px}
+  .top .t{flex:1;min-width:0}
+  .top .t b{display:block;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .top .t span{font-size:.78rem;color:#C9A35A;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  .stage{position:fixed;inset:0;display:grid;place-items:center}
+  canvas#view{max-width:100%;max-height:100%;width:auto;height:100%;object-fit:contain;background:#0d111b}
+  video{display:none}
+  .hint{position:fixed;left:50%;top:84px;transform:translateX(-50%);z-index:5;background:#121a2ce6;border:1px solid #ffffff22;border-radius:999px;padding:9px 16px;font-size:.88rem;font-weight:600;white-space:nowrap;max-width:calc(100% - 32px);overflow:hidden;text-overflow:ellipsis}
+  .hint:empty{display:none}
+  .bar{position:fixed;left:0;right:0;bottom:0;z-index:5;padding:14px 16px calc(env(safe-area-inset-bottom) + 16px);background:linear-gradient(#0d111b00,#0d111bf0 40%);display:grid;gap:12px;justify-items:center}
+  .seg{display:flex;background:#ffffff1f;border-radius:999px;padding:4px}
+  .seg button{background:none;color:#fff;font-weight:700;font-size:.9rem;padding:8px 18px;border-radius:999px}
+  .seg button.on{background:#fff;color:#121a2c}
+  .acts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;font-weight:800;font-size:.95rem;padding:13px 22px;text-decoration:none}
+  .btn-gold{background:#C9A35A;color:#121a2c}
+  .btn-light{background:#fff;color:#121a2c}
+  .btn-ghost{background:#ffffff1f;color:#fff}
+  .gate{position:fixed;inset:0;z-index:10;display:grid;place-items:center;padding:24px;background:#0d111b}
+  .gate[hidden]{display:none}
+  .gate .card{max-width:420px;text-align:center}
+  .gate img{width:170px;height:200px;object-fit:cover;border-radius:18px;margin-bottom:18px}
+  .gate h1{font-size:1.6rem;line-height:1.2;margin-bottom:10px}
+  .gate p{color:#c3c8d3;line-height:1.55;font-size:.95rem;margin-bottom:8px}
+  .gate ul{text-align:left;color:#c3c8d3;font-size:.9rem;line-height:1.7;margin:12px 0 18px 18px}
+  .gate .btn{width:100%;margin-top:6px}
+  .gate .small{font-size:.78rem;color:#8d94a3;margin-top:12px}
+  .err{color:#ffb4ab!important}
+  .spin{width:44px;height:44px;border-radius:50%;border:3px solid #ffffff33;border-top-color:#C9A35A;animation:sp 1s linear infinite;margin:0 auto 14px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="top"><a href="shop.html" id="back">&larr; Shop</a><div class="t"><span>Live try-on</span><b id="pname">The Customized House</b></div></div>
+<div class="stage"><canvas id="view" width="720" height="1280"></canvas></div>
+<video id="cam" playsinline muted></video>
+<div class="hint" id="hint"></div>
+<div class="bar">
+  <div class="seg" id="side"><button data-v="front" class="on">Front</button><button data-v="back">Back</button></div>
+  <div class="acts">
+    <button class="btn btn-ghost" id="snap">📸 Take photo</button>
+    <a class="btn btn-gold" id="buy" href="shop.html">Buy this design</a>
+  </div>
+</div>
+
+<div class="gate" id="gate">
+  <div class="card">
+    <img id="gimg" alt="">
+    <h1>Try it on, live</h1>
+    <p>See this design on you in real time with your camera.</p>
+    <ul>
+      <li>Stand 1.5-2 metres back so your upper body is in view</li>
+      <li>Face the camera, arms relaxed by your sides</li>
+      <li>Good light works best</li>
+    </ul>
+    <button class="btn btn-gold" id="start">Start camera</button>
+    <p class="small">Your camera stays on your device. Nothing is recorded or uploaded.</p>
+    <p class="err" id="gerr" hidden></p>
+  </div>
+</div>
+
+<script src="js/catalog.js?v=20261115d"></script>
+<script src="js/mockup.js?v=20261115d"></script>
+<script type="module">
+const $ = s => document.querySelector(s);
+const CATS = window.TCH_CATEGORIES, CAT = window.TCH_CATALOG, M = window.TCHMock;
+const qs = new URLSearchParams(location.search);
+const id = qs.get('id');
+let prod = null;
+for (const [k, l] of Object.entries(CAT)) { const p = l.find(x => x.id === id); if (p) { prod = { ...p, cat: k }; break; } }
+if (!prod || !prod.art) { location.replace('shop.html'); }
+
+const COLOR = { black: '#1B1B1E', white: '#F2F2F0', beige: '#D8C6A6', charcoal: '#3A3C42', navy: '#1F2A44', grey: '#BDBDBD' };
+const colour = (() => { const c = (prod.colour || 'black').toLowerCase(); for (const k in COLOR) if (c.includes(k)) return COLOR[k]; return COLOR.black; })();
+const backPrint = /back/i.test(prod.print) && !/front/i.test(prod.print);
+const kind = CATS[prod.cat].name.replace(/s$/, '');
+$('#pname').textContent = prod.name + ' ' + kind;
+$('#gimg').src = prod.img; $('#gimg').alt = prod.name;
+$('#buy').href = `shop.html?c=${prod.cat}#${prod.id}`;
+$('#back').href = `shop.html?c=${prod.cat}#${prod.id}`;
+
+/* garment anchors in mockup space (1000 x 1240): shoulder seams, hem, and top cut-off (hides hood over the face) */
+const FIT = {
+  tshirt:     { L: [225, 295], R: [775, 295], hem: 1040, cut: 0,   below: 0.22 },
+  oversized:  { L: [230, 305], R: [770, 305], hem: 1062, cut: 0,   below: 0.28 },
+  hoodie:     { L: [230, 320], R: [770, 320], hem: 1090, cut: 245, below: 0.18 },
+  sweatshirt: { L: [225, 310], R: [775, 310], hem: 1095, cut: 0,   below: 0.18 },
+  jacket:     { L: [230, 320], R: [770, 320], hem: 1090, cut: 245, below: 0.18 }
+};
+const fit = FIT[prod.cat];
+
+/* render the garment (colour + design + fabric shading) with the existing mockup engine */
+const art = new Image(); art.src = prod.art;
+const garments = {};
+async function garment(view) {
+  if (garments[view]) return garments[view];
+  await art.decode().catch(() => {});
+  const c = document.createElement('canvas'); c.width = M.W; c.height = M.H;
+  const printHere = backPrint ? view === 'back' : view === 'front';
+  await M.render(c.getContext('2d'), {
+    product: prod.cat, view, color: colour, backdrop: 'none',
+    drawPrint: printHere ? (ctx, a) => {
+      const s = Math.min(a[2] / art.naturalWidth, a[3] / art.naturalHeight);
+      const w = art.naturalWidth * s, h = art.naturalHeight * s;
+      ctx.drawImage(art, a[0] + (a[2] - w) / 2, a[1] + (a[3] - h) * 0.12, w, h);
+    } : null
+  });
+  if (fit.cut) { const x = c.getContext('2d'); x.clearRect(0, 0, M.W, fit.cut);
+    x.globalCompositeOperation = 'destination-out'; const gr = x.createLinearGradient(0, fit.cut, 0, fit.cut + 45);
+    gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = gr; x.fillRect(0, fit.cut, M.W, 45); x.globalCompositeOperation = 'source-over'; }
+  garments[view] = c; return c;
+}
+let view = backPrint ? 'back' : 'front';
+document.querySelectorAll('#side button').forEach(b => b.classList.toggle('on', b.dataset.v === view));
+$('#side').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; view = b.dataset.v;
+  document.querySelectorAll('#side button').forEach(x => x.classList.toggle('on', x === b)); garment(view); });
+garment('front'); garment('back');
+
+/* draw one frame: camera image + garment warped onto the shoulders and hips */
+const cv = $('#view'), cx = cv.getContext('2d');
+const sm = {};
+function smooth(key, p, a = 0.45) { const o = sm[key]; if (!o) return (sm[key] = { ...p }); o.x += (p.x - o.x) * a; o.y += (p.y - o.y) * a; return o; }
+function drawFrame(src, lm, mirror) {
+  const W = cv.width, H = cv.height;
+  cx.setTransform(1, 0, 0, 1, 0, 0);
+  if (mirror) { cx.translate(W, 0); cx.scale(-1, 1); }
+  cx.drawImage(src, 0, 0, W, H);
+  cx.setTransform(1, 0, 0, 1, 0, 0);
+  const g = garments[view];
+  if (!lm || !g) return false;
+  const P = i => ({ x: (mirror ? 1 - lm[i].x : lm[i].x) * W, y: lm[i].y * H, v: lm[i].visibility ?? 1 });
+  let a = P(11), b = P(12); const h1 = P(23), h2 = P(24);
+  if (a.v < 0.5 || b.v < 0.5) return false;
+  if (a.x > b.x) [a, b] = [b, a];                       // a = shoulder on the screen's left
+  const sL = smooth('sL', a), sR = smooth('sR', b);
+  const dx = sR.x - sL.x, dy = sR.y - sL.y, sw = Math.hypot(dx, dy);
+  const u = { x: dx / sw, y: dy / sw }, n = { x: -u.y, y: u.x };
+  const jm = { x: (sL.x + sR.x) / 2, y: (sL.y + sR.y) / 2 };
+  const lift = sw * 0.12;                                  // shoulder seam sits above the shoulder joints
+  const mid = { x: jm.x - n.x * lift, y: jm.y - n.y * lift };
+  let torso;
+  if (h1.v > 0.4 && h2.v > 0.4) { const hm = smooth('hm', { x: (h1.x + h2.x) / 2, y: (h1.y + h2.y) / 2 }); torso = Math.hypot(hm.x - jm.x, hm.y - jm.y) + lift; }
+  else torso = sw * 1.45;                                 // hips out of frame: typical body proportion
+  const sx = (sw * 1.2) / (fit.R[0] - fit.L[0]);
+  const sy = (torso * (1 + fit.below)) / (fit.hem - fit.L[1]);
+  const gcx = (fit.L[0] + fit.R[0]) / 2, gsy = (fit.L[1] + fit.R[1]) / 2;
+  const A = u.x * sx, B = u.y * sx, C = n.x * sy, D = n.y * sy;
+  cx.setTransform(A, B, C, D, mid.x - (A * gcx + C * gsy), mid.y - (B * gcx + D * gsy));
+  cx.drawImage(g, 0, 0);
+  cx.setTransform(1, 0, 0, 1, 0, 0);
+  return true;
+}
+window.__tchDrawFrame = drawFrame;   // used for testing with a still photo
+window.__tchReady = Promise.all([garment('front'), garment('back')]);
+
+/* camera + pose tracking (MediaPipe, runs fully in the browser) */
+const hint = t => { $('#hint').textContent = t; };
+let landmarker = null, video = $('#cam'), lastT = -1, lastSeen = 0;
+async function start() {
+  const btn = $('#start'), err = $('#gerr'); err.hidden = true;
+  btn.disabled = true; btn.innerHTML = '<span class="spin" style="width:18px;height:18px;margin:0;border-width:2px"></span> Starting...';
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 720 }, height: { ideal: 1280 } }, audio: false });
+    video.srcObject = stream; await video.play();
+    cv.width = video.videoWidth || 720; cv.height = video.videoHeight || 1280;
+    const vision = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14');
+    const fileset = await vision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
+    landmarker = await vision.PoseLandmarker.createFromOptions(fileset, {
+      baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task', delegate: 'GPU' },
+      runningMode: 'VIDEO', numPoses: 1
+    });
+    $('#gate').hidden = true;
+    hint(view === 'back' ? 'Turn around so your back faces the camera' : 'Step back until your shoulders and waist are in view');
+    loop();
+  } catch (e) {
+    btn.disabled = false; btn.textContent = 'Try again';
+    err.hidden = false;
+    err.textContent = (e && e.name === 'NotAllowedError') ? 'Camera access was blocked. Allow camera access for this site in your browser settings, then try again.'
+      : 'Live try-on could not start on this device. Try the latest Chrome or Safari, or open the site on your phone.';
+  }
+}
+function loop() {
+  if (video.readyState >= 2 && landmarker) {
+    const t = performance.now(); let lm = null;
+    if (t !== lastT) { lastT = t; const r = landmarker.detectForVideo(video, t); lm = r.landmarks && r.landmarks[0]; }
+    const ok = drawFrame(video, lm, true);
+    if (ok) { lastSeen = t; hint(''); }
+    else if (t - lastSeen > 900) hint(view === 'back' ? 'Turn around so your back faces the camera' : 'Step back until your shoulders and waist are in view');
+  }
+  requestAnimationFrame(loop);
+}
+$('#start').addEventListener('click', start);
+$('#snap').addEventListener('click', async () => {
+  const blob = await new Promise(r => cv.toBlob(r, 'image/jpeg', 0.92));
+  const file = new File([blob], `tch-${prod.id}.jpg`, { type: 'image/jpeg' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: 'My TCH try-on' }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+});
+</script>
+</body>
+</html>

@@ -223,3 +223,5 @@
 .pm-try svg{width:18px;height:18px;fill:#121a2c}
 .pm-try:hover{filter:brightness(1.05)}
 .pm-try[hidden]{display:none}
+.pm-live{background:#1F2A44;color:#fff}.pm-live svg{fill:#fff}
+.pm-live+.pm-try{margin-top:8px}

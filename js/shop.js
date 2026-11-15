@@ -96,6 +96,7 @@ function openProduct(id){
   const p=find(id); if(!p) return; cur=p; size=null; qty=1;
   $('#pmImg').src=p.img; $('#pmImg').alt=p.name; $('#pmBadge').textContent=off(p)+'% OFF';
   $('#pmCat').textContent=CATS[p.cat].name.replace(/s$/,''); $('#pmName').textContent=p.name;
+  { const lv=$('#pmLive'); lv.hidden=!p.art; if(p.art) lv.href='live-try.html?id='+encodeURIComponent(p.id); }
   if(window.TCH_TRYON_LIVE || qs.get('tryon')==='1'){ const t=$('#pmTry'); t.hidden=false;
     const g=new URL(p.img, location.href).href, back=/back/i.test(p.print)&&!/front/i.test(p.print);
     t.href=`try-on.html?garment=${encodeURIComponent(g)}&name=${encodeURIComponent(p.name+' '+CATS[p.cat].name.replace(/s$/,''))}${back?'&view=back':''}`; } $('#pmFav').classList.toggle('on',favs.has(p.id)); $('#pmFav').setAttribute('aria-pressed',favs.has(p.id));
