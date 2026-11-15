@@ -160,3 +160,40 @@
 .pay-note a{color:var(--navy);font-weight:700;text-decoration:underline}
 .dr-foot .btn-ghost{margin-top:2px;padding:12px}
 .btn.busy{opacity:.6;pointer-events:none}
+
+/* UPI checkout */
+.upi{position:fixed;inset:0;background:rgba(12,15,24,.6);backdrop-filter:blur(4px);z-index:97;display:none;align-items:center;justify-content:center;padding:20px}
+.upi.on{display:flex}
+.upi-card{position:relative;background:#fff;border-radius:26px;width:min(560px,100%);max-height:calc(100vh - 40px);overflow:auto;padding:30px 30px 26px;box-shadow:0 40px 100px -30px rgba(0,0,0,.5);animation:pmIn .25s ease}
+.upi-x{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:50%;background:var(--cream);font-size:1.4rem;line-height:1;color:var(--navy)}
+.upi-steps{display:flex;gap:8px;margin:0 44px 18px 0;flex-wrap:wrap}
+.upi-steps span{font-size:.76rem;font-weight:700;letter-spacing:.04em;color:#a3a8b3;background:var(--paper);border:1px solid var(--line);padding:6px 10px;border-radius:999px}
+.upi-steps span.on{color:var(--navy);border-color:var(--gold);background:var(--gold-soft)}
+.upi h3{font-size:1.35rem;color:var(--navy);margin-bottom:12px}
+.upi-sum{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:16px;font-size:.9rem}
+.upi-sum div{display:flex;justify-content:space-between;gap:10px;padding:3px 0;color:var(--muted)}
+.upi-sum .t{border-top:1px dashed var(--line);margin-top:6px;padding-top:8px;color:var(--navy);font-weight:700}
+.upi form{display:grid;gap:12px}
+.upi label{display:grid;gap:6px;font-size:.82rem;font-weight:700;color:var(--navy)}
+.upi input,.upi textarea{font:inherit;font-weight:500;font-size:.95rem;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;background:#fff;width:100%;resize:vertical}
+.upi input:focus,.upi textarea:focus{outline:none;border-color:var(--gold)}
+.upi .f2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.upi .f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.upi .opt{font-weight:500;color:var(--muted)}
+.upi-go{width:100%;margin-top:6px}
+.upi-fine{text-align:center;color:var(--muted);font-size:.78rem}
+.upi-err{color:#b3261e;font-size:.85rem;font-weight:600;min-height:0}
+.upi-err:empty{display:none}
+.upi-ref{color:var(--muted);font-size:.9rem;margin:-4px 0 14px}
+.upi-qr{display:flex;gap:16px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px;margin:16px 0}
+.upi-qr img{width:150px;height:150px;border-radius:10px;background:#fff;flex:none}
+.upi-qr p{font-size:.88rem;color:#3b404b;line-height:1.55}
+.upi-id{margin-top:8px}.upi-id button{margin-left:6px;font-weight:700;font-size:.78rem;color:var(--navy);background:var(--gold-soft);border-radius:999px;padding:4px 10px}
+.upi section>label{margin-bottom:6px}
+.upi-back{display:block;margin:12px auto 0;color:var(--muted);font-weight:600;font-size:.86rem}
+.upi section[data-step="3"] p{color:#3b404b;line-height:1.6;margin-bottom:10px}
+.upi section[data-step="3"] a{color:var(--navy);font-weight:700;text-decoration:underline}
+.upi label,.upi input,.upi textarea,.upi .f2>*,.upi .f3>*{min-width:0}
+.upi-card{box-sizing:border-box}
+@media (max-width:560px){.upi{padding:0;align-items:flex-end}.upi-card{width:100%;border-radius:24px 24px 0 0;max-height:94vh;padding:24px 18px 20px}.upi .f3{grid-template-columns:1fr 1fr}.upi .f3 label:last-child{grid-column:1/-1}.upi .f2{grid-template-columns:1fr}.upi-qr img{width:120px;height:120px}}
+.chips{min-width:0;max-width:100%}.toolbar{min-width:0;max-width:100%}
+.upi-x,.upi-back,.upi-id button{border:0}.upi-back{background:none}

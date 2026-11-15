@@ -87,8 +87,11 @@ $('#addBag').addEventListener('click',()=>{ if(needSize()) return; addToBag(cur,
 function waProduct(){
   const msg=['Hi The Customized House, I want to order:',`${cur.name} ${CATS[cur.cat].name.replace(/s$/,'')}`,`Colour: ${cur.colour}`,`Size: ${size}`,`Quantity: ${qty}`,`Price: ${money(cur.price)} each (MRP ${money(cur.mrp)})`,`Total: ${money(cur.price*qty)}`].join('\n');
   window.open(WA+encodeURIComponent(msg),'_blank'); }
-async function payOnline(btn, lines, fallback){
-  if(!window.TCHStore || !TCHStore.canPay(lines)){ fallback(); return; }
+function upiLines(lines){ return lines.map(l=>{ const p=find(l.id); return {id:l.id,size:l.size,qty:l.qty,name:p.name+' '+CATS[p.cat].name.replace(/s$/,''),colour:p.colour,price:p.price}; }); }
+async function payOnline(btn, lines, fallback, onPaid){
+  if(!window.TCHStore || !TCHStore.canPay(lines)){
+    if(window.TCHUpi){ closeProduct(); closeBag(); TCHUpi.open(upiLines(lines), onPaid); } else fallback();
+    return; }
   const label=btn.textContent; btn.classList.add('busy'); btn.textContent='Opening secure checkout...';
   try{ await TCHStore.checkout(lines); }
   catch(e){ btn.classList.remove('busy'); btn.textContent=label; toast('Online payment is unavailable right now - opening WhatsApp'); setTimeout(fallback,900); }
@@ -123,18 +126,16 @@ function waBag(){
   const tot=items.reduce((a,i)=>a+i.p.price*i.qty,0);
   window.open(WA+encodeURIComponent(['Hi The Customized House, I want to order:',...lines,`Total: ${money(tot)}`,'','Please confirm availability and delivery.'].join('\n')),'_blank');
 }
-$('#checkout').addEventListener('click',()=>{ const lines=bag.filter(i=>find(i.id)).map(i=>({id:i.id,size:i.size,qty:i.qty})); if(lines.length) payOnline($('#checkout'),lines,waBag); });
+$('#checkout').addEventListener('click',()=>{ const lines=bag.filter(i=>find(i.id)).map(i=>({id:i.id,size:i.size,qty:i.qty})); if(lines.length) payOnline($('#checkout'),lines,waBag,()=>{ bag=[]; saveBag(); }); });
 $('#checkoutWa').addEventListener('click',waBag);
 
 
-/* until online payments are switched on, keep the WhatsApp flow and labels */
+/* card payments (Razorpay) are off until connected: checkout is by UPI */
 if(!(window.TCHStore && TCHStore.live)){
-  $('#buyNow').textContent='Buy now on WhatsApp'; $('#buyNow').className='btn btn-wa';
-  $('#addBag').className='btn btn-primary';
-  $('.pay-note').style.display='none';
-  $('#checkout').textContent='Order on WhatsApp'; $('#checkout').className='btn btn-wa';
-  $('#checkoutWa').style.display='none';
-  $('.dr-foot small').textContent='You will confirm sizes, address and payment on WhatsApp.';
+  $('.pay-note').innerHTML='Pay by UPI: GPay, PhonePe, Paytm &nbsp;·&nbsp; <a href="#" id="buyWa">or order on WhatsApp</a>';
+  $('#buyWa').addEventListener('click',e=>{ e.preventDefault(); if(needSize()) return; waProduct(); });
+  $('#checkout').textContent='Checkout & pay by UPI';
+  $('.dr-foot small').textContent='Pay by UPI (GPay, PhonePe, Paytm). Free delivery across India. Prices include GST.';
 }
 renderAll(); renderBag();
 if(qs.get('checkout')==='cancelled'){ toast('Payment cancelled - your bag is saved'); history.replaceState(null,'','?c='+cat); }
