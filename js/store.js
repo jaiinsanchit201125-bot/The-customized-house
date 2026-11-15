@@ -1,3 +1,5 @@
+/* Virtual try-on: set to true once the Cloudflare Worker + FASHN key are set up (see try-on.html). */
+window.TCH_TRYON_LIVE = false;
 /* The Customized House - online checkout (Hostinger Ecommerce + Razorpay)
    Store: The Customized House (ARIHANTH SELECTIONS)
    Each product id + size maps to a variant in the Hostinger store.

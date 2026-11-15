@@ -218,3 +218,8 @@
 .pm-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 #pmFav{flex:none;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;margin-top:4px}
 #pmFav:hover{border-color:#d6263b}
+
+.pm-try{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;padding:13px;border-radius:999px;background:linear-gradient(135deg,#C9A35A,#e2c27f);color:#121a2c;font-weight:800;font-size:.95rem}
+.pm-try svg{width:18px;height:18px;fill:#121a2c}
+.pm-try:hover{filter:brightness(1.05)}
+.pm-try[hidden]{display:none}
