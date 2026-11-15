@@ -25,10 +25,13 @@
   .count{position:fixed;inset:0;z-index:6;display:grid;place-items:center;font-size:9rem;font-weight:800;color:#fff;text-shadow:0 6px 30px #0009;pointer-events:none}
   .count:empty{display:none}
   .flash{position:fixed;inset:0;z-index:7;background:#fff;opacity:0;pointer-events:none;transition:opacity .35s}
-  .review{position:fixed;inset:0;z-index:8;background:#0d111b;display:grid;grid-template-rows:1fr auto;padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 16px)}
+  .review{position:fixed;inset:0;z-index:8;background:#0d111b;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 16px)}
+  .rtop{display:grid;gap:10px;justify-items:center}.rtop b{font-size:1.1rem}
+  .segs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .step{font-weight:800;font-size:.95rem;background:#ffffff1f;border-radius:999px;padding:8px 16px}
   .review[hidden]{display:none}
   .review img{width:100%;height:100%;object-fit:contain;min-height:0;border-radius:16px}
-  .review .acts{padding-top:14px}
+  .review .acts{padding-top:2px}
   .hint{position:fixed;left:50%;top:84px;transform:translateX(-50%);z-index:5;background:#121a2ce6;border:1px solid #ffffff22;border-radius:999px;padding:9px 16px;font-size:.88rem;font-weight:600;white-space:nowrap;max-width:calc(100% - 32px);overflow:hidden;text-overflow:ellipsis}
   .hint:empty{display:none}
   .bar{position:fixed;left:0;right:0;bottom:0;z-index:5;padding:14px 16px calc(env(safe-area-inset-bottom) + 16px);background:linear-gradient(#0d111b00,#0d111bf0 40%);display:grid;gap:12px;justify-items:center}
@@ -59,14 +62,18 @@
 <div class="stage"><canvas id="view" width="720" height="1280"></canvas></div>
 <video id="cam" playsinline muted autoplay></video>
 <div class="count" id="count"></div><div class="flash" id="flash"></div>
-<div class="review" id="review" hidden><img id="rimg" alt="Your try-on photo"><div class="acts">
-  <button class="btn btn-ghost" id="retake">Retake</button><button class="btn btn-light" id="share">Save / share</button><a class="btn btn-gold" id="buy2" href="shop.html">Buy this design</a></div></div>
+<div class="review" id="review" hidden>
+  <div class="rtop"><b>Your look</b><div class="segs">
+    <div class="seg" id="rside"><button data-v="front" class="on">Front</button><button data-v="back">Back</button></div>
+    <div class="seg" id="rbg"><button data-b="room" class="on">My room</button><button data-b="studio">Studio</button></div></div></div>
+  <img id="rimg" alt="You wearing this design">
+  <div class="acts"><button class="btn btn-ghost" id="retake">Retake</button><button class="btn btn-light" id="share">Save / share</button><a class="btn btn-gold" id="buy2" href="shop.html">Buy this design</a></div>
+</div>
 <div class="hint" id="hint"></div>
 <div class="bar">
-  <div class="seg" id="side"><button data-v="front" class="on">Front</button><button data-v="back">Back</button></div>
+  <div class="step" id="step">Front photo · 1 of 2</div>
   <div class="acts">
-    <button class="btn btn-ghost" id="timer">⏱ 5s timer</button>
-    <button class="btn btn-ghost" id="snap">📸 Photo</button>
+    <button class="btn btn-light" id="snap">📸 Capture now</button>
     <a class="btn btn-gold" id="buy" href="shop.html">Buy this design</a>
   </div>
 </div>
@@ -74,13 +81,13 @@
 <div class="gate" id="gate">
   <div class="card">
     <img id="gimg" alt="">
-    <h1>Try it on, live</h1>
-    <p>See this design on you in real time with your camera.</p>
+    <h1>See it on you</h1>
+    <p>Your camera takes a front and back photo and dresses you in this design.</p>
     <ul>
-      <li>Stand 1.5-2 metres back so your upper body is in view</li>
-      <li>Face the camera, arms relaxed by your sides</li>
+      <li>Prop your phone up at chest height (or ask a friend to hold it)</li>
+      <li>Step back about 2 metres so you are in view from head to waist</li>
+      <li>Hold still: it takes your front photo by itself, then asks you to turn around for the back</li>
       <li>Good light, and only one person in the frame</li>
-      <li>Trying alone? Prop your phone up at chest height and use the 5-second timer</li>
     </ul>
     <button class="btn btn-gold" id="start">Start camera</button>
     <p class="small">Your camera stays on your device. Nothing is recorded or uploaded.</p>
@@ -152,10 +159,7 @@ async function garment(view) {
   profiles[view] = { gl, gr, top, bot, torsoHalf };
   garments[view] = c; return c;
 }
-let view = backPrint ? 'back' : 'front';
-document.querySelectorAll('#side button').forEach(b => b.classList.toggle('on', b.dataset.v === view));
-$('#side').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; view = b.dataset.v;
-  document.querySelectorAll('#side button').forEach(x => x.classList.toggle('on', x === b)); garment(view); });
+let view = 'front';
 const ready = Promise.all([garment('front'), garment('back')]);
 
 /* canvases: "work" is the camera frame at full size (not mirrored), "view" is the full-screen display */
@@ -382,7 +386,7 @@ async function start() {
     await ready;
     landmarker = await makeLandmarker('VIDEO');
     $('#gate').hidden = true;
-    hint(view === 'back' ? 'Turn around so your back faces the camera' : 'Step back until your shoulders and waist are in view');
+    resetCapture();
     loop();
   } catch (e) {
     btn.disabled = false; btn.textContent = 'Try again';
@@ -392,7 +396,7 @@ async function start() {
   }
 }
 function loop() {
-  if (video.readyState >= 2 && landmarker && video.videoWidth) {
+  if (phase !== 'done' && video.readyState >= 2 && landmarker && video.videoWidth) {
     const t = performance.now();
     if (t !== lastT) {
       lastT = t; let hit = null;
@@ -400,36 +404,124 @@ function loop() {
       const k = Math.min(1, 1280 / Math.max(video.videoWidth, video.videoHeight));   // cap work size for smooth frame rate
       const ok = render(video, Math.round(video.videoWidth * k), Math.round(video.videoHeight * k), hit, true);
       if (r.close) r.close();
-      if (ok) { lastSeen = t; hint(tooClose ? 'Step back so your waist is in view, or use the 5s timer' : ''); }
-      else { if (t - lastSeen > 1500) lockX = null; if (t - lastSeen > 900) hint(view === 'back' ? 'Turn around so your back faces the camera' : 'Step back until your shoulders and waist are in view'); }
+      if (ok) lastSeen = t; else if (t - lastSeen > 1500) lockX = null;
+      autoCapture(hit, ok, t);
     }
   }
   requestAnimationFrame(loop);
 }
 $('#start').addEventListener('click', start);
 
-/* photo, 5-second timer, review */
-let lastBlob = null;
-async function capture() {
-  const fl = $('#flash'); fl.style.opacity = 0.9; setTimeout(() => fl.style.opacity = 0, 120);
-  lastBlob = await new Promise(r => cv.toBlob(r, 'image/jpeg', 0.92));
-  $('#rimg').src = URL.createObjectURL(lastBlob); $('#review').hidden = false;
+/* guided capture: front photo, then back photo, taken automatically once the person holds still */
+let phase = 'front', shots = {}, steady = [], countEnd = 0, readyAt = 0, seenSince = 0, lastHit = null;
+const FRONT_HINT = 'Step back until you are in view from head to waist, then hold still';
+const BACK_HINT = 'Now turn around so your back faces the camera';
+function setPhase(p) {
+  phase = p; steady = []; countEnd = 0; seenSince = 0;
+  view = p === 'back' ? 'back' : 'front';
+  $('#step').textContent = p === 'back' ? 'Back photo · 2 of 2' : 'Front photo · 1 of 2';
+  hint(p === 'back' ? BACK_HINT : FRONT_HINT);
 }
-let counting = false;
-$('#snap').addEventListener('click', capture);
-$('#timer').addEventListener('click', async () => {
-  if (counting) return; counting = true;
-  for (let i = 5; i > 0; i--) { $('#count').textContent = i; try { navigator.vibrate && navigator.vibrate(60); } catch (e) {} await new Promise(r => setTimeout(r, 1000)); }
-  $('#count').textContent = ''; counting = false; capture();
-});
-$('#retake').addEventListener('click', () => { $('#review').hidden = true; });
-$('#share').addEventListener('click', async () => {
-  if (!lastBlob) return;
-  const file = new File([lastBlob], `tch-${prod.id}.jpg`, { type: 'image/jpeg' });
-  if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: 'My TCH try-on' }); return; } catch (e) { if (e.name === 'AbortError') return; } }
-  const a = document.createElement('a'); a.href = URL.createObjectURL(lastBlob); a.download = file.name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-});
+function resetCapture() { shots = {}; for (const k in sm) if (k !== 'frame') delete sm[k]; widths.ok = false; setPhase('front'); readyAt = performance.now() + 800; }
+function grab(hit) {
+  const k = Math.min(1, 1280 / Math.max(video.videoWidth, video.videoHeight));
+  const c = document.createElement('canvas'); c.width = Math.round(video.videoWidth * k); c.height = Math.round(video.videoHeight * k);
+  c.getContext('2d').drawImage(video, 0, 0, c.width, c.height);
+  return { img: c, lm: hit.lm.map(p => ({ ...p })), mask: hit.mask };
+}
+function autoCapture(hit, ok, t) {
+  if (ok && hit) lastHit = hit;
+  if (countEnd) {                                    // counting down
+    const left = Math.ceil((countEnd - t) / 1000);
+    $('#count').textContent = left > 0 ? left : '';
+    if (t >= countEnd) {
+      $('#count').textContent = '';
+      const h = (ok && hit) ? hit : lastHit;
+      if (!h) { countEnd = 0; return; }
+      shots[phase] = grab(h);
+      const fl = $('#flash'); fl.style.opacity = 0.9; setTimeout(() => fl.style.opacity = 0, 150);
+      try { navigator.vibrate && navigator.vibrate(80); } catch (e) {}
+      if (phase === 'front') { setPhase('back'); readyAt = t + 2500; for (const k in sm) if (k !== 'frame') delete sm[k]; widths.ok = false; }
+      else { phase = 'done'; showResult(); }
+    }
+    return;
+  }
+  if (t < readyAt) return;
+  if (!ok || !hit) { steady = []; seenSince = 0; hint(phase === 'back' ? BACK_HINT : FRONT_HINT); return; }
+  if (!seenSince) seenSince = t;
+  const lm = hit.lm, hips = (lm[23].visibility ?? 1) > 0.5 && (lm[24].visibility ?? 1) > 0.5;
+  steady.push({ x: (lm[11].x + lm[12].x) / 2, y: (lm[11].y + lm[12].y) / 2 }); if (steady.length > 18) steady.shift();
+  const still = steady.length >= 18 && steady.every(p => Math.abs(p.x - steady[0].x) < 0.025 && Math.abs(p.y - steady[0].y) < 0.025);
+  if ((still && hips) || (still && t - seenSince > 4000)) { countEnd = t + 3000; hint(''); }
+  else hint(hips ? 'Hold still...' : 'Step back a little so your waist is in view');
+}
+$('#snap').addEventListener('click', () => { if (!countEnd && phase !== 'done') { countEnd = performance.now() + 3000; hint(''); } });
 
+/* result: the person centred in a portrait frame, wearing the garment, front and back */
+const results = {};
+let rSide = 'front', rBg = 'room';
+function compose(shot, side, bg) {
+  const { img, lm, mask } = shot, W = img.width, H = img.height;
+  view = side; for (const k in sm) if (k !== 'frame') delete sm[k]; widths.ok = false;
+  size(work, W, H); wx.drawImage(img, 0, 0);
+  const f = dress(lm, mask, W, H, false);
+  const OW = 900, OH = 1200, out = document.createElement('canvas'); out.width = OW; out.height = OH; const o = out.getContext('2d');
+  const P = i => ({ x: lm[i].x * W, y: lm[i].y * H, v: lm[i].visibility ?? 1 });
+  const s1 = P(11), s2 = P(12), sw = Math.hypot(s1.x - s2.x, s1.y - s2.y) || W * 0.3;
+  const cxp = (s1.x + s2.x) / 2, shy = (s1.y + s2.y) / 2;
+  const hipOk = P(23).v > 0.45 && P(24).v > 0.45, hipY = hipOk ? (P(23).y + P(24).y) / 2 : shy + sw * 1.45;
+  let top = shy - sw * 1.05, bottom = hipY + sw * 1.1;
+  let bh = bottom - top, bw = bh * OW / OH;
+  if (bw < sw * 2.7) { bw = sw * 2.7; bh = bw * OH / OW; const mid = (top + bottom) / 2; top = mid - bh * 0.48; }
+  const bx = cxp - bw / 2, sc = OW / bw;
+  if (bg === 'studio') {
+    const gr = o.createLinearGradient(0, 0, 0, OH); gr.addColorStop(0, '#efe9df'); gr.addColorStop(0.72, '#e2d9cb'); gr.addColorStop(1, '#cfc4b3');
+    o.fillStyle = gr; o.fillRect(0, 0, OW, OH);
+    const v = o.createRadialGradient(OW / 2, OH * 0.45, OW * 0.2, OW / 2, OH * 0.45, OW * 0.9); v.addColorStop(0, 'rgba(255,255,255,0.35)'); v.addColorStop(1, 'rgba(0,0,0,0.12)');
+    o.fillStyle = v; o.fillRect(0, 0, OW, OH);
+    // cut the person out: body outline plus the garment
+    const cut = document.createElement('canvas'); cut.width = W; cut.height = H; const c2 = cut.getContext('2d');
+    if (mask) c2.drawImage(buildMask(mask), 0, 0, W, H); c2.drawImage(layer, 0, 0);
+    c2.globalCompositeOperation = 'source-in'; c2.drawImage(work, 0, 0);
+    o.save(); o.shadowColor = 'rgba(0,0,0,0.28)'; o.shadowBlur = 40; o.shadowOffsetY = 18;
+    o.drawImage(cut, bx, top, bw, bh, 0, 0, OW, OH); o.restore();
+  } else {
+    // your own room: blurred backdrop for any edge outside the camera picture, then the sharp photo
+    o.save(); if (FILTER) o.filter = 'blur(24px) brightness(0.9)';
+    const cs = Math.max(OW / W, OH / H); o.drawImage(work, (OW - W * cs) / 2, (OH - H * cs) / 2, W * cs, H * cs); o.restore();
+    o.drawImage(work, bx, top, bw, bh, 0, 0, OW, OH);
+  }
+  // small brand tag
+  o.fillStyle = 'rgba(18,26,44,0.75)'; o.font = '700 22px DM Sans, Arial'; o.textAlign = 'right';
+  o.fillText('THE CUSTOMIZED HOUSE', OW - 28, OH - 30);
+  return out;
+}
+function drawResult() {
+  const key = rSide + '-' + rBg, shot = shots[rSide] || shots.front;
+  if (!results[key]) results[key] = compose(shot, rSide, rBg);
+  $('#rimg').src = results[key].toDataURL('image/jpeg', 0.9);
+}
+function showResult() {
+  for (const k in results) delete results[k];
+  rSide = 'front'; hint(''); $('#review').hidden = false; drawResult();
+  document.querySelectorAll('#rside button').forEach(b => b.classList.toggle('on', b.dataset.v === rSide));
+  document.querySelectorAll('#rbg button').forEach(b => b.classList.toggle('on', b.dataset.b === rBg));
+}
+$('#rside').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; rSide = b.dataset.v;
+  document.querySelectorAll('#rside button').forEach(x => x.classList.toggle('on', x === b)); drawResult(); });
+$('#rbg').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; rBg = b.dataset.b;
+  document.querySelectorAll('#rbg button').forEach(x => x.classList.toggle('on', x === b)); drawResult(); });
+$('#retake').addEventListener('click', () => { $('#review').hidden = true; resetCapture(); });
+$('#share').addEventListener('click', async () => {
+  // front and back side by side in one picture
+  const f = results['front-' + rBg] || compose(shots.front, 'front', rBg), b = shots.back ? (results['back-' + rBg] || compose(shots.back, 'back', rBg)) : null;
+  const c = document.createElement('canvas'); c.width = b ? 1800 : 900; c.height = 1200; const x = c.getContext('2d');
+  x.drawImage(f, 0, 0); if (b) x.drawImage(b, 900, 0);
+  const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.92));
+  const file = new File([blob], `tch-${prod.id}.jpg`, { type: 'image/jpeg' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: 'My TCH look' }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+});
 /* testing hooks: run the real pipeline on a still photo */
 window.__tchReady = ready;
 window.__tchRenderStill = async (img, opts = {}) => {
@@ -439,6 +531,7 @@ window.__tchRenderStill = async (img, opts = {}) => {
   const ok = render(img, img.naturalWidth, img.naturalHeight, hit, !!opts.mirror);
   return { ok, poses: (r.landmarks || []).length, hasMask: !!(hit && hit.mask) };
 };
+window.__tchResult = async (front, back, bg = 'room') => { await ready; shots = { front, back }; rBg = bg; phase = 'done'; showResult(); return true; };
 window.__tchRenderManual = async (img, lm, mask, mirror) => { await ready; return render(img, img.naturalWidth, img.naturalHeight, lm ? { lm, mask } : null, !!mirror); };
 </script>
 </body>
