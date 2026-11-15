@@ -20,8 +20,15 @@
   .top .t b{display:block;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .top .t span{font-size:.78rem;color:#C9A35A;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
   .stage{position:fixed;inset:0;display:grid;place-items:center}
-  canvas#view{max-width:100%;max-height:100%;width:auto;height:100%;object-fit:contain;background:#0d111b}
-  video{display:none}
+  canvas#view{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;background:#0d111b}
+  video{position:fixed;width:2px;height:2px;opacity:0;pointer-events:none}
+  .count{position:fixed;inset:0;z-index:6;display:grid;place-items:center;font-size:9rem;font-weight:800;color:#fff;text-shadow:0 6px 30px #0009;pointer-events:none}
+  .count:empty{display:none}
+  .flash{position:fixed;inset:0;z-index:7;background:#fff;opacity:0;pointer-events:none;transition:opacity .35s}
+  .review{position:fixed;inset:0;z-index:8;background:#0d111b;display:grid;grid-template-rows:1fr auto;padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 16px)}
+  .review[hidden]{display:none}
+  .review img{width:100%;height:100%;object-fit:contain;min-height:0;border-radius:16px}
+  .review .acts{padding-top:14px}
   .hint{position:fixed;left:50%;top:84px;transform:translateX(-50%);z-index:5;background:#121a2ce6;border:1px solid #ffffff22;border-radius:999px;padding:9px 16px;font-size:.88rem;font-weight:600;white-space:nowrap;max-width:calc(100% - 32px);overflow:hidden;text-overflow:ellipsis}
   .hint:empty{display:none}
   .bar{position:fixed;left:0;right:0;bottom:0;z-index:5;padding:14px 16px calc(env(safe-area-inset-bottom) + 16px);background:linear-gradient(#0d111b00,#0d111bf0 40%);display:grid;gap:12px;justify-items:center}
@@ -50,12 +57,16 @@
 <body>
 <div class="top"><a href="shop.html" id="back">&larr; Shop</a><div class="t"><span>Live try-on</span><b id="pname">The Customized House</b></div></div>
 <div class="stage"><canvas id="view" width="720" height="1280"></canvas></div>
-<video id="cam" playsinline muted></video>
+<video id="cam" playsinline muted autoplay></video>
+<div class="count" id="count"></div><div class="flash" id="flash"></div>
+<div class="review" id="review" hidden><img id="rimg" alt="Your try-on photo"><div class="acts">
+  <button class="btn btn-ghost" id="retake">Retake</button><button class="btn btn-light" id="share">Save / share</button><a class="btn btn-gold" id="buy2" href="shop.html">Buy this design</a></div></div>
 <div class="hint" id="hint"></div>
 <div class="bar">
   <div class="seg" id="side"><button data-v="front" class="on">Front</button><button data-v="back">Back</button></div>
   <div class="acts">
-    <button class="btn btn-ghost" id="snap">📸 Take photo</button>
+    <button class="btn btn-ghost" id="timer">⏱ 5s timer</button>
+    <button class="btn btn-ghost" id="snap">📸 Photo</button>
     <a class="btn btn-gold" id="buy" href="shop.html">Buy this design</a>
   </div>
 </div>
@@ -68,7 +79,8 @@
     <ul>
       <li>Stand 1.5-2 metres back so your upper body is in view</li>
       <li>Face the camera, arms relaxed by your sides</li>
-      <li>Good light works best, and only one person in the frame</li>
+      <li>Good light, and only one person in the frame</li>
+      <li>Trying alone? Prop your phone up at chest height and use the 5-second timer</li>
     </ul>
     <button class="btn btn-gold" id="start">Start camera</button>
     <p class="small">Your camera stays on your device. Nothing is recorded or uploaded.</p>
@@ -93,22 +105,23 @@ const backPrint = /back/i.test(prod.print) && !/front/i.test(prod.print);
 const kind = CATS[prod.cat].name.replace(/s$/, '');
 $('#pname').textContent = prod.name + ' ' + kind;
 $('#gimg').src = prod.img; $('#gimg').alt = prod.name;
-$('#buy').href = `shop.html?c=${prod.cat}#${prod.id}`;
-$('#back').href = `shop.html?c=${prod.cat}#${prod.id}`;
+const shopLink = `shop.html?c=${prod.cat}#${prod.id}`;
+$('#buy').href = shopLink; $('#buy2').href = shopLink; $('#back').href = shopLink;
 
-/* garment anchors in mockup space (1000 x 1240): shoulder seams, hem, and top cut-off (hides hood over the face) */
+/* garment anchors in mockup space (1000 x 1240): shoulder seams, hem, top cut-off (hides the hood), length below the hips */
 const FIT = {
-  tshirt:     { L: [225, 295], R: [775, 295], hem: 1040, cut: 0,   below: 0.22 },
-  oversized:  { L: [230, 305], R: [770, 305], hem: 1062, cut: 0,   below: 0.28 },
-  hoodie:     { L: [230, 320], R: [770, 320], hem: 1090, cut: 245, below: 0.18 },
-  sweatshirt: { L: [225, 310], R: [775, 310], hem: 1095, cut: 0,   below: 0.18 },
-  jacket:     { L: [230, 320], R: [770, 320], hem: 1090, cut: 245, below: 0.18 }
+  tshirt:     { L: [225, 295], R: [775, 295], hem: 1040, cut: 0,   below: 0.10 },
+  oversized:  { L: [230, 305], R: [770, 305], hem: 1062, cut: 0,   below: 0.16 },
+  hoodie:     { L: [230, 320], R: [770, 320], hem: 1090, cut: 245, below: 0.08 },
+  sweatshirt: { L: [225, 310], R: [775, 310], hem: 1095, cut: 0,   below: 0.08 },
+  jacket:     { L: [230, 320], R: [770, 320], hem: 1090, cut: 245, below: 0.08 }
 };
 const fit = FIT[prod.cat];
+const GCX = (fit.L[0] + fit.R[0]) / 2, SEAM = (fit.L[1] + fit.R[1]) / 2;
 
-/* render the garment (colour + design + fabric shading) with the existing mockup engine */
+/* render the garment once per side with the mockup engine, and measure its outline row by row */
 const art = new Image(); art.src = prod.art;
-const garments = {};
+const garments = {}, profiles = {};
 async function garment(view) {
   if (garments[view]) return garments[view];
   await art.decode().catch(() => {});
@@ -122,133 +135,213 @@ async function garment(view) {
       ctx.drawImage(art, a[0] + (a[2] - w) / 2, a[1] + (a[3] - h) * 0.12, w, h);
     } : null
   });
-  if (fit.cut) { const x = c.getContext('2d'); x.clearRect(0, 0, M.W, fit.cut);
+  const x = c.getContext('2d');
+  if (fit.cut) { x.clearRect(0, 0, M.W, fit.cut);
     x.globalCompositeOperation = 'destination-out'; const gr = x.createLinearGradient(0, fit.cut, 0, fit.cut + 45);
     gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = gr; x.fillRect(0, fit.cut, M.W, 45); x.globalCompositeOperation = 'source-over'; }
+  // outline: left/right edge of the garment on every row, and its top and bottom
+  const d = x.getImageData(0, 0, M.W, M.H).data, gl = new Float32Array(M.H), gr = new Float32Array(M.H);
+  let top = -1, bot = -1;
+  for (let y = 0; y < M.H; y++) {
+    let l = -1, r = -1;
+    for (let i = 0; i < M.W; i++) if (d[(y * M.W + i) * 4 + 3] > 60) { l = i; break; }
+    if (l >= 0) { for (let i = M.W - 1; i >= 0; i--) if (d[(y * M.W + i) * 4 + 3] > 60) { r = i; break; } if (top < 0) top = y; bot = y; }
+    gl[y] = l < 0 ? GCX : GCX - l; gr[y] = r < 0 ? 0 : r - GCX;
+  }
+  const torsoHalf = (gl[Math.round(fit.hem * 0.85)] + gr[Math.round(fit.hem * 0.85)]) / 2;
+  profiles[view] = { gl, gr, top, bot, torsoHalf };
   garments[view] = c; return c;
 }
 let view = backPrint ? 'back' : 'front';
 document.querySelectorAll('#side button').forEach(b => b.classList.toggle('on', b.dataset.v === view));
 $('#side').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; view = b.dataset.v;
   document.querySelectorAll('#side button').forEach(x => x.classList.toggle('on', x === b)); garment(view); });
-garment('front'); garment('back');
+const ready = Promise.all([garment('front'), garment('back')]);
 
-/* draw one frame: camera image + garment warped onto the shoulders and hips,
-   clipped to the person's body outline and lit by the room's own light */
+/* canvases: "work" is the camera frame at full size (not mirrored), "view" is the full-screen display */
 const cv = $('#view'), cx = cv.getContext('2d');
+const work = document.createElement('canvas'), wx = work.getContext('2d');
 const layer = document.createElement('canvas'), lx = layer.getContext('2d');
 const shade = document.createElement('canvas'), shx = shade.getContext('2d');
+const shape = document.createElement('canvas'), shapeX = shape.getContext('2d');
 const mk = document.createElement('canvas'), mkx = mk.getContext('2d');
 const mk2 = document.createElement('canvas'), mk2x = mk2.getContext('2d');
 const FILTER = (() => { try { const t = document.createElement('canvas').getContext('2d'); t.filter = 'blur(2px)'; return t.filter === 'blur(2px)'; } catch (e) { return false; } })();
-const sm = {};
-function smooth(key, p, a = 0.45) { const o = sm[key]; if (!o) return (sm[key] = { ...p }); o.x += (p.x - o.x) * a; o.y += (p.y - o.y) * a; return o; }
 function size(c, w, h) { if (c.width !== w || c.height !== h) { c.width = w; c.height = h; } }
+const sm = {};
+function smooth(key, p, a = 0.5) { const o = sm[key]; if (!o) return (sm[key] = { ...p }); for (const k in p) o[k] += (p[k] - o[k]) * a; return o; }
+const N = 36, widths = { l: new Float32Array(N + 1), r: new Float32Array(N + 1), ok: false };
 
-/* body mask (0-1 floats, mw x mh) -> small dilated alpha canvas, so clothes sit slightly outside the skin like real fabric */
+function maskAt(m, W, H) {
+  const fx = m.w / W, fy = m.h / H;
+  return (x, y) => { const mx = Math.round(x * fx), my = Math.round(y * fy); if (mx < 0 || my < 0 || mx >= m.w || my >= m.h) return -1; return m.data[my * m.w + mx]; };
+}
+/* distance from point p along direction (ux,uy) until the body outline ends */
+function walk(at, p, ux, uy, max, step) {
+  let d = 0; while (d < max) { const v = at(p.x + ux * (d + step), p.y + uy * (d + step)); if (v < 0.5) break; d += step; } return d;
+}
 function buildMask(m) {
-  if (!m) return null;
-  const st = Math.max(1, Math.round(m.w / 180)), w = Math.floor(m.w / st), h = Math.floor(m.h / st);
+  const st = Math.max(1, Math.round(m.w / 360)), w = Math.floor(m.w / st), h = Math.floor(m.h / st);
   size(mk, w, h); const id = mkx.createImageData(w, h), d = id.data;
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     const v = m.data[(y * st) * m.w + x * st], i = (y * w + x) * 4;
-    d[i] = d[i + 1] = d[i + 2] = 255; d[i + 3] = v > 0.35 ? 255 : v * 400;
+    d[i] = d[i + 1] = d[i + 2] = 255; d[i + 3] = v > 0.4 ? 255 : v * 500;
   }
   mkx.putImageData(id, 0, 0);
   size(mk2, w, h); mk2x.clearRect(0, 0, w, h);
-  for (const [ox, oy] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1]]) mk2x.drawImage(mk, ox, oy);
+  if (FILTER) { mk2x.filter = 'blur(1.5px)'; for (let k = 0; k < 3; k++) mk2x.drawImage(mk, 0, 0); mk2x.filter = 'none'; }   // soft edge, grown slightly
+  else for (const [ox, oy] of [[0, 0], [1, 0], [-1, 0], [0, -1]]) mk2x.drawImage(mk, ox, oy);
   return mk2;
 }
 
-function drawFrame(src, lm, mirror, mask) {
-  const W = cv.width, H = cv.height;
-  cx.setTransform(1, 0, 0, 1, 0, 0);
-  if (mirror) { cx.translate(W, 0); cx.scale(-1, 1); }
-  cx.drawImage(src, 0, 0, W, H);
-  cx.setTransform(1, 0, 0, 1, 0, 0);
-  const g = garments[view];
-  if (!lm || !g) return false;
-  const P = i => ({ x: (mirror ? 1 - lm[i].x : lm[i].x) * W, y: lm[i].y * H, v: lm[i].visibility ?? 1 });
-  let a = P(11), b = P(12); const h1 = P(23), h2 = P(24);
-  if (a.v < 0.5 || b.v < 0.5) return false;
-  if (a.x > b.x) [a, b] = [b, a];                       // a = shoulder on the screen's left
-  const sL = smooth('sL', a), sR = smooth('sR', b);
-  const dx = sR.x - sL.x, dy = sR.y - sL.y, sw = Math.hypot(dx, dy);
+/* put the garment on the person in the work canvas. Returns the torso centre (for framing) or null */
+let tooClose = false;
+function dress(lm, mask, W, H, flip) {
+  const g = garments[view], pf = profiles[view];
+  if (!lm || !g) return null;
+  const P = i => ({ x: lm[i].x * W, y: lm[i].y * H, v: lm[i].visibility ?? 1 });
+  let a = P(11), b = P(12);
+  if (a.v < 0.5 || b.v < 0.5) return null;
+  if (a.x > b.x) [a, b] = [b, a];
+  const S = smooth('sh', { ax: a.x, ay: a.y, bx: b.x, by: b.y });
+  const dx = S.bx - S.ax, dy = S.by - S.ay, sw = Math.hypot(dx, dy);
+  if (sw < 20) return null;
   const u = { x: dx / sw, y: dy / sw }, n = { x: -u.y, y: u.x };
-  const jm = { x: (sL.x + sR.x) / 2, y: (sL.y + sR.y) / 2 };
-  const lift = sw * 0.06;                                  // shoulder seam sits above the shoulder joints
+  const jm = { x: (S.ax + S.bx) / 2, y: (S.ay + S.by) / 2 };
+  const at = mask ? maskAt(mask, W, H) : null, step = mask ? Math.max(1, W / mask.w) : 1;
+
+  // shoulder line: the top of the shoulders from the body outline, so no real shirt shows above the seams
+  let lift = sw * 0.08;
+  if (at) {
+    const t1 = walk(at, { x: S.ax + u.x * sw * 0.08, y: S.ay + u.y * sw * 0.08 }, -n.x, -n.y, sw * 0.5, step);
+    const t2 = walk(at, { x: S.bx - u.x * sw * 0.08, y: S.by - u.y * sw * 0.08 }, -n.x, -n.y, sw * 0.5, step);
+    const t = Math.min(t1, t2); if (t > sw * 0.02 && t < sw * 0.3) lift = t + sw * 0.02;
+  }
+  lift = smooth('lift', { v: lift }, 0.3).v;
   const mid = { x: jm.x - n.x * lift, y: jm.y - n.y * lift };
-  let torso; tooClose = false;
-  if (h1.v > 0.4 && h2.v > 0.4) { const hm = smooth('hm', { x: (h1.x + h2.x) / 2, y: (h1.y + h2.y) / 2 }); torso = Math.hypot(hm.x - jm.x, hm.y - jm.y) + lift; }
-  else { torso = sw * 1.45; tooClose = true; }            // hips out of frame: typical body proportion
-  const sx = (sw * 1.16) / (fit.R[0] - fit.L[0]);
-  const sy = (torso * (1 + fit.below)) / (fit.hem - fit.L[1]);
-  const gcx = (fit.L[0] + fit.R[0]) / 2, gsy = (fit.L[1] + fit.R[1]) / 2;
-  const A = u.x * sx, B = u.y * sx, C = n.x * sy, D = n.y * sy;
 
-  // 1. garment on its own layer
-  size(layer, W, H); lx.setTransform(1, 0, 0, 1, 0, 0); lx.globalCompositeOperation = 'source-over'; lx.globalAlpha = 1; lx.clearRect(0, 0, W, H);
-  lx.setTransform(A, B, C, D, mid.x - (A * gcx + C * gsy), mid.y - (B * gcx + D * gsy));
-  lx.drawImage(g, 0, 0);
-  lx.setTransform(1, 0, 0, 1, 0, 0);
+  // length: shoulders to hips, plus the style's length below the hips
+  const h1 = P(23), h2 = P(24); let torso; tooClose = false;
+  if (h1.v > 0.45 && h2.v > 0.45) torso = Math.hypot((h1.x + h2.x) / 2 - jm.x, (h1.y + h2.y) / 2 - jm.y) + lift;
+  else { torso = sw * 1.4 + lift; tooClose = true; }
+  torso = smooth('torso', { v: torso }, 0.3).v;
+  const sy = torso * (1 + fit.below) / (fit.hem - SEAM);
+  const sx = sw * 1.12 / (fit.R[0] - fit.L[0]);            // width from the shoulders alone
 
-  // 2. room lighting: soft light and shadow taken from the camera image, so the fabric picks up folds and shade
-  if (FILTER) {
-    const sw2 = Math.round(W / 4), sh2 = Math.round(H / 4); size(shade, sw2, sh2);
-    shx.setTransform(1, 0, 0, 1, 0, 0); shx.filter = 'grayscale(1) blur(3px) contrast(1.15) brightness(1.55)';
-    if (mirror) { shx.translate(sw2, 0); shx.scale(-1, 1); }
-    shx.drawImage(src, 0, 0, sw2, sh2); shx.setTransform(1, 0, 0, 1, 0, 0); shx.filter = 'none';
-    lx.globalCompositeOperation = 'multiply'; lx.globalAlpha = 0.42; lx.drawImage(shade, 0, 0, W, H);
-    lx.globalAlpha = 1; lx.globalCompositeOperation = 'destination-in';
-    lx.setTransform(A, B, C, D, mid.x - (A * gcx + C * gsy), mid.y - (B * gcx + D * gsy)); lx.drawImage(g, 0, 0); lx.setTransform(1, 0, 0, 1, 0, 0);
+  // width: measure the body outline on each row and stretch that row of the garment to match
+  const top = Math.max(pf.top, 0), bot = pf.bot, rows = (bot - top) / N;
+  for (let i = 0; i <= N; i++) {
+    const gy = Math.min(top + i * rows, M.H - 1), gyi = Math.round(gy);
+    const gH = Math.max((pf.gl[gyi] + pf.gr[gyi]) / 2, 1);
+    const sleeve = gH > pf.torsoHalf * 1.12;
+    const d = (gy - SEAM) * sy, c = { x: mid.x + n.x * d, y: mid.y + n.y * d };
+    let sl = sx, sr = sx;
+    if (at && d > sw * 0.1) {
+      const ml = walk(at, c, -u.x, -u.y, sw * 1.6, step) * 1.06, mr = walk(at, c, u.x, u.y, sw * 1.6, step) * 1.06;
+      if (ml > 0 && mr > 0) {
+        sl = ml / gH; sr = mr / gH;
+        if (sleeve) { sl = Math.max(sl, sx); sr = Math.max(sr, sx); }   // keep sleeves on the arms
+      }
+    }
+    sl = Math.min(Math.max(sl, sx * 0.85), sx * 1.4); sr = Math.min(Math.max(sr, sx * 0.85), sx * 1.4);
+    if (!widths.ok) { widths.l[i] = sl; widths.r[i] = sr; }
+    else { widths.l[i] += (sl - widths.l[i]) * 0.35; widths.r[i] += (sr - widths.r[i]) * 0.35; }
+  }
+  widths.ok = true;
+  // smooth the width profile down the body so the side seams run in clean curves
+  let WL = Float32Array.from(widths.l), WR = Float32Array.from(widths.r);
+  for (let pass = 0; pass < 3; pass++) {
+    const a = new Float32Array(N + 1), b = new Float32Array(N + 1);
+    for (let i = 0; i <= N; i++) { let sa = 0, sb = 0, w = 0;
+      for (let k = -2; k <= 2; k++) { const j = Math.min(Math.max(i + k, 0), N), wt = 3 - Math.abs(k); sa += WL[j] * wt; sb += WR[j] * wt; w += wt; }
+      a[i] = sa / w; b[i] = sb / w; }
+    WL = a; WR = b;
   }
 
-  // 3. clip to this person's body outline: no sleeves floating in the air, nothing drawn over other people
-  const bm = buildMask(mask);
-  if (bm) {
-    lx.globalCompositeOperation = 'destination-in';
-    if (mirror) { lx.translate(W, 0); lx.scale(-1, 1); }
-    lx.imageSmoothingEnabled = true; lx.drawImage(bm, 0, 0, W, H);
-    lx.setTransform(1, 0, 0, 1, 0, 0);
+  // draw the garment as a smooth mesh (left and right half). Mirror view: print reads correctly on screen
+  size(layer, W, H); lx.setTransform(1, 0, 0, 1, 0, 0); lx.globalCompositeOperation = 'source-over'; lx.globalAlpha = 1; lx.clearRect(0, 0, W, H);
+  const sg = flip ? -1 : 1;
+  const map = (gx, gy, s) => { const d = (gy - SEAM) * sy, o = (gx - GCX) * s * sg; return [mid.x + u.x * o + n.x * d, mid.y + u.y * o + n.y * d]; };
+  const tri = (S0, S1, S2, D0, D1, D2) => {
+    const [u0, v0] = S0, [u1, v1] = S1, [u2, v2] = S2;
+    const den = u0 * (v1 - v2) + u1 * (v2 - v0) + u2 * (v0 - v1); if (!den) return;
+    const [x0, y0] = D0, [x1, y1] = D1, [x2, y2] = D2;
+    const A = (x0 * (v1 - v2) + x1 * (v2 - v0) + x2 * (v0 - v1)) / den, C = (x0 * (u2 - u1) + x1 * (u0 - u2) + x2 * (u1 - u0)) / den;
+    const E = (x0 * (u1 * v2 - u2 * v1) + x1 * (u2 * v0 - u0 * v2) + x2 * (u0 * v1 - u1 * v0)) / den;
+    const B = (y0 * (v1 - v2) + y1 * (v2 - v0) + y2 * (v0 - v1)) / den, D = (y0 * (u2 - u1) + y1 * (u0 - u2) + y2 * (u1 - u0)) / den;
+    const F = (y0 * (u1 * v2 - u2 * v1) + y1 * (u2 * v0 - u0 * v2) + y2 * (u0 * v1 - u1 * v0)) / den;
+    const cx0 = (x0 + x1 + x2) / 3, cy0 = (y0 + y1 + y2) / 3, gr = (x, y) => { const dx = x - cx0, dy = y - cy0, l = Math.hypot(dx, dy) || 1; return [x + dx / l * 0.8, y + dy / l * 0.8]; };
+    lx.save(); lx.setTransform(1, 0, 0, 1, 0, 0); lx.beginPath();
+    lx.moveTo(...gr(x0, y0)); lx.lineTo(...gr(x1, y1)); lx.lineTo(...gr(x2, y2)); lx.closePath(); lx.clip();
+    lx.setTransform(A, B, C, D, E, F);
+    const bx = Math.max(Math.min(u0, u1, u2) - 2, 0), by = Math.max(Math.min(v0, v1, v2) - 2, 0);
+    const bw = Math.min(Math.max(u0, u1, u2) + 2, M.W) - bx, bh = Math.min(Math.max(v0, v1, v2) + 2, M.H) - by;
+    if (bw > 0 && bh > 0) lx.drawImage(g, bx, by, bw, bh, bx, by, bw, bh);
+    lx.restore();
+  };
+  for (let i = 0; i < N; i++) {
+    const y0 = top + i * rows, y1 = top + (i + 1) * rows;
+    for (const half of ['L', 'R']) {
+      const bodyLeft = (half === 'L') === (sg > 0);
+      const s0 = bodyLeft ? WL[i] : WR[i], s1 = bodyLeft ? WL[i + 1] : WR[i + 1];
+      const xa = half === 'L' ? 0 : GCX, xb = half === 'L' ? GCX : M.W;
+      const p00 = map(xa, y0, s0), p10 = map(xb, y0, s0), p01 = map(xa, y1, s1), p11 = map(xb, y1, s1);
+      tri([xa, y0], [xb, y0], [xa, y1], p00, p10, p01);
+      tri([xb, y0], [xb, y1], [xa, y1], p10, p11, p01);
+    }
+  }
+  lx.drawImage(layer, 0, 0); lx.drawImage(layer, 0, 0);    // fill the hairline seams between mesh pieces
+  size(shape, W, H); shapeX.clearRect(0, 0, W, H); shapeX.drawImage(layer, 0, 0);
+
+  // room lighting: soft light and shadow from the camera picture so the fabric sits in the same light
+  if (FILTER) {
+    const w4 = Math.round(W / 4), h4 = Math.round(H / 4); size(shade, w4, h4);
+    shx.filter = 'grayscale(1) blur(4px) contrast(1.2) brightness(1.5)'; shx.drawImage(work, 0, 0, w4, h4); shx.filter = 'none';
+    lx.globalAlpha = 0.4;
+    lx.globalCompositeOperation = 'multiply'; lx.drawImage(shade, 0, 0, W, H);
+    lx.globalAlpha = 1; lx.globalCompositeOperation = 'destination-in'; lx.drawImage(shape, 0, 0);
+  }
+
+  // forearms and hands in front of the garment stay visible
+  lx.globalCompositeOperation = 'destination-out'; lx.fillStyle = '#000'; lx.lineCap = 'round';
+  for (const [e, w] of [[13, 15], [14, 16]]) {
+    const E = P(e), Wr = P(w); if (E.v < 0.5 || Wr.v < 0.5) continue;
+    const ex = Wr.x + (Wr.x - E.x) * 0.3, ey = Wr.y + (Wr.y - E.y) * 0.3;
+    lx.lineWidth = sw * 0.24; lx.beginPath(); lx.moveTo(E.x + (Wr.x - E.x) * 0.2, E.y + (Wr.y - E.y) * 0.2); lx.lineTo(ex, ey); lx.stroke();
+  }
+  // clip to this person's outline: nothing floating in the air or drawn over other people
+  if (mask) {
+    lx.globalCompositeOperation = 'destination-in'; lx.imageSmoothingEnabled = true; lx.drawImage(buildMask(mask), 0, 0, W, H);
   }
   lx.globalCompositeOperation = 'source-over';
-
-  // 4. soft contact shadow under the garment edge, then the garment
-  cx.save(); cx.globalAlpha = 0.35; if (FILTER) cx.filter = 'blur(6px) brightness(0)'; if (FILTER) cx.drawImage(layer, 0, 3); cx.restore();
-  cx.drawImage(layer, 0, 0);
-  return true;
+  wx.drawImage(layer, 0, 0);
+  return { x: mid.x, y: mid.y + n.y * torso * 0.45, sw };
 }
-window.__tchDrawFrame = drawFrame;   // used for testing with a still photo
-window.__tchReady = Promise.all([garment('front'), garment('back')]);
 
-/* camera + pose tracking (MediaPipe, runs fully in the browser) */
-const hint = t => { $('#hint').textContent = t; };
-let tooClose = false;
-let landmarker = null, video = $('#cam'), lastT = -1, lastSeen = 0;
-async function start() {
-  const btn = $('#start'), err = $('#gerr'); err.hidden = true;
-  btn.disabled = true; btn.innerHTML = '<span class="spin" style="width:18px;height:18px;margin:0;border-width:2px"></span> Starting...';
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 720 }, height: { ideal: 1280 } }, audio: false });
-    video.srcObject = stream; await video.play();
-    cv.width = video.videoWidth || 720; cv.height = video.videoHeight || 1280;
-    const vision = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14');
-    const fileset = await vision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
-    landmarker = await vision.PoseLandmarker.createFromOptions(fileset, {
-      baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task', delegate: 'GPU' },
-      runningMode: 'VIDEO', numPoses: 2, outputSegmentationMasks: true
-    });
-    $('#gate').hidden = true;
-    hint(view === 'back' ? 'Turn around so your back faces the camera' : 'Step back until your shoulders and waist are in view');
-    loop();
-  } catch (e) {
-    btn.disabled = false; btn.textContent = 'Try again';
-    err.hidden = false;
-    err.textContent = (e && e.name === 'NotAllowedError') ? 'Camera access was blocked. Allow camera access for this site in your browser settings, then try again.'
-      : 'Live try-on could not start on this device. Try the latest Chrome or Safari, or open the site on your phone.';
-  }
+/* show the work canvas full screen, mirrored, cropped to keep the person centred */
+const frame = smooth('frame', { x: 0.5, y: 0.5, z: 1 });
+function present(W, H, focus, mirror) {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2), SW = Math.round(innerWidth * dpr), SH = Math.round(innerHeight * dpr);
+  size(cv, SW, SH);
+  const cover = Math.max(SW / W, SH / H);
+  const vw = SW / cover, vh = SH / cover;
+  const f = smooth('frame', focus ? { x: focus.x / W, y: focus.y / H, z: 1 } : { x: frame.x, y: frame.y, z: 1 }, 0.08);
+  const sxp = Math.min(Math.max(f.x * W - vw / 2, 0), W - vw), syp = Math.min(Math.max(f.y * H - vh / 2, 0), H - vh);
+  cx.setTransform(1, 0, 0, 1, 0, 0); cx.fillStyle = '#0d111b'; cx.fillRect(0, 0, SW, SH);
+  if (mirror) cx.setTransform(-1, 0, 0, 1, SW, 0);
+  cx.drawImage(work, sxp, syp, vw, vh, 0, 0, SW, SH);
+  cx.setTransform(1, 0, 0, 1, 0, 0);
 }
-/* pick one person and stay locked on them: the one nearest the last tracked person, else the most central, biggest one */
+
+/* one full frame: camera picture + garment */
+function render(src, W, H, hit, mirror) {
+  size(work, W, H); wx.drawImage(src, 0, 0, W, H);
+  const focus = hit ? dress(hit.lm, hit.mask, W, H, mirror) : null;
+  present(W, H, focus, mirror);
+  return !!focus;
+}
+
+/* pick one person and stay locked on them */
 let lockX = null;
 function pick(r) {
   const L = r.landmarks || []; let best = -1, score = -1e9;
@@ -260,29 +353,92 @@ function pick(r) {
   });
   if (best < 0) return null;
   const lm = L[best], mx = (lm[11].x + lm[12].x) / 2;
-  if (lockX !== null && Math.abs(mx - lockX) > 0.18) { for (const k in sm) delete sm[k]; }   // switched person: reset smoothing
+  if (lockX !== null && Math.abs(mx - lockX) > 0.18) { for (const k in sm) if (k !== 'frame') delete sm[k]; widths.ok = false; }
   lockX = mx;
   let mask = null; const m = r.segmentationMasks && r.segmentationMasks[best];
   if (m) { try { mask = { data: new Float32Array(m.getAsFloat32Array()), w: m.width, h: m.height }; } catch (e) {} }
   return { lm, mask };
 }
+
+/* MediaPipe pose + body outline, runs fully in the browser */
+const MP = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14';
+async function makeLandmarker(mode) {
+  const vision = await import(MP);
+  const fileset = await vision.FilesetResolver.forVisionTasks(MP + '/wasm');
+  const opts = m => ({ baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task', delegate: m },
+    runningMode: mode, numPoses: 2, outputSegmentationMasks: true, minPoseDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+  try { return await vision.PoseLandmarker.createFromOptions(fileset, opts('GPU')); }
+  catch (e) { return await vision.PoseLandmarker.createFromOptions(fileset, opts('CPU')); }
+}
+
+const hint = t => { $('#hint').textContent = t; };
+let landmarker = null, video = $('#cam'), lastT = -1, lastSeen = 0;
+async function start() {
+  const btn = $('#start'), err = $('#gerr'); err.hidden = true;
+  btn.disabled = true; btn.innerHTML = '<span class="spin" style="width:18px;height:18px;margin:0;border-width:2px"></span> Starting...';
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 1920 }, height: { ideal: 1080 } }, audio: false });
+    video.srcObject = stream; await video.play();
+    await ready;
+    landmarker = await makeLandmarker('VIDEO');
+    $('#gate').hidden = true;
+    hint(view === 'back' ? 'Turn around so your back faces the camera' : 'Step back until your shoulders and waist are in view');
+    loop();
+  } catch (e) {
+    btn.disabled = false; btn.textContent = 'Try again';
+    err.hidden = false;
+    err.textContent = (e && e.name === 'NotAllowedError') ? 'Camera access was blocked. Allow camera access for this site in your browser settings, then try again.'
+      : 'Live try-on could not start on this device. Try the latest Chrome or Safari, or open the site on your phone.';
+  }
+}
 function loop() {
-  if (video.readyState >= 2 && landmarker) {
-    const t = performance.now(); let hit = null;
-    if (t !== lastT) { lastT = t; const r = landmarker.detectForVideo(video, t); hit = pick(r); if (r.close) r.close(); }
-    const ok = drawFrame(video, hit && hit.lm, true, hit && hit.mask);
-    if (ok) { lastSeen = t; hint(tooClose ? 'Step back a little so your waist is in view for the best fit' : ''); }
-    else { if (t - lastSeen > 1500) lockX = null; if (t - lastSeen > 900) hint(view === 'back' ? 'Turn around so your back faces the camera' : 'Step back until your shoulders and waist are in view'); }
+  if (video.readyState >= 2 && landmarker && video.videoWidth) {
+    const t = performance.now();
+    if (t !== lastT) {
+      lastT = t; let hit = null;
+      const r = landmarker.detectForVideo(video, t); hit = pick(r);
+      const ok = render(video, video.videoWidth, video.videoHeight, hit, true);
+      if (r.close) r.close();
+      if (ok) { lastSeen = t; hint(tooClose ? 'Step back so your waist is in view, or use the 5s timer' : ''); }
+      else { if (t - lastSeen > 1500) lockX = null; if (t - lastSeen > 900) hint(view === 'back' ? 'Turn around so your back faces the camera' : 'Step back until your shoulders and waist are in view'); }
+    }
   }
   requestAnimationFrame(loop);
 }
 $('#start').addEventListener('click', start);
-$('#snap').addEventListener('click', async () => {
-  const blob = await new Promise(r => cv.toBlob(r, 'image/jpeg', 0.92));
-  const file = new File([blob], `tch-${prod.id}.jpg`, { type: 'image/jpeg' });
-  if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: 'My TCH try-on' }); return; } catch (e) { if (e.name === 'AbortError') return; } }
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+
+/* photo, 5-second timer, review */
+let lastBlob = null;
+async function capture() {
+  const fl = $('#flash'); fl.style.opacity = 0.9; setTimeout(() => fl.style.opacity = 0, 120);
+  lastBlob = await new Promise(r => cv.toBlob(r, 'image/jpeg', 0.92));
+  $('#rimg').src = URL.createObjectURL(lastBlob); $('#review').hidden = false;
+}
+let counting = false;
+$('#snap').addEventListener('click', capture);
+$('#timer').addEventListener('click', async () => {
+  if (counting) return; counting = true;
+  for (let i = 5; i > 0; i--) { $('#count').textContent = i; try { navigator.vibrate && navigator.vibrate(60); } catch (e) {} await new Promise(r => setTimeout(r, 1000)); }
+  $('#count').textContent = ''; counting = false; capture();
 });
+$('#retake').addEventListener('click', () => { $('#review').hidden = true; });
+$('#share').addEventListener('click', async () => {
+  if (!lastBlob) return;
+  const file = new File([lastBlob], `tch-${prod.id}.jpg`, { type: 'image/jpeg' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: 'My TCH try-on' }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(lastBlob); a.download = file.name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+});
+
+/* testing hooks: run the real pipeline on a still photo */
+window.__tchReady = ready;
+window.__tchRenderStill = async (img, opts = {}) => {
+  await ready;
+  if (!window.__tchImgLm) window.__tchImgLm = await makeLandmarker('IMAGE');
+  const r = window.__tchImgLm.detect(img); const hit = pick(r);
+  const ok = render(img, img.naturalWidth, img.naturalHeight, hit, !!opts.mirror);
+  return { ok, poses: (r.landmarks || []).length, hasMask: !!(hit && hit.mask) };
+};
+window.__tchRenderManual = async (img, lm, mask, mirror) => { await ready; return render(img, img.naturalWidth, img.naturalHeight, lm ? { lm, mask } : null, !!mirror); };
 </script>
 </body>
 </html>
