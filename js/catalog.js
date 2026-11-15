@@ -3,9 +3,9 @@
    mrp = price shown crossed out, price = selling price.
    art = optional transparent PNG of just the design (lets customers open it in the Design Studio). */
 window.TCH_CATEGORIES = {
-  tshirt:     {name:'T-Shirts',          blurb:'Soft 180 GSM cotton tees with bold prints. Pick a design, choose your size and order on WhatsApp.', studio:'tshirt'},
+  tshirt:     {name:'T-Shirts',          blurb:'Soft 180 GSM cotton tees with bold prints. Pick a design, choose your size and pay securely online or order on WhatsApp.', studio:'tshirt'},
   oversized:  {name:'Oversized T-Shirts',blurb:'Heavy 240 GSM drop-shoulder tees with a relaxed, boxy fit and big back prints.', studio:'oversized'},
-  hoodie:     {name:'Hoodies',           blurb:'Heavy 320 GSM brushed fleece hoodies with bold prints. Pick a design, choose your size and order on WhatsApp.', studio:'hoodie'},
+  hoodie:     {name:'Hoodies',           blurb:'Heavy 320 GSM brushed fleece hoodies with bold prints. Pick a design, choose your size and pay securely online or order on WhatsApp.', studio:'hoodie'},
   sweatshirt: {name:'Sweatshirts',       blurb:'Cosy 320 GSM crewneck fleece sweatshirts with bold prints.', studio:'sweatshirt'},
   jacket:     {name:'Jackets',           blurb:'320 GSM fleece zip hoodie jackets with a metal zip and back prints.', studio:'jacket'}
 };

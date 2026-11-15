@@ -87,11 +87,12 @@
       <span class="lbl">Quantity</span>
       <div class="qty"><button id="qMinus" aria-label="Less">−</button><span id="qVal">1</span><button id="qPlus" aria-label="More">+</button></div>
       <div class="pm-acts">
-        <button class="btn btn-primary" id="addBag">Add to bag</button>
-        <button class="btn btn-wa" id="buyNow">Buy now on WhatsApp</button>
+        <button class="btn btn-ghost" id="addBag">Add to bag</button>
+        <button class="btn btn-primary" id="buyNow">Buy now</button>
       </div>
+      <p class="pay-note">Secure payment: UPI, cards, netbanking &nbsp;·&nbsp; <a href="#" id="buyWa">or order on WhatsApp</a></p>
       <a class="pm-custom" id="pmStudio" href="#">Customise this design in the Design Studio →</a>
-      <ul class="pm-notes"><li>Free design check before printing</li><li>Delivery date confirmed on WhatsApp</li><li>Wash inside out in cold water</li></ul>
+      <ul class="pm-notes"><li>Free design check before printing</li><li>Free delivery across India</li><li>Free replacement for any print or size defect</li><li>Wash inside out in cold water</li></ul>
     </div>
   </div>
 </div>
@@ -106,8 +107,9 @@
       <div class="ln"><span>MRP</span><s id="drMrp"></s></div>
       <div class="ln save"><span>Discount</span><span id="drSave"></span></div>
       <div class="ln tot"><span>Total</span><b id="drTot"></b></div>
-      <button class="btn btn-wa" id="checkout">Order on WhatsApp</button>
-      <small>You will confirm sizes, address and payment on WhatsApp.</small>
+      <button class="btn btn-primary" id="checkout">Checkout &amp; pay securely</button>
+      <button class="btn btn-ghost" id="checkoutWa">Order on WhatsApp instead</button>
+      <small>UPI, cards &amp; netbanking via Razorpay. Free delivery across India. Prices include GST.</small>
     </div>
   </div>
 </div>
@@ -124,6 +126,8 @@
       <div><h4>Explore</h4><a href="studio.html">Design Studio</a><a href="index.html#bulk">Bulk Orders</a><a href="index.html#sizes">Size Guide</a><a href="index.html#order">Place an order</a><a href="index.html#faq">FAQ</a></div>
       <div><h4>Contact</h4><a href="https://wa.me/918431573282" target="_blank" rel="noopener">WhatsApp +91 84315 73282</a><a href="tel:+918431573282">Call us</a><a href="mailto:shop@thecustomizedhouse.com?subject=Order%20enquiry%20-%20The%20Customized%20House">shop@thecustomizedhouse.com</a><a href="https://www.instagram.com/_the_customized_house" target="_blank" rel="noopener">Instagram</a><a>Bengaluru, India</a></div>
     </div>
+    <div class="legal-links"><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a><a href="refund-policy.html">Refund &amp; Replacement</a><a href="shipping-policy.html">Shipping</a><a href="contact.html">Contact</a></div>
+    <p class="legal-entity">The Customized House is a brand of <b>ARIHANTH SELECTIONS</b>, Bengaluru, Karnataka &middot; GSTIN 29AFUPK2861E1Z2</p>
     <div class="foot-bottom"><span>© <span id="yr">2026</span> The Customized House. All rights reserved.</span><span>Wear your story.</span></div>
   </div>
 </footer>
@@ -135,6 +139,7 @@
 </a>
 
 <script src="js/catalog.js"></script>
+<script src="js/store.js"></script>
 <script src="js/shop.js"></script>
 </body>
 </html>

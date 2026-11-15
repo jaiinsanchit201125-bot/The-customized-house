@@ -154,3 +154,9 @@
 .trend-tabs button.on span{color:var(--gold)}
 @media (max-width:760px){.trend-tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;margin:-10px -16px 22px;padding:0 16px}.trend-tabs button{flex:none}}
 .bag-btn{bottom:150px}
+
+/* online checkout */
+.pay-note{margin-top:10px;font-size:.84rem;color:var(--muted);text-align:center}
+.pay-note a{color:var(--navy);font-weight:700;text-decoration:underline}
+.dr-foot .btn-ghost{margin-top:2px;padding:12px}
+.btn.busy{opacity:.6;pointer-events:none}

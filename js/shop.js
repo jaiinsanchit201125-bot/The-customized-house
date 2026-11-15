@@ -84,9 +84,17 @@ $('#qMinus').addEventListener('click',()=>{qty=Math.max(1,qty-1); $('#qVal').tex
 $('#qPlus').addEventListener('click',()=>{qty=Math.min(99,qty+1); $('#qVal').textContent=qty;});
 function needSize(){ if(size) return false; const z=$('#pmSizes'); z.classList.remove('err'); void z.offsetWidth; z.classList.add('err'); toast('Please select a size'); return true; }
 $('#addBag').addEventListener('click',()=>{ if(needSize()) return; addToBag(cur,size,qty); closeProduct(); toast(`Added to bag - ${cur.name} (${size})`); });
-$('#buyNow').addEventListener('click',()=>{ if(needSize()) return;
+function waProduct(){
   const msg=['Hi The Customized House, I want to order:',`${cur.name} ${CATS[cur.cat].name.replace(/s$/,'')}`,`Colour: ${cur.colour}`,`Size: ${size}`,`Quantity: ${qty}`,`Price: ${money(cur.price)} each (MRP ${money(cur.mrp)})`,`Total: ${money(cur.price*qty)}`].join('\n');
-  window.open(WA+encodeURIComponent(msg),'_blank'); });
+  window.open(WA+encodeURIComponent(msg),'_blank'); }
+async function payOnline(btn, lines, fallback){
+  if(!window.TCHStore || !TCHStore.canPay(lines)){ fallback(); return; }
+  const label=btn.textContent; btn.classList.add('busy'); btn.textContent='Opening secure checkout...';
+  try{ await TCHStore.checkout(lines); }
+  catch(e){ btn.classList.remove('busy'); btn.textContent=label; toast('Online payment is unavailable right now - opening WhatsApp'); setTimeout(fallback,900); }
+}
+$('#buyNow').addEventListener('click',()=>{ if(needSize()) return; payOnline($('#buyNow'),[{id:cur.id,size,qty}],waProduct); });
+$('#buyWa').addEventListener('click',e=>{ e.preventDefault(); if(needSize()) return; waProduct(); });
 
 /* bag (saved on this device) */
 let bag=[];
@@ -109,13 +117,26 @@ const openBag=()=>{ $('#drawer').classList.add('on'); document.body.style.overfl
 function closeBag(){ $('#drawer').classList.remove('on'); if(!$('#pm').classList.contains('on')) document.body.style.overflow=''; }
 $('#bagBtn').addEventListener('click',openBag); $('#drClose').addEventListener('click',closeBag);
 $('#drawer').addEventListener('click',e=>{ if(e.target.id==='drawer') closeBag(); });
-$('#checkout').addEventListener('click',()=>{
+function waBag(){
   const items=bag.map(i=>({...i,p:find(i.id)})).filter(i=>i.p); if(!items.length) return;
   const lines=items.map((i,k)=>`${k+1}. ${i.p.name} - ${i.p.colour} - Size ${i.size} x ${i.qty} = ${money(i.p.price*i.qty)}`);
   const tot=items.reduce((a,i)=>a+i.p.price*i.qty,0);
   window.open(WA+encodeURIComponent(['Hi The Customized House, I want to order:',...lines,`Total: ${money(tot)}`,'','Please confirm availability and delivery.'].join('\n')),'_blank');
-});
+}
+$('#checkout').addEventListener('click',()=>{ const lines=bag.filter(i=>find(i.id)).map(i=>({id:i.id,size:i.size,qty:i.qty})); if(lines.length) payOnline($('#checkout'),lines,waBag); });
+$('#checkoutWa').addEventListener('click',waBag);
 
+
+/* until online payments are switched on, keep the WhatsApp flow and labels */
+if(!(window.TCHStore && TCHStore.live)){
+  $('#buyNow').textContent='Buy now on WhatsApp'; $('#buyNow').className='btn btn-wa';
+  $('#addBag').className='btn btn-primary';
+  $('.pay-note').style.display='none';
+  $('#checkout').textContent='Order on WhatsApp'; $('#checkout').className='btn btn-wa';
+  $('#checkoutWa').style.display='none';
+  $('.dr-foot small').textContent='You will confirm sizes, address and payment on WhatsApp.';
+}
 renderAll(); renderBag();
+if(qs.get('checkout')==='cancelled'){ toast('Payment cancelled - your bag is saved'); history.replaceState(null,'','?c='+cat); }
 if(location.hash){ const id=location.hash.slice(1); if(find(id)) openProduct(id); }
 })();
