@@ -68,7 +68,7 @@
     <ul>
       <li>Stand 1.5-2 metres back so your upper body is in view</li>
       <li>Face the camera, arms relaxed by your sides</li>
-      <li>Good light works best</li>
+      <li>Good light works best, and only one person in the frame</li>
     </ul>
     <button class="btn btn-gold" id="start">Start camera</button>
     <p class="small">Your camera stays on your device. Nothing is recorded or uploaded.</p>
@@ -133,11 +133,34 @@ $('#side').addEventListener('click', e => { const b = e.target.closest('button')
   document.querySelectorAll('#side button').forEach(x => x.classList.toggle('on', x === b)); garment(view); });
 garment('front'); garment('back');
 
-/* draw one frame: camera image + garment warped onto the shoulders and hips */
+/* draw one frame: camera image + garment warped onto the shoulders and hips,
+   clipped to the person's body outline and lit by the room's own light */
 const cv = $('#view'), cx = cv.getContext('2d');
+const layer = document.createElement('canvas'), lx = layer.getContext('2d');
+const shade = document.createElement('canvas'), shx = shade.getContext('2d');
+const mk = document.createElement('canvas'), mkx = mk.getContext('2d');
+const mk2 = document.createElement('canvas'), mk2x = mk2.getContext('2d');
+const FILTER = (() => { try { const t = document.createElement('canvas').getContext('2d'); t.filter = 'blur(2px)'; return t.filter === 'blur(2px)'; } catch (e) { return false; } })();
 const sm = {};
 function smooth(key, p, a = 0.45) { const o = sm[key]; if (!o) return (sm[key] = { ...p }); o.x += (p.x - o.x) * a; o.y += (p.y - o.y) * a; return o; }
-function drawFrame(src, lm, mirror) {
+function size(c, w, h) { if (c.width !== w || c.height !== h) { c.width = w; c.height = h; } }
+
+/* body mask (0-1 floats, mw x mh) -> small dilated alpha canvas, so clothes sit slightly outside the skin like real fabric */
+function buildMask(m) {
+  if (!m) return null;
+  const st = Math.max(1, Math.round(m.w / 180)), w = Math.floor(m.w / st), h = Math.floor(m.h / st);
+  size(mk, w, h); const id = mkx.createImageData(w, h), d = id.data;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const v = m.data[(y * st) * m.w + x * st], i = (y * w + x) * 4;
+    d[i] = d[i + 1] = d[i + 2] = 255; d[i + 3] = v > 0.35 ? 255 : v * 400;
+  }
+  mkx.putImageData(id, 0, 0);
+  size(mk2, w, h); mk2x.clearRect(0, 0, w, h);
+  for (const [ox, oy] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1]]) mk2x.drawImage(mk, ox, oy);
+  return mk2;
+}
+
+function drawFrame(src, lm, mirror, mask) {
   const W = cv.width, H = cv.height;
   cx.setTransform(1, 0, 0, 1, 0, 0);
   if (mirror) { cx.translate(W, 0); cx.scale(-1, 1); }
@@ -153,18 +176,46 @@ function drawFrame(src, lm, mirror) {
   const dx = sR.x - sL.x, dy = sR.y - sL.y, sw = Math.hypot(dx, dy);
   const u = { x: dx / sw, y: dy / sw }, n = { x: -u.y, y: u.x };
   const jm = { x: (sL.x + sR.x) / 2, y: (sL.y + sR.y) / 2 };
-  const lift = sw * 0.05;                                  // shoulder seam sits above the shoulder joints
+  const lift = sw * 0.06;                                  // shoulder seam sits above the shoulder joints
   const mid = { x: jm.x - n.x * lift, y: jm.y - n.y * lift };
   let torso; tooClose = false;
   if (h1.v > 0.4 && h2.v > 0.4) { const hm = smooth('hm', { x: (h1.x + h2.x) / 2, y: (h1.y + h2.y) / 2 }); torso = Math.hypot(hm.x - jm.x, hm.y - jm.y) + lift; }
-  else { torso = sw * 1.45; tooClose = true; }                                 // hips out of frame: typical body proportion
-  const sx = (sw * 1.1) / (fit.R[0] - fit.L[0]);
+  else { torso = sw * 1.45; tooClose = true; }            // hips out of frame: typical body proportion
+  const sx = (sw * 1.16) / (fit.R[0] - fit.L[0]);
   const sy = (torso * (1 + fit.below)) / (fit.hem - fit.L[1]);
   const gcx = (fit.L[0] + fit.R[0]) / 2, gsy = (fit.L[1] + fit.R[1]) / 2;
   const A = u.x * sx, B = u.y * sx, C = n.x * sy, D = n.y * sy;
-  cx.setTransform(A, B, C, D, mid.x - (A * gcx + C * gsy), mid.y - (B * gcx + D * gsy));
-  cx.drawImage(g, 0, 0);
-  cx.setTransform(1, 0, 0, 1, 0, 0);
+
+  // 1. garment on its own layer
+  size(layer, W, H); lx.setTransform(1, 0, 0, 1, 0, 0); lx.globalCompositeOperation = 'source-over'; lx.globalAlpha = 1; lx.clearRect(0, 0, W, H);
+  lx.setTransform(A, B, C, D, mid.x - (A * gcx + C * gsy), mid.y - (B * gcx + D * gsy));
+  lx.drawImage(g, 0, 0);
+  lx.setTransform(1, 0, 0, 1, 0, 0);
+
+  // 2. room lighting: soft light and shadow taken from the camera image, so the fabric picks up folds and shade
+  if (FILTER) {
+    const sw2 = Math.round(W / 4), sh2 = Math.round(H / 4); size(shade, sw2, sh2);
+    shx.setTransform(1, 0, 0, 1, 0, 0); shx.filter = 'grayscale(1) blur(3px) contrast(1.15) brightness(1.55)';
+    if (mirror) { shx.translate(sw2, 0); shx.scale(-1, 1); }
+    shx.drawImage(src, 0, 0, sw2, sh2); shx.setTransform(1, 0, 0, 1, 0, 0); shx.filter = 'none';
+    lx.globalCompositeOperation = 'multiply'; lx.globalAlpha = 0.42; lx.drawImage(shade, 0, 0, W, H);
+    lx.globalAlpha = 1; lx.globalCompositeOperation = 'destination-in';
+    lx.setTransform(A, B, C, D, mid.x - (A * gcx + C * gsy), mid.y - (B * gcx + D * gsy)); lx.drawImage(g, 0, 0); lx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+
+  // 3. clip to this person's body outline: no sleeves floating in the air, nothing drawn over other people
+  const bm = buildMask(mask);
+  if (bm) {
+    lx.globalCompositeOperation = 'destination-in';
+    if (mirror) { lx.translate(W, 0); lx.scale(-1, 1); }
+    lx.imageSmoothingEnabled = true; lx.drawImage(bm, 0, 0, W, H);
+    lx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+  lx.globalCompositeOperation = 'source-over';
+
+  // 4. soft contact shadow under the garment edge, then the garment
+  cx.save(); cx.globalAlpha = 0.35; if (FILTER) cx.filter = 'blur(6px) brightness(0)'; if (FILTER) cx.drawImage(layer, 0, 3); cx.restore();
+  cx.drawImage(layer, 0, 0);
   return true;
 }
 window.__tchDrawFrame = drawFrame;   // used for testing with a still photo
@@ -184,8 +235,8 @@ async function start() {
     const vision = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14');
     const fileset = await vision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
     landmarker = await vision.PoseLandmarker.createFromOptions(fileset, {
-      baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task', delegate: 'GPU' },
-      runningMode: 'VIDEO', numPoses: 1
+      baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task', delegate: 'GPU' },
+      runningMode: 'VIDEO', numPoses: 2, outputSegmentationMasks: true
     });
     $('#gate').hidden = true;
     hint(view === 'back' ? 'Turn around so your back faces the camera' : 'Step back until your shoulders and waist are in view');
@@ -197,13 +248,31 @@ async function start() {
       : 'Live try-on could not start on this device. Try the latest Chrome or Safari, or open the site on your phone.';
   }
 }
+/* pick one person and stay locked on them: the one nearest the last tracked person, else the most central, biggest one */
+let lockX = null;
+function pick(r) {
+  const L = r.landmarks || []; let best = -1, score = -1e9;
+  L.forEach((lm, i) => {
+    const a = lm[11], b = lm[12]; if (!a || !b || (a.visibility ?? 1) < 0.5 || (b.visibility ?? 1) < 0.5) return;
+    const mx = (a.x + b.x) / 2, w = Math.abs(a.x - b.x);
+    const sc = lockX !== null ? -Math.abs(mx - lockX) * 3 + w : w - Math.abs(mx - 0.5) * 0.8;
+    if (sc > score) { score = sc; best = i; }
+  });
+  if (best < 0) return null;
+  const lm = L[best], mx = (lm[11].x + lm[12].x) / 2;
+  if (lockX !== null && Math.abs(mx - lockX) > 0.18) { for (const k in sm) delete sm[k]; }   // switched person: reset smoothing
+  lockX = mx;
+  let mask = null; const m = r.segmentationMasks && r.segmentationMasks[best];
+  if (m) { try { mask = { data: new Float32Array(m.getAsFloat32Array()), w: m.width, h: m.height }; } catch (e) {} }
+  return { lm, mask };
+}
 function loop() {
   if (video.readyState >= 2 && landmarker) {
-    const t = performance.now(); let lm = null;
-    if (t !== lastT) { lastT = t; const r = landmarker.detectForVideo(video, t); lm = r.landmarks && r.landmarks[0]; }
-    const ok = drawFrame(video, lm, true);
+    const t = performance.now(); let hit = null;
+    if (t !== lastT) { lastT = t; const r = landmarker.detectForVideo(video, t); hit = pick(r); if (r.close) r.close(); }
+    const ok = drawFrame(video, hit && hit.lm, true, hit && hit.mask);
     if (ok) { lastSeen = t; hint(tooClose ? 'Step back a little so your waist is in view for the best fit' : ''); }
-    else if (t - lastSeen > 900) hint(view === 'back' ? 'Turn around so your back faces the camera' : 'Step back until your shoulders and waist are in view');
+    else { if (t - lastSeen > 1500) lockX = null; if (t - lastSeen > 900) hint(view === 'back' ? 'Turn around so your back faces the camera' : 'Step back until your shoulders and waist are in view'); }
   }
   requestAnimationFrame(loop);
 }
