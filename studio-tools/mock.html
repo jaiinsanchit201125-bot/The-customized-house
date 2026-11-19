@@ -1,0 +1,19 @@
+<!doctype html><html><body style="margin:0">
+<canvas id="c" width="1000" height="1240"></canvas>
+<script src="../js/mockup.js"></script>
+<script>
+// renderBatch(color, ink, batch, section, names[], backdrop) -> PNG data URL of a hoodie back with a batch design
+window.renderBatch = async function(color, ink, batch, section, names, backdrop){
+  const ctx=document.getElementById('c').getContext('2d');
+  await TCHMock.render(ctx,{product:'hoodie',view:'back',color,backdrop:backdrop||'light',base:'../assets/mockups/',drawPrint:(f,a)=>{
+    const [x,y,w,h]=a; const cx=x+w/2;
+    f.fillStyle=ink; f.textAlign='center';
+    f.font='600 13px Poppins'; f.fillText('BATCH OF', cx, y+34);
+    f.font='800 64px Poppins'; f.fillText(batch, cx, y+96);
+    f.font='600 15px Poppins'; f.fillText(section, cx, y+124);
+    f.font='500 10.5px Poppins';
+    const cols=3, cw=w/cols; names.forEach((n,i)=>{ f.fillText(n, x+cw*(i%cols)+cw/2, y+156+Math.floor(i/cols)*17); });
+  }});
+  return document.getElementById('c').toDataURL('image/png');
+};
+</script></body></html>
